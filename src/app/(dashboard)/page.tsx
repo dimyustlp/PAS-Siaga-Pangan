@@ -4,6 +4,7 @@ import { StatCard } from "@/components/ui/stat-card";
 import { Alert, Select } from "@/components/ui/form";
 import type { SecurityStatus } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
+import { AlurKerja } from "@/components/shared/alur-kerja";
 import { RealtimeRefresh } from "@/components/shared/realtime-refresh";
 import { SesiTabel } from "@/components/shared/session-panels";
 import { perhatianSesi, skorUrgensi } from "@/lib/domain/attention";
@@ -66,6 +67,8 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
           </div>
         </div>
       </section>
+
+      <AlurKerja role={user.role} />
 
       {error && <Alert tone="bahaya">Data belum bisa dibaca dari database. Muat ulang halaman, atau hubungi Administrator bila berulang.</Alert>}
 

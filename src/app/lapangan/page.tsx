@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BookOpen, ChevronRight } from "lucide-react";
+import { AlurKerja } from "@/components/shared/alur-kerja";
 import { AksiTindakLanjut } from "@/components/shared/followup-forms";
 import { Card } from "@/components/ui/card";
 import { Alert, Pill } from "@/components/ui/form";
@@ -29,6 +30,7 @@ export default async function LapanganPage() {
         <h1 className="text-2xl font-bold tracking-tight">Tugas hari ini</h1>
         <p className="text-sm text-muted-foreground">Sesi yang ditugaskan kepada Anda.</p>
       </div>
+      <AlurKerja role={user.role} />
       {sesi.error && <Alert tone="bahaya">Data belum bisa dibaca. Coba muat ulang halaman.</Alert>}
       {daftar.length === 0 && !sesi.error && <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">Belum ada sesi yang ditugaskan kepada Anda.</p>}
 
