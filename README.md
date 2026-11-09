@@ -23,6 +23,26 @@ Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu 
 ## Tahap pengembangan
 
 - Fase 1: skema database, RLS, penyimpanan berkas (selesai)
-- Fase 2: kerangka aplikasi, login, pembatas peran (ini)
-- Fase 3: server actions (sesi harian, entri lapangan, keputusan, penutupan)
+- Fase 2: kerangka aplikasi, login, pembatas peran (selesai)
+- Fase 3: server actions dan lapisan data (selesai, lihat di bawah)
 - Fase 4: dasbor realtime dan antarmuka Pengawal mobile
+
+## Fase 3: fungsi sisi server
+
+Semua ada di `src/lib/actions/` dan hanya bisa dipanggil sesuai peran. Aturan alur yang sebenarnya dijaga database, jadi pesan penolakannya (berbahasa Indonesia) diteruskan apa adanya.
+
+| Berkas | Fungsi | Peran |
+|---|---|---|
+| `master.ts` | `createLocation`, `createInmate` | Operator |
+| `sessions.ts` | `createActivity`, `createSession`, `updateSession`, `resubmitSession`, `attachSessionDocument` | Operator |
+| `field-logs.ts` | `submitFieldLog`, `submitFieldLogBatch` (entri susulan setelah offline) | Pengawal |
+| `decisions.ts` | `decideReadiness`, `verifyIncident`, `lowerSecurityStatus`, `closeSession`, `checkReconciliation` | Kepala Pengamanan (cek rekonsiliasi: Operator juga) |
+
+Pembacaan data: `src/lib/data/sessions.ts` (`listSessions`, `getSessionDetail` termasuk status jadwal pemeriksaan berkala).
+
+Catatan penting:
+- Foto dan dokumen diunggah langsung dari browser ke Supabase Storage, lalu alamatnya dikirim ke server action untuk diperiksa dan dicatat.
+- Entri lapangan membawa `client_id` (UUID dari perangkat). Kirim ulang entri yang sama aman: dianggap sudah tersimpan.
+- Entri susulan boleh bermundur sampai 7 hari dan tidak boleh di masa depan (toleransi 5 menit untuk selisih jam HP).
+- Jalankan uji: `npm test`.
+

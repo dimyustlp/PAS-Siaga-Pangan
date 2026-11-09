@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { SUPABASE_KEY, SUPABASE_URL } from "@/lib/env";
 import type { Role } from "@/lib/rbac";
+import type { Database } from "@/lib/supabase/database.types";
 
 export type SessionProfile = { role: Role; is_active: boolean } | null;
 
@@ -9,7 +10,7 @@ export type SessionProfile = { role: Role; is_active: boolean } | null;
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
-  const supabase = createServerClient(SUPABASE_URL, SUPABASE_KEY, {
+  const supabase = createServerClient<Database>(SUPABASE_URL, SUPABASE_KEY, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
