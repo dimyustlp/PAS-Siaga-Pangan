@@ -32,9 +32,9 @@ export function SesiTabel({ rows, now, tampilkanUpt }: { rows: Overview[]; now: 
     return <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">Belum ada sesi pada cakupan ini.</p>;
   }
   return (
-    <div className="overflow-x-auto rounded-lg border bg-card">
+    <div className="overflow-x-auto rounded-xl border border-border/70 bg-card shadow-soft">
       <table className="w-full min-w-[56rem] text-sm">
-        <thead className="bg-muted text-left text-xs uppercase tracking-wide text-muted-foreground">
+        <thead className="bg-secondary/70 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
           <tr>
             <th className="px-3 py-2">Kegiatan</th>
             {tampilkanUpt && <th className="px-3 py-2">UPT</th>}
@@ -51,7 +51,7 @@ export function SesiTabel({ rows, now, tampilkanUpt }: { rows: Overview[]; now: 
             const menit = o.batas_periksa_berikut ? Math.ceil((Date.parse(o.batas_periksa_berikut) - now.getTime()) / 60_000) : null;
             const berjalan = !o.ditutup_at && (o.fase === "Di lokasi" || o.fase === "Dalam perjalanan");
             return (
-              <tr key={o.session_id ?? ""} className={cn("align-top", p.some((x) => x.tingkat === "kritis") && "bg-status-merah/5")}>
+              <tr key={o.session_id ?? ""} className={cn("align-top transition-colors hover:bg-brand-soft/40", p.some((x) => x.tingkat === "kritis") && "bg-status-merah/5")}>
                 <td className="px-3 py-2.5">
                   <Link href={`/sesi/${o.session_id}`} className="font-medium text-primary hover:underline">
                     {o.jenis_kegiatan} · {o.lokasi_nama}

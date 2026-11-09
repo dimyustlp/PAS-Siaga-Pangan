@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Simpan hasil halaman dinamis sebentar di peramban agar berpindah menu dan kembali terasa instan.
+  experimental: { staleTimes: { dynamic: 30, static: 180 } },
   async headers() {
     return [
       {

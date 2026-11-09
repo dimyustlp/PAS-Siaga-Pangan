@@ -1,6 +1,8 @@
-import { Download } from "lucide-react";
+import { CalendarRange, CheckCheck, Download, History, Play } from "lucide-react";
+import { StatCard } from "@/components/ui/stat-card";
 import { ActionForm } from "@/components/shared/action-form";
-import { TrenChart, type TitikTren } from "@/components/shared/tren-chart";
+import { TrenChartLazy } from "@/components/shared/tren-chart-lazy";
+import type { TitikTren } from "@/components/shared/tren-chart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, Field, PageHeader, Pill, Textarea } from "@/components/ui/form";
@@ -55,14 +57,10 @@ export default async function EvaluasiPage({ searchParams }: { searchParams: Pro
       ) : (
         <>
           <section className="grid grid-cols-2 gap-4 sm:grid-cols-4" aria-label="Ringkasan">
-            {[
-              ["Sesi pada periode", indikator.total_sesi],
-              ["Sesi dijalankan", indikator.sesi_dijalankan],
-              ["Sesi ditutup", indikator.sesi_ditutup],
-              ["Entri susulan", `${indikator.entri_susulan} dari ${indikator.entri_total}`],
-            ].map(([k, v]) => (
-              <Card key={String(k)}><CardContent className="p-4"><p className="text-2xl font-semibold tabular-nums">{v}</p><p className="text-xs text-muted-foreground">{k}</p></CardContent></Card>
-            ))}
+            <StatCard icon={CalendarRange} nada="biru" nilai={indikator.total_sesi} label="sesi pada periode" />
+            <StatCard icon={Play} nada="teal" nilai={indikator.sesi_dijalankan} label="sesi dijalankan" />
+            <StatCard icon={CheckCheck} nada="hijau" nilai={indikator.sesi_ditutup} label="sesi ditutup" />
+            <StatCard icon={History} nada="kuning" nilai={`${indikator.entri_susulan}/${indikator.entri_total}`} label="entri susulan dari total" />
           </section>
 
           <Card>
@@ -102,7 +100,7 @@ export default async function EvaluasiPage({ searchParams }: { searchParams: Pro
         <CardContent>
           {titik.length === 0 ? <p className="text-sm text-muted-foreground">Belum ada data pada periode ini.</p> : (
             <>
-              <TrenChart data={titik} />
+              <TrenChartLazy data={titik} />
               <table className="sr-only"><caption>Data tren mingguan</caption><thead><tr><th>Minggu</th><th>Sesi</th><th>Ditutup</th><th>Merah/Kritis</th><th>Gangguan</th></tr></thead>
                 <tbody>{titik.map((t) => <tr key={t.minggu}><td>{t.minggu}</td><td>{t.sesi}</td><td>{t.ditutup}</td><td>{t.merah_kritis}</td><td>{t.gangguan}</td></tr>)}</tbody></table>
             </>

@@ -23,10 +23,10 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  // getUser() memeriksa token ke server Supabase, bukan sekadar membaca cookie.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // getClaims() memeriksa tanda tangan token secara lokal (tanpa bolak-balik ke server login),
+  // dan menyegarkan sesi bila hampir habis. Status akun tetap dicek lewat tabel profiles di bawah.
+  const { data: tokenData } = await supabase.auth.getClaims();
+  const user = tokenData?.claims?.sub ? { id: tokenData.claims.sub } : null;
 
   let profile: SessionProfile = null;
   if (user) {

@@ -9,6 +9,13 @@ const STYLE: Record<SecurityStatus, string> = {
   KRITIS: "bg-status-kritis text-white border-status-kritis",
 };
 
+const DOT: Record<SecurityStatus, string> = {
+  HIJAU: "bg-status-hijau",
+  KUNING: "bg-status-kuning",
+  MERAH: "bg-status-merah",
+  KRITIS: "bg-white",
+};
+
 export function StatusBadge({ status, className }: { status: SecurityStatus; className?: string }) {
   return (
     <span
@@ -18,6 +25,7 @@ export function StatusBadge({ status, className }: { status: SecurityStatus; cla
         className
       )}
     >
+      <span className={cn("mr-1.5 h-1.5 w-1.5 rounded-full", DOT[status])} aria-hidden />
       {status}
     </span>
   );

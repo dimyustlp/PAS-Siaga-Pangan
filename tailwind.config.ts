@@ -17,6 +17,8 @@ const config: Config = {
         accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" },
         destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
         card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
+        brand: { DEFAULT: "hsl(var(--brand))", soft: "hsl(var(--brand-soft))" },
+        gold: "hsl(var(--gold))",
         status: {
           hijau: "hsl(var(--status-hijau))",
           kuning: "hsl(var(--status-kuning))",

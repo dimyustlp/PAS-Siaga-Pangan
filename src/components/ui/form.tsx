@@ -7,7 +7,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTML
     <textarea
       ref={ref}
       className={cn(
-        "flex min-h-20 w-full rounded-md border border-input bg-card px-3 py-2 text-base placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "flex min-h-20 w-full rounded-lg border border-input bg-card px-3 py-2 transition-shadow text-base placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
         className
       )}
       {...props}
@@ -21,7 +21,7 @@ export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttrib
     <select
       ref={ref}
       className={cn(
-        "flex h-10 w-full rounded-md border border-input bg-card px-3 py-2 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "flex h-10 w-full rounded-lg border border-input bg-card px-3 py-2 transition-shadow text-base focus-visible:outline-none focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
         className
       )}
       {...props}
@@ -63,7 +63,7 @@ const TONE = {
 
 export function Alert({ tone = "info", children, className }: { tone?: keyof typeof TONE; children: React.ReactNode; className?: string }) {
   return (
-    <div role={tone === "bahaya" ? "alert" : "status"} className={cn("rounded-md border px-3 py-2 text-sm", TONE[tone], className)}>
+    <div role={tone === "bahaya" ? "alert" : "status"} className={cn("rounded-lg border px-3.5 py-2.5 text-sm", TONE[tone], className)}>
       {children}
     </div>
   );
@@ -86,9 +86,9 @@ export function Pill({ tone = "netral", children, className }: { tone?: keyof ty
 export function PageHeader({ title, description, actions }: { title: string; description?: string; actions?: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-start justify-between gap-3">
-      <div className="min-w-0">
-        <h1 className="text-2xl font-semibold">{title}</h1>
-        {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
+      <div className="min-w-0 border-l-4 border-brand pl-3.5">
+        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+        {description && <p className="mt-1 max-w-3xl text-sm text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>

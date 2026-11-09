@@ -26,7 +26,7 @@ export default async function LapanganPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">Tugas hari ini</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Tugas hari ini</h1>
         <p className="text-sm text-muted-foreground">Sesi yang ditugaskan kepada Anda.</p>
       </div>
       {sesi.error && <Alert tone="bahaya">Data belum bisa dibaca. Coba muat ulang halaman.</Alert>}
@@ -36,7 +36,7 @@ export default async function LapanganPage() {
         {daftar.map((s) => {
           const siap = s.status_kesiapan === "Dapat Dimulai";
           const isi = (
-            <Card className="flex items-center gap-3 p-4">
+            <Card className={`lift flex items-center gap-3 p-4 ${siap ? "border-l-4 border-l-brand" : "border-l-4 border-l-border opacity-90"}`}>
               <div className="min-w-0 flex-1 space-y-1">
                 <p className="truncate font-medium">{s.jenis_kegiatan} · {s.lokasi_nama}</p>
                 <p className="text-xs text-muted-foreground">{s.kode_kegiatan} · {fmtTanggalPendek(s.tanggal_sesi)} · {s.jumlah_narapidana} WB</p>

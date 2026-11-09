@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Alert, PageHeader, Select } from "@/components/ui/form";
-import { StatusBadge, type SecurityStatus } from "@/components/ui/status-badge";
+import { AlertTriangle, CheckCircle2, Clock, ClipboardCheck, OctagonAlert, ShieldAlert, Siren } from "lucide-react";
+import { StatCard } from "@/components/ui/stat-card";
+import { Alert, Select } from "@/components/ui/form";
+import type { SecurityStatus } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { RealtimeRefresh } from "@/components/shared/realtime-refresh";
 import { SesiTabel } from "@/components/shared/session-panels";
@@ -9,11 +10,21 @@ import { perhatianSesi, skorUrgensi } from "@/lib/domain/attention";
 import { listOverview, listUpt } from "@/lib/data/overview";
 import { requireUser } from "@/lib/auth";
 import { ROLE_LABEL } from "@/lib/rbac";
+import { fmtTanggal } from "@/lib/format";
 
 export const metadata = { title: "Dasbor" };
 export const dynamic = "force-dynamic";
 
-const URUTAN: SecurityStatus[] = ["HIJAU", "KUNING", "MERAH", "KRITIS"];
+const URUTAN: { st: SecurityStatus; label: string; ikon: typeof CheckCircle2; nada: "hijau" | "kuning" | "merah" | "kritis" }[] = [
+  { st: "HIJAU", label: "Hijau · aman", ikon: CheckCircle2, nada: "hijau" },
+  { st: "KUNING", label: "Kuning · waspada", ikon: AlertTriangle, nada: "kuning" },
+  { st: "MERAH", label: "Merah · gangguan", ikon: ShieldAlert, nada: "merah" },
+  { st: "KRITIS", label: "Kritis · darurat", ikon: Siren, nada: "kritis" },
+];
+
+function sapaan(jam: number) {
+  return jam < 11 ? "Selamat pagi" : jam < 15 ? "Selamat siang" : jam < 18 ? "Selamat sore" : "Selamat malam";
+}
 
 export default async function DasborPage({ searchParams }: { searchParams: Promise<{ upt?: string }> }) {
   const user = await requireUser();
@@ -33,21 +44,28 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      <PageHeader
-        title="Dasbor"
-        description={`${user.fullName} · ${ROLE_LABEL[user.role]}. Kegiatan aktif dan 14 hari terakhir pada cakupan Anda.`}
-        actions={
-          <>
-            <RealtimeRefresh />
+      <section className="bg-brand-gradient relative overflow-hidden rounded-2xl p-6 text-white shadow-soft md:p-8">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/10 blur-2xl" aria-hidden />
+        <div className="pointer-events-none absolute -bottom-20 right-1/3 h-56 w-56 rounded-full bg-[hsl(173_70%_50%)]/20 blur-3xl" aria-hidden />
+        <div className="relative flex flex-wrap items-end justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-sm text-white/75">{fmtTanggal(now)} · {ROLE_LABEL[user.role]}</p>
+            <h1 className="mt-1 text-2xl font-extrabold tracking-tight md:text-3xl">{sapaan(Number(new Intl.DateTimeFormat("id-ID", { hour: "numeric", hourCycle: "h23", timeZone: "Asia/Jakarta" }).format(now)))}, {user.fullName.split(" ")[0]}</h1>
+            <p className="mt-2 max-w-xl text-sm text-white/80">
+              {perlu.length > 0 ? `${perlu.length} kegiatan perlu perhatian sekarang.` : "Tidak ada kegiatan yang perlu perhatian khusus saat ini."}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="rounded-full bg-white/12 px-3 py-1.5 text-white ring-1 ring-white/20 [&_*]:!text-white"><RealtimeRefresh /></span>
             {user.role === "operator" && (
-              <Button asChild size="sm"><Link href="/kegiatan">Siapkan kegiatan</Link></Button>
+              <Button asChild size="sm" variant="outline" className="border-white/30 bg-white text-primary hover:bg-white/90"><Link href="/kegiatan">Siapkan kegiatan</Link></Button>
             )}
             {user.role === "kepala_pengamanan" && (
-              <Button asChild size="sm"><Link href="/keputusan">Antrean keputusan</Link></Button>
+              <Button asChild size="sm" variant="outline" className="border-white/30 bg-white text-primary hover:bg-white/90"><Link href="/keputusan">Antrean keputusan</Link></Button>
             )}
-          </>
-        }
-      />
+          </div>
+        </div>
+      </section>
 
       {error && <Alert tone="bahaya">Data belum bisa dibaca dari database. Muat ulang halaman, atau hubungi Administrator bila berulang.</Alert>}
 
@@ -63,25 +81,19 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
       )}
 
       <section aria-label="Status keamanan kegiatan berjalan" className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {URUTAN.map((st) => (
-          <Card key={st}>
-            <CardHeader className="pb-2"><StatusBadge status={st} className="w-fit" /></CardHeader>
-            <CardContent>
-              <p className="text-3xl font-semibold tabular-nums">{hitung(st)}</p>
-              <p className="text-xs text-muted-foreground">kegiatan berjalan</p>
-            </CardContent>
-          </Card>
+        {URUTAN.map(({ st, label, ikon, nada }) => (
+          <StatCard key={st} icon={ikon} nada={nada} nilai={hitung(st)} label={`${label} · kegiatan berjalan`} />
         ))}
       </section>
 
       <section aria-label="Ringkasan perhatian" className="grid gap-4 sm:grid-cols-3">
-        <Card><CardContent className="p-5"><p className="text-3xl font-semibold tabular-nums">{menunggu}</p><p className="text-sm text-muted-foreground">menunggu keputusan kesiapan</p></CardContent></Card>
-        <Card><CardContent className="p-5"><p className="text-3xl font-semibold tabular-nums">{perlu.length}</p><p className="text-sm text-muted-foreground">kegiatan perlu perhatian</p></CardContent></Card>
-        <Card><CardContent className="p-5"><p className="text-3xl font-semibold tabular-nums">{tlTerlambat}</p><p className="text-sm text-muted-foreground">tindak lanjut lewat tenggat</p></CardContent></Card>
+        <StatCard icon={ClipboardCheck} nada="biru" nilai={menunggu} label="menunggu keputusan kesiapan" />
+        <StatCard icon={OctagonAlert} nada="kuning" nilai={perlu.length} label="kegiatan perlu perhatian" />
+        <StatCard icon={Clock} nada="merah" nilai={tlTerlambat} label="tindak lanjut lewat tenggat" />
       </section>
 
       <section aria-label="Daftar sesi" className="space-y-3">
-        <h2 className="text-lg font-semibold">Sesi kegiatan</h2>
+        <h2 className="text-lg font-bold tracking-tight">Sesi kegiatan</h2>
         <SesiTabel rows={urut} now={now} tampilkanUpt={luas} />
       </section>
     </div>

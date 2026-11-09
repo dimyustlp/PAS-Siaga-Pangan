@@ -76,7 +76,7 @@ const ITEMS: Record<Role, Item[]> = {
 export function NavLinks({ role }: { role: Role }) {
   const pathname = usePathname();
   return (
-    <nav className="flex flex-col gap-1" aria-label="Menu utama">
+    <nav className="flex gap-1 overflow-x-auto pb-1 md:flex-col md:overflow-visible md:pb-0" aria-label="Menu utama">
       {ITEMS[role].map(({ href, label, icon }) => {
         const Icon = ICONS[icon];
         const active = href === "/" ? pathname === "/" || pathname.startsWith("/sesi") : pathname.startsWith(href);
@@ -86,11 +86,14 @@ export function NavLinks({ role }: { role: Role }) {
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-              active ? "bg-primary text-primary-foreground" : "text-foreground/80 hover:bg-secondary"
+              "group relative flex shrink-0 items-center gap-3 whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
+              active
+                ? "bg-white/14 text-white shadow-[inset_0_0_0_1px_hsl(0_0%_100%/0.08)]"
+                : "text-white/70 hover:bg-white/8 hover:text-white"
             )}
           >
-            <Icon className="h-4 w-4 shrink-0" aria-hidden />
+            {active && <span className="absolute inset-y-2 left-0 hidden w-1 rounded-full bg-[hsl(173_70%_55%)] md:block" aria-hidden />}
+            <Icon className={cn("h-4 w-4 shrink-0 transition-transform group-hover:scale-110", active && "text-[hsl(173_70%_65%)]")} aria-hidden />
             {label}
           </Link>
         );
