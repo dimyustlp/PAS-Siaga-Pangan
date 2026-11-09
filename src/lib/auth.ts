@@ -9,6 +9,7 @@ export type CurrentUser = {
   fullName: string;
   role: Role;
   kodeUpt: string | null;
+  kanwilId: string | null;
 };
 
 /**
@@ -24,7 +25,7 @@ export const requireUser = cache(async (): Promise<CurrentUser> => {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name,role,kode_upt,is_active")
+    .select("full_name,role,kode_upt,kanwil_id,is_active")
     .eq("id", claims.sub)
     .maybeSingle();
   if (!profile || !profile.is_active) redirect("/login");
@@ -35,5 +36,6 @@ export const requireUser = cache(async (): Promise<CurrentUser> => {
     fullName: profile.full_name,
     role: profile.role as Role,
     kodeUpt: profile.kode_upt,
+    kanwilId: profile.kanwil_id,
   };
 });

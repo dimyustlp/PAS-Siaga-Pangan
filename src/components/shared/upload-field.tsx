@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Alert } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const UKURAN: Record<string, number> = { "pas-siaga-documents": 20, "pas-siaga-evidence": 10 };
+const UKURAN: Record<string, number> = { "pas-siaga-documents": 20, "pas-siaga-evidence": 10, "pas-siaga-berkas": 20 };
 
 /** Mengunggah berkas langsung dari browser ke Storage (menghindari batas ukuran permintaan server). */
 export async function unggah(bucket: string, sessionId: string, file: File): Promise<{ path: string } | { error: string }> {

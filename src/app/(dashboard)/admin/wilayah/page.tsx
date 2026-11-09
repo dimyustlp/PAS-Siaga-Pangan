@@ -2,7 +2,7 @@ import { ActionForm } from "@/components/shared/action-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, PageHeader, Select } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createKanwil, createUpt } from "@/lib/actions/admin";
+import { createKanwil, createUpt, updateKanwilTautan } from "@/lib/actions/admin";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "UPT & Kanwil" };
@@ -46,6 +46,24 @@ export default async function WilayahPage() {
           </CardContent>
         </Card>
       </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Penampungan berkas per Kanwil</CardTitle>
+          <CardDescription>Isi tautan Google Form tempat UPT mengirim berkas, dan tautan folder Drive tempat hasilnya tersimpan. Tautan tampil di halaman Berkas untuk semua peran pada Kanwil itu. Kosongkan untuk menghapus.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          {daftarKanwil.length === 0 && <p className="text-sm text-muted-foreground">Belum ada Kanwil.</p>}
+          {daftarKanwil.map((k) => (
+            <ActionForm key={k.id} action={updateKanwilTautan} submit="Simpan tautan" resetOnSuccess={false} className="space-y-3 border-b pb-5 last:border-0 last:pb-0" fields={{ id: { v: k.id }, tautan_form: { s: "form" }, tautan_folder: { s: "folder" } }}>
+              <p className="font-semibold">{k.nama}</p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Field label="Tautan Google Form" htmlFor={`f-${k.id}`}><Input id={`f-${k.id}`} name="form" type="url" defaultValue={k.tautan_form ?? ""} placeholder="https://forms.gle/…" /></Field>
+                <Field label="Tautan folder Drive" htmlFor={`d-${k.id}`}><Input id={`d-${k.id}`} name="folder" type="url" defaultValue={k.tautan_folder ?? ""} placeholder="https://drive.google.com/…" /></Field>
+              </div>
+            </ActionForm>
+          ))}
+        </CardContent>
+      </Card>
       <Card>
         <CardHeader><CardTitle>Daftar UPT</CardTitle><CardDescription>{daftarKanwil.length} Kanwil, {daftarUpt.length} UPT.</CardDescription></CardHeader>
         <CardContent className="overflow-x-auto">

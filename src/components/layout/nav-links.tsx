@@ -7,6 +7,7 @@ import {
   ChartColumn,
   ClipboardList,
   Database,
+  FolderOpen,
   Gavel,
   LayoutDashboard,
   ListChecks,
@@ -30,12 +31,14 @@ const ICONS = {
   wilayah: MapPinned,
   induk: Database,
   audit: ScrollText,
+  berkas: FolderOpen,
 };
 
 type Item = { href: string; label: string; icon: keyof typeof ICONS };
 
 const DASBOR: Item = { href: "/", label: "Dasbor", icon: "dasbor" };
 const BERSAMA: Item[] = [
+  { href: "/berkas", label: "Berkas", icon: "berkas" },
   { href: "/evaluasi", label: "Evaluasi", icon: "evaluasi" },
   { href: "/risiko", label: "Risiko & mitigasi", icon: "risiko" },
   { href: "/pedoman", label: "Pedoman & SOP", icon: "pedoman" },
@@ -66,6 +69,7 @@ const ITEMS: Record<Role, Item[]> = {
   pemantau_pusat: [DASBOR, ...BERSAMA],
   pengawal: [
     { href: "/lapangan", label: "Tugas lapangan", icon: "kegiatan" },
+    { href: "/berkas", label: "Berkas", icon: "berkas" },
     { href: "/pedoman", label: "Pedoman & SOP", icon: "pedoman" },
   ],
 };

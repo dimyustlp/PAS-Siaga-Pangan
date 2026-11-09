@@ -14,13 +14,13 @@ Teknologi: Next.js 15 (App Router), TypeScript, Tailwind CSS, Supabase (database
 
 | Peran | Halaman |
 |---|---|
-| Administrator | Dasbor, `/sesi`, `/evaluasi`, `/risiko`, `/pedoman`, `/admin/akun`, `/admin/wilayah`, `/admin/data-induk`, `/admin/audit` |
-| Operator UPT | Dasbor, `/kegiatan`, `/tindak-lanjut`, `/evaluasi` |
+| Administrator | Dasbor, `/sesi`, `/evaluasi`, `/risiko`, `/pedoman`, `/admin/akun`, `/admin/wilayah`, `/admin/data-induk`, `/admin/audit`, `/berkas` |
+| Operator UPT | Dasbor, `/kegiatan`, `/tindak-lanjut`, `/evaluasi`, `/berkas` (unggah dan hapus untuk UPT sendiri) |
 | Kepala Pengamanan | Dasbor, `/keputusan`, `/tindak-lanjut`, `/evaluasi`, `/risiko` |
 | Pengawal | `/lapangan` (entri offline, bisa dipasang sebagai aplikasi), `/pedoman` |
 | Pemantau Kanwil / Pusat | Dasbor, `/sesi`, `/evaluasi`, `/risiko`, `/pedoman` (hanya baca, cakupan sesuai Kanwil/pusat) |
 
-Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu hanya memudahkan tampilan. Penjaga data yang sebenarnya adalah aturan RLS di database (`01-skema-pas-siaga-pangan.sql`, `02-peran-administrator.sql`, dan `03-fitur-rpp.sql`).
+Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu hanya memudahkan tampilan. Penjaga data yang sebenarnya adalah aturan RLS di database (`01-skema-pas-siaga-pangan.sql`, `02-peran-administrator.sql`, dan `03-fitur-rpp.sql`, `06-berkas-dan-akun.sql`).
 
 ## Tahap pengembangan
 

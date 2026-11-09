@@ -379,16 +379,73 @@ export type Database = {
           id: string;
           kode: string;
           nama: string;
+          tautan_folder: string | null;
+          tautan_form: string | null;
         };
         Insert: {
           id?: string;
           kode: string;
           nama: string;
+          tautan_folder?: string | null;
+          tautan_form?: string | null;
         };
         Update: {
           id?: string;
           kode?: string;
           nama?: string;
+          tautan_folder?: string | null;
+          tautan_form?: string | null;
+        };
+        Relationships: [];
+      };
+      berkas: {
+        Row: {
+          created_at: string;
+          diunggah_oleh: string;
+          id: string;
+          judul: string;
+          kategori: string;
+          keterangan: string | null;
+          kode_upt: string;
+          mime: string | null;
+          nama_berkas: string | null;
+          sumber: string;
+          storage_path: string | null;
+          tanggal: string;
+          tautan: string | null;
+          ukuran_byte: number | null;
+        };
+        Insert: {
+          created_at?: string;
+          diunggah_oleh?: string;
+          id?: string;
+          judul: string;
+          kategori: string;
+          keterangan?: string | null;
+          kode_upt: string;
+          mime?: string | null;
+          nama_berkas?: string | null;
+          sumber: string;
+          storage_path?: string | null;
+          tanggal?: string;
+          tautan?: string | null;
+          ukuran_byte?: number | null;
+        };
+        Update: {
+          created_at?: string;
+          diunggah_oleh?: string;
+          id?: string;
+          judul?: string;
+          kategori?: string;
+          keterangan?: string | null;
+          kode_upt?: string;
+          mime?: string | null;
+          nama_berkas?: string | null;
+          sumber?: string;
+          storage_path?: string | null;
+          tanggal?: string;
+          tautan?: string | null;
+          ukuran_byte?: number | null;
         };
         Relationships: [];
       };
@@ -674,6 +731,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      v_berkas: {
+        Row: {
+          created_at: string | null;
+          diunggah_oleh: string | null;
+          id: string | null;
+          judul: string | null;
+          kanwil_id: string | null;
+          kanwil_nama: string | null;
+          kategori: string | null;
+          keterangan: string | null;
+          kode_upt: string | null;
+          nama_berkas: string | null;
+          pengunggah: string | null;
+          sumber: string | null;
+          tanggal: string | null;
+          tautan: string | null;
+          ukuran_byte: number | null;
+          upt_nama: string | null;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
       admin_atur_kata_sandi: { Args: { p_password: string; p_user: string }; Returns: undefined };
@@ -681,6 +759,12 @@ export type Database = {
         Args: { p_email: string; p_kanwil: string | null; p_kode_upt: string | null; p_nama: string; p_nip: string | null; p_password: string; p_role: Database["public"]["Enums"]["user_role"] };
         Returns: string;
       };
+      admin_daftar_akun: {
+        Args: Record<PropertyKey, never>;
+        Returns: { id: string; email: string; full_name: string; nip: string | null; role: Database["public"]["Enums"]["user_role"]; kode_upt: string | null; kanwil_id: string | null; is_active: boolean; last_sign_in_at: string | null; created_at: string }[];
+      };
+      admin_ubah_akun: { Args: { p_email: string; p_id: string; p_nama: string }; Returns: undefined };
+      admin_hapus_akun: { Args: { p_id: string }; Returns: undefined };
       daftar_nominatif: { Args: { p_session: string }; Returns: { inmate_id: string; nama: string; nomor_registrasi: string }[] };
       indikator_evaluasi: { Args: { p_dari: string; p_sampai: string }; Returns: Json };
       rekonsiliasi_sesi: { Args: { p_session: string }; Returns: Json };

@@ -17,6 +17,8 @@ export const accountCreateSchema = z.object({
 
 export const accountUpdateSchema = z.object({
   id: z.string().uuid(),
+  nama: z.string().trim().min(1, "Nama lengkap wajib diisi.").max(150).optional(),
+  email: z.string().trim().toLowerCase().email("Alamat email tidak valid.").optional(),
   role: z.enum(ROLE_VALUES).optional(),
   is_active: z.boolean().optional(),
   kode_upt: opt(30),
@@ -50,3 +52,5 @@ export const riskUpdateSchema = z.object({
   status: z.enum(["Dipantau", "Terjadi", "Terkendali"]),
   catatan: opt(1000),
 });
+
+export const accountDeleteSchema = z.object({ id: z.string().uuid() });
