@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
-const TABEL_BAWAAN = ["daily_sessions", "field_logs", "incidents", "decisions", "follow_ups", "status_history"];
+const TABEL_BAWAAN = ["daily_sessions", "field_logs", "incidents", "decisions", "follow_ups", "status_history", "gelang_alarm"];
 
 /**
  * Memperbarui halaman begitu ada perubahan data (Supabase Realtime), dengan polling cadangan

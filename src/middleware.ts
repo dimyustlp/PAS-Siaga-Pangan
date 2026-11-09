@@ -13,6 +13,10 @@ export async function middleware(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
+
+  // Penerima alarm dari sistem gelang tidak memakai login pengguna; kuncinya diperiksa di database.
+  if (pathname.startsWith("/api/gelang/")) return NextResponse.next();
+
   const { supabase, user, profile, getResponse } = await updateSession(request, pathname === "/login");
 
   const redirectTo = (path: string, params?: Record<string, string>) => {

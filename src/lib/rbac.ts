@@ -51,6 +51,7 @@ const RULES: Rule[] = [
   { prefix: "/evaluasi", roles: NON_PENGAWAL },
   { prefix: "/risiko", roles: NON_PENGAWAL },
   { prefix: "/berkas", roles: ALL_ROLES },
+  { prefix: "/gelang", roles: ALL_ROLES },
   { prefix: "/pedoman", roles: ALL_ROLES },
   { prefix: "/admin", roles: ["administrator"] },
   { prefix: "/lapangan", roles: ["pengawal"] },

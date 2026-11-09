@@ -398,6 +398,93 @@ export type Database = {
         };
         Relationships: [];
       };
+      gelang_unit: {
+        Row: {
+          aktif: boolean;
+          created_at: string;
+          id: string;
+          inmate_id: string | null;
+          kode_unit: string;
+          kode_upt: string;
+          nama_unit: string | null;
+        };
+        Insert: {
+          aktif?: boolean;
+          created_at?: string;
+          id?: string;
+          inmate_id?: string | null;
+          kode_unit: string;
+          kode_upt: string;
+          nama_unit?: string | null;
+        };
+        Update: {
+          aktif?: boolean;
+          created_at?: string;
+          id?: string;
+          inmate_id?: string | null;
+          kode_unit?: string;
+          kode_upt?: string;
+          nama_unit?: string | null;
+        };
+        Relationships: [];
+      };
+      gelang_alarm: {
+        Row: {
+          baterai: string | null;
+          created_at: string;
+          dikonfirmasi_at: string | null;
+          dikonfirmasi_oleh: string | null;
+          id: string;
+          inmate_id: string | null;
+          jenis: string;
+          kode_upt: string | null;
+          lokasi: string | null;
+          payload: Json;
+          session_id: string | null;
+          status: string;
+          tindakan: string | null;
+          unit_kode: string | null;
+          unit_nama: string;
+          waktu: string;
+        };
+        Insert: {
+          baterai?: string | null;
+          created_at?: string;
+          dikonfirmasi_at?: string | null;
+          dikonfirmasi_oleh?: string | null;
+          id?: string;
+          inmate_id?: string | null;
+          jenis: string;
+          kode_upt?: string | null;
+          lokasi?: string | null;
+          payload?: Json;
+          session_id?: string | null;
+          status?: string;
+          tindakan?: string | null;
+          unit_kode?: string | null;
+          unit_nama: string;
+          waktu?: string;
+        };
+        Update: {
+          baterai?: string | null;
+          created_at?: string;
+          dikonfirmasi_at?: string | null;
+          dikonfirmasi_oleh?: string | null;
+          id?: string;
+          inmate_id?: string | null;
+          jenis?: string;
+          kode_upt?: string | null;
+          lokasi?: string | null;
+          payload?: Json;
+          session_id?: string | null;
+          status?: string;
+          tindakan?: string | null;
+          unit_kode?: string | null;
+          unit_nama?: string;
+          waktu?: string;
+        };
+        Relationships: [];
+      };
       berkas: {
         Row: {
           created_at: string;
@@ -731,6 +818,31 @@ export type Database = {
         };
         Relationships: [];
       };
+      v_gelang_alarm: {
+        Row: {
+          baterai: string | null;
+          created_at: string | null;
+          dikonfirmasi_at: string | null;
+          dikonfirmasi_nama: string | null;
+          dikonfirmasi_oleh: string | null;
+          id: string | null;
+          inmate_id: string | null;
+          jenis: string | null;
+          kode_kegiatan: string | null;
+          kode_upt: string | null;
+          lokasi: string | null;
+          nomor_registrasi: string | null;
+          session_id: string | null;
+          status: string | null;
+          tindakan: string | null;
+          unit_kode: string | null;
+          unit_nama: string | null;
+          upt_nama: string | null;
+          waktu: string | null;
+          wb_nama: string | null;
+        };
+        Relationships: [];
+      };
       v_berkas: {
         Row: {
           created_at: string | null;
@@ -764,6 +876,13 @@ export type Database = {
         Returns: { id: string; email: string; full_name: string; nip: string | null; role: Database["public"]["Enums"]["user_role"]; kode_upt: string | null; kanwil_id: string | null; is_active: boolean; last_sign_in_at: string | null; created_at: string }[];
       };
       admin_ubah_akun: { Args: { p_email: string; p_id: string; p_nama: string }; Returns: undefined };
+      admin_status_kunci_gelang: { Args: Record<PropertyKey, never>; Returns: string };
+      admin_atur_kunci_gelang: { Args: { p_hash: string }; Returns: undefined };
+      konfirmasi_alarm_gelang: { Args: { p_id: string; p_status: string; p_tindakan: string }; Returns: undefined };
+      terima_alarm_gelang: {
+        Args: { p_baterai?: string | null; p_jenis: string; p_kunci: string; p_lokasi?: string | null; p_payload?: Json; p_unit: string; p_waktu?: string | null };
+        Returns: string;
+      };
       admin_hapus_akun: { Args: { p_id: string }; Returns: undefined };
       daftar_nominatif: { Args: { p_session: string }; Returns: { inmate_id: string; nama: string; nomor_registrasi: string }[] };
       indikator_evaluasi: { Args: { p_dari: string; p_sampai: string }; Returns: Json };

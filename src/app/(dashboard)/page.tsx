@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertTriangle, CheckCircle2, Clock, ClipboardCheck, OctagonAlert, ShieldAlert, Siren } from "lucide-react";
+import { AlertTriangle, BellRing, CheckCircle2, Clock, ClipboardCheck, OctagonAlert, ShieldAlert, Siren } from "lucide-react";
 import { StatCard } from "@/components/ui/stat-card";
 import { Alert, Select } from "@/components/ui/form";
 import type { SecurityStatus } from "@/components/ui/status-badge";
@@ -12,6 +12,7 @@ import { listOverview, listUpt } from "@/lib/data/overview";
 import { requireUser } from "@/lib/auth";
 import { ROLE_LABEL } from "@/lib/rbac";
 import { fmtTanggal } from "@/lib/format";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Dasbor" };
 export const dynamic = "force-dynamic";
@@ -30,7 +31,14 @@ function sapaan(jam: number) {
 export default async function DasborPage({ searchParams }: { searchParams: Promise<{ upt?: string }> }) {
   const { upt } = await searchParams;
   // Semua dibaca bersamaan; cakupan data tetap ditentukan RLS di database.
-  const [user, semuaUpt, { rows, error }] = await Promise.all([requireUser(), listUpt(), listOverview({ upt: upt || undefined })]);
+  const supabase = await createClient();
+  const [user, semuaUpt, { rows, error }, alarm] = await Promise.all([
+    requireUser(),
+    listUpt(),
+    listOverview({ upt: upt || undefined }),
+    supabase.from("gelang_alarm").select("id", { count: "exact", head: true }).eq("status", "Menunggu"),
+  ]);
+  const alarmMenunggu = alarm.count ?? 0;
   const luas = user.role === "administrator" || user.role === "pemantau_pusat" || user.role === "pemantau_kanwil";
   const daftarUpt = luas ? semuaUpt : [];
 
@@ -89,10 +97,11 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
         ))}
       </section>
 
-      <section aria-label="Ringkasan perhatian" className="grid gap-4 sm:grid-cols-3">
+      <section aria-label="Ringkasan perhatian" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard icon={ClipboardCheck} nada="biru" nilai={menunggu} label="menunggu keputusan kesiapan" />
         <StatCard icon={OctagonAlert} nada="kuning" nilai={perlu.length} label="kegiatan perlu perhatian" />
         <StatCard icon={Clock} nada="merah" nilai={tlTerlambat} label="tindak lanjut lewat tenggat" />
+        <Link href="/gelang" className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><StatCard icon={BellRing} nada={alarmMenunggu > 0 ? "kritis" : "hijau"} nilai={alarmMenunggu} label="alarm gelang menunggu konfirmasi" /></Link>
       </section>
 
       <section aria-label="Daftar sesi" className="space-y-3">

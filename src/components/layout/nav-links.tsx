@@ -9,6 +9,7 @@ import {
   Database,
   FolderOpen,
   Gavel,
+  Radio,
   LayoutDashboard,
   ListChecks,
   MapPinned,
@@ -32,6 +33,7 @@ const ICONS = {
   induk: Database,
   audit: ScrollText,
   berkas: FolderOpen,
+  gelang: Radio,
 };
 
 type Item = { href: string; label: string; icon: keyof typeof ICONS };
@@ -39,6 +41,7 @@ type Item = { href: string; label: string; icon: keyof typeof ICONS };
 const DASBOR: Item = { href: "/", label: "Dasbor", icon: "dasbor" };
 const BERSAMA: Item[] = [
   { href: "/berkas", label: "Berkas", icon: "berkas" },
+  { href: "/gelang", label: "Gelang", icon: "gelang" },
   { href: "/evaluasi", label: "Evaluasi", icon: "evaluasi" },
   { href: "/risiko", label: "Risiko & mitigasi", icon: "risiko" },
   { href: "/pedoman", label: "Pedoman & SOP", icon: "pedoman" },
@@ -50,6 +53,7 @@ const ITEMS: Record<Role, Item[]> = {
     ...BERSAMA,
     { href: "/admin/akun", label: "Akun", icon: "akun" },
     { href: "/admin/wilayah", label: "UPT & Kanwil", icon: "wilayah" },
+    { href: "/admin/gelang", label: "Penerima gelang", icon: "gelang" },
     { href: "/admin/data-induk", label: "Data induk", icon: "induk" },
     { href: "/admin/audit", label: "Jejak audit", icon: "audit" },
   ],
@@ -70,6 +74,7 @@ const ITEMS: Record<Role, Item[]> = {
   pengawal: [
     { href: "/lapangan", label: "Tugas lapangan", icon: "kegiatan" },
     { href: "/berkas", label: "Berkas", icon: "berkas" },
+    { href: "/gelang", label: "Gelang", icon: "gelang" },
     { href: "/pedoman", label: "Pedoman & SOP", icon: "pedoman" },
   ],
 };

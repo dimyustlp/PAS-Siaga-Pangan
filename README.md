@@ -20,7 +20,7 @@ Teknologi: Next.js 15 (App Router), TypeScript, Tailwind CSS, Supabase (database
 | Pengawal | `/lapangan` (entri offline, bisa dipasang sebagai aplikasi), `/pedoman` |
 | Pemantau Kanwil / Pusat | Dasbor, `/sesi`, `/evaluasi`, `/risiko`, `/pedoman` (hanya baca, cakupan sesuai Kanwil/pusat) |
 
-Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu hanya memudahkan tampilan. Penjaga data yang sebenarnya adalah aturan RLS di database (`01-skema-pas-siaga-pangan.sql`, `02-peran-administrator.sql`, dan `03-fitur-rpp.sql`, `06-berkas-dan-akun.sql`).
+Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu hanya memudahkan tampilan. Penjaga data yang sebenarnya adalah aturan RLS di database (`01-skema-pas-siaga-pangan.sql`, `02-peran-administrator.sql`, dan `03-fitur-rpp.sql`, `06-berkas-dan-akun.sql`, `07-gelang-alarm.sql`).
 
 ## Tahap pengembangan
 
@@ -48,3 +48,12 @@ Catatan penting:
 - Entri susulan boleh bermundur sampai 7 hari dan tidak boleh di masa depan (toleransi 5 menit untuk selisih jam HP).
 - Jalankan uji: `npm test`.
 
+
+## Alarm gelang
+
+Sistem pemantauan gelang (imipas.kittways.com) tidak punya API yang kami ketahui, jadi integrasinya memakai model dorong: notifikasi di sistem gelang memanggil `GET/POST /api/gelang/alarm` dengan parameter `kunci`, `unit`, `jenis`, `waktu`, `lokasi`, `baterai`.
+
+- Kunci dibuat Administrator di `/admin/gelang`. Database hanya menyimpan SHA-256-nya.
+- Nama unit di sistem gelang diawali kode (`0834_M Hendi F`). Kode itu dipetakan ke UPT dan WB di menu Gelang.
+- Alarm masuk ke sesi aktif UPT (yang memakai gelang) dan menunggu konfirmasi petugas di menu Gelang.
+- Tidak ada pemantauan posisi terus-menerus di aplikasi ini.
