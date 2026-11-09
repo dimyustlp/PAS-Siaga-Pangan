@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { authorize, fail, storageObjectExists, success, zodFail, type ActionResult, type ServerClient } from "./_shared";
 import {
   closeSessionSchema,
+  directiveSchema,
   lowerStatusSchema,
   readinessDecisionSchema,
   verifyIncidentSchema,
@@ -72,7 +73,7 @@ export async function lowerSecurityStatus(input: unknown): Promise<ActionResult>
   if (!auth.ok) return fail(auth.error);
   const parsed = lowerStatusSchema.safeParse(input);
   if (!parsed.success) return zodFail(parsed.error);
-  const { session_id, bukti_path, catatan } = parsed.data;
+  const { session_id, bukti_path, catatan, status_baru } = parsed.data;
 
   if (!isSafeStoragePath(bukti_path, session_id)) return fail("Alamat foto bukti tidak valid untuk sesi ini.");
   if (!(await storageObjectExists(auth.supabase, "pas-siaga-evidence", bukti_path))) {
@@ -82,8 +83,22 @@ export async function lowerSecurityStatus(input: unknown): Promise<ActionResult>
   return insertDecision(auth.supabase, {
     session_id,
     jenis_keputusan: "Penurunan Status",
+    status_baru: status_baru ?? "HIJAU",
     bukti_url: bukti_path,
-    catatan_keputusan: catatan || null,
+    catatan_keputusan: catatan,
+  });
+}
+
+/** Arahan tindakan Kepala Pengamanan selama status KUNING, MERAH, atau KRITIS. Tercatat bersama keputusan lain. */
+export async function recordDirective(input: unknown): Promise<ActionResult> {
+  const auth = await authorize(["kepala_pengamanan"]);
+  if (!auth.ok) return fail(auth.error);
+  const parsed = directiveSchema.safeParse(input);
+  if (!parsed.success) return zodFail(parsed.error);
+  return insertDecision(auth.supabase, {
+    session_id: parsed.data.session_id,
+    jenis_keputusan: "Arahan Tindakan",
+    catatan_keputusan: parsed.data.catatan,
   });
 }
 

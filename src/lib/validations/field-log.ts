@@ -39,7 +39,7 @@ export const p2uPayload = z.object({
   catatan: opt(500),
 });
 
-export const tibaPayload = z.object({ jumlah_wbp: count.optional(), catatan: opt(500) });
+export const tibaPayload = z.object({ jumlah_wbp: count, catatan: opt(500) });
 
 export const berkalaPayload = z.object({
   jumlah_wbp: count,
@@ -48,7 +48,7 @@ export const berkalaPayload = z.object({
 });
 
 export const pindahPayload = z
-  .object({ area_baru: opt(120), pengawal_baru: opt(120), catatan: opt(500) })
+  .object({ jumlah_wbp: count, area_baru: opt(120), pengawal_baru: opt(120), catatan: opt(500) })
   .superRefine((v, ctx) => {
     if (!v.area_baru && !v.pengawal_baru) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["area_baru"], message: "Isi area baru atau pengawal pengganti." });
@@ -71,9 +71,22 @@ export const pengembalianSebagianPayload = z.object({
 
 export const alarmGelangPayload = z.object({
   jenis_alarm: wajib(120, "Jenis alarm wajib diisi."),
+  /** Alarm gelang harus dikonfirmasi langsung kepada petugas di lokasi, tidak dianggap pasti benar. */
+  dikonfirmasi_langsung: z.boolean({ required_error: "Isi apakah alarm sudah dikonfirmasi langsung ke petugas di lokasi.", invalid_type_error: "Isi apakah alarm sudah dikonfirmasi langsung ke petugas di lokasi." }),
   nomor_registrasi: opt(40),
   tindakan: opt(500),
 });
+
+export const pemeriksaanGelangPayload = z
+  .object({
+    jumlah_diperiksa: count,
+    jumlah_berfungsi: count,
+    catatan: opt(500),
+  })
+  .refine((v) => v.jumlah_berfungsi <= v.jumlah_diperiksa, {
+    path: ["jumlah_berfungsi"],
+    message: "Jumlah yang berfungsi tidak boleh melebihi jumlah yang diperiksa.",
+  });
 
 export const gangguanPayload = z.object({
   kategori: wajib(120, "Kategori gangguan wajib diisi."),
@@ -116,6 +129,7 @@ export const fieldLogSchema = z.discriminatedUnion("jenis_entri", [
   v("Pihak luar dan kendaraan", pihakLuarPayload),
   v("Pengembalian sebagian", pengembalianSebagianPayload),
   v("Alarm gelang", alarmGelangPayload),
+  v("Pemeriksaan gelang", pemeriksaanGelangPayload),
   v("Gangguan", gangguanPayload),
   v("Naikkan status", naikkanStatusPayload),
 ]);

@@ -19,6 +19,7 @@ export async function createLocation(input: unknown): Promise<ActionResult<{ id:
     return fail(mapDbError(error, DITOLAK));
   }
   revalidatePath("/kegiatan");
+  revalidatePath("/admin/data-induk");
   return success({ id: data.id });
 }
 
@@ -34,5 +35,6 @@ export async function createInmate(input: unknown): Promise<ActionResult<{ id: s
     return fail(mapDbError(error, DITOLAK));
   }
   revalidatePath("/kegiatan");
+  revalidatePath("/admin/data-induk");
   return success({ id: data.id });
 }

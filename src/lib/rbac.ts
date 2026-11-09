@@ -1,10 +1,28 @@
-export type Role = "administrator" | "operator" | "pengawal" | "kepala_pengamanan";
+export type Role =
+  | "administrator"
+  | "operator"
+  | "pengawal"
+  | "kepala_pengamanan"
+  | "pemantau_kanwil"
+  | "pemantau_pusat";
+
+export const ALL_ROLES: Role[] = [
+  "administrator",
+  "operator",
+  "pengawal",
+  "kepala_pengamanan",
+  "pemantau_kanwil",
+  "pemantau_pusat",
+];
+const NON_PENGAWAL: Role[] = ["administrator", "operator", "kepala_pengamanan", "pemantau_kanwil", "pemantau_pusat"];
 
 export const ROLE_LABEL: Record<Role, string> = {
   administrator: "Administrator",
   operator: "Operator UPT",
   pengawal: "Pengawal",
   kepala_pengamanan: "Kepala Pengamanan",
+  pemantau_kanwil: "Pemantau Kanwil",
+  pemantau_pusat: "Pemantau Pusat",
 };
 
 /** Halaman pertama setelah masuk, menurut peran. */
@@ -13,6 +31,8 @@ export const HOME: Record<Role, string> = {
   operator: "/",
   kepala_pengamanan: "/",
   pengawal: "/lapangan",
+  pemantau_kanwil: "/",
+  pemantau_pusat: "/",
 };
 
 type Rule = { prefix: string; exact?: boolean; roles: Role[] };
@@ -23,9 +43,16 @@ type Rule = { prefix: string; exact?: boolean; roles: Role[] };
  * Ini hanya pembatas tampilan. Penjaga yang sebenarnya adalah aturan RLS di database.
  */
 const RULES: Rule[] = [
-  { prefix: "/", exact: true, roles: ["administrator", "operator", "kepala_pengamanan"] },
+  { prefix: "/", exact: true, roles: NON_PENGAWAL },
+  { prefix: "/sesi", roles: NON_PENGAWAL },
   { prefix: "/kegiatan", roles: ["operator"] },
   { prefix: "/keputusan", roles: ["kepala_pengamanan"] },
+  { prefix: "/tindak-lanjut", roles: ["operator", "kepala_pengamanan"] },
+  { prefix: "/evaluasi", roles: NON_PENGAWAL },
+  { prefix: "/risiko", roles: NON_PENGAWAL },
+  { prefix: "/pembekalan", roles: NON_PENGAWAL },
+  { prefix: "/pedoman", roles: ALL_ROLES },
+  { prefix: "/admin", roles: ["administrator"] },
   { prefix: "/lapangan", roles: ["pengawal"] },
 ];
 

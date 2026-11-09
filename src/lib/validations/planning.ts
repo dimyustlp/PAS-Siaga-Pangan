@@ -24,6 +24,7 @@ export const locationSchema = z.object({
   keterangan: opt(500),
   latitude: z.number().min(-90).max(90).optional(),
   longitude: z.number().min(-180).max(180).optional(),
+  luas_ha: z.number().min(0).max(100000).optional(),
 });
 
 export const inmateSchema = z.object({
@@ -37,6 +38,13 @@ export const activitySchema = z
     lokasi_id: z.string().uuid("Pilih lokasi."),
     tanggal_mulai: tanggal,
     rencana_berakhir: tanggal.optional(),
+    luas_lahan_ha: z.number().min(0, "Tidak boleh negatif.").max(100000).optional(),
+    batas_area: opt(500),
+    rute: opt(500),
+    titik_komunikasi: opt(500),
+    akses_warga: opt(500),
+    nomor_persetujuan: opt(120),
+    nomor_surat_perintah: opt(120),
   })
   .refine((v) => !v.rencana_berakhir || v.rencana_berakhir >= v.tanggal_mulai, {
     path: ["rencana_berakhir"],
@@ -53,6 +61,9 @@ const sessionFields = {
   jumlah_narapidana: z.number().int("Isi dengan bilangan bulat.").min(0).max(10_000),
   jumlah_alat_kerja: z.number().int("Isi dengan bilangan bulat.").min(0).max(10_000),
   rincian_alat: opt(1000),
+  bimker_penanggung_jawab: opt(150),
+  petugas_blok: opt(150),
+  petugas_p2u: opt(150),
   interval_pemeriksaan: z.number().int().min(5, "Minimal 5 menit.").max(480, "Maksimal 480 menit."),
   pakai_gelang_monitor: z.boolean(),
 };
@@ -60,6 +71,28 @@ const sessionFields = {
 export const sessionSchema = z.object({ activity_id: z.string().uuid("Pilih kegiatan."), ...sessionFields });
 
 export const sessionUpdateSchema = z.object({ session_id: z.string().uuid(), ...sessionFields });
+
+export const readinessItemSchema = z.object({
+  session_id: z.string().uuid(),
+  kode: z.enum(["a", "b", "c", "d", "e", "f"]),
+  terpenuhi: z.boolean(),
+  catatan: opt(500),
+});
+
+export const nominatifSchema = z.object({
+  session_id: z.string().uuid(),
+  inmate_ids: z.array(z.string().uuid()).max(2000, "Terlalu banyak warga binaan."),
+});
+
+/** Enam indikator kesiapan (RPP Tabel 3.3). Indikator f hanya berlaku bila sesi memakai gelang monitor. */
+export const INDIKATOR_KESIAPAN: { kode: "a" | "b" | "c" | "d" | "e" | "f"; judul: string; uraian: string }[] = [
+  { kode: "a", judul: "Dokumen perintah dan persetujuan", uraian: "Surat perintah dan persetujuan kegiatan sudah terbit dan sesuai dengan rencana hari ini." },
+  { kode: "b", judul: "Daftar nominatif WB", uraian: "Daftar nama WB yang keluar sudah final, jumlahnya sama dengan rencana, dan sudah dipegang pengawal." },
+  { kode: "c", judul: "Petugas dan pembagian tugas", uraian: "Pengawal, petugas blok, dan petugas P2U sudah ditetapkan dan paham perannya." },
+  { kode: "d", judul: "Alat kerja dan perlengkapan", uraian: "Alat kerja sudah didata jumlah dan jenisnya; alat berbahaya tidak dibawa ke area kegiatan." },
+  { kode: "e", judul: "Area, rute, dan komunikasi", uraian: "Batas area, rute, titik komunikasi, dan pengaturan akses warga sekitar sudah ditetapkan." },
+  { kode: "f", judul: "Gelang monitor", uraian: "Gelang terpasang dan berfungsi, penerima pantauan siaga, dan prosedur sinyal terputus dipahami." },
+];
 
 export const documentKindSchema = z.enum(["surat_perintah", "rencana_pengamanan"]);
 

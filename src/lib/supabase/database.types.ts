@@ -1,23 +1,14 @@
-// Tipe dibuat otomatis dari skema Supabase (proyek PAS-Siaga Pangan), lalu diringkas.
-// Perbarui bila skema berubah: minta Claude menjalankan ulang pembuatan tipe, atau
-// `npx supabase gen types typescript --project-id <ref>`.
+// Dihasilkan dari skema Supabase (proyek PAS-SIAGA Pangan). Jangan diubah manual.
 
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
-  __InternalSupabase: {
-    PostgrestVersion: "14.18";
-  };
   public: {
     Tables: {
       activities: {
         Row: {
+          akses_warga: string | null;
+          batas_area: string | null;
           created_at: string;
           created_by: string;
           id: string;
@@ -25,11 +16,18 @@ export type Database = {
           kode_kegiatan: string;
           kode_upt: string | null;
           lokasi_id: string;
+          luas_lahan_ha: number | null;
+          nomor_persetujuan: string | null;
+          nomor_surat_perintah: string | null;
           rencana_berakhir: string | null;
+          rute: string | null;
           tanggal_mulai: string;
+          titik_komunikasi: string | null;
           updated_at: string;
         };
         Insert: {
+          akses_warga?: string | null;
+          batas_area?: string | null;
           created_at?: string;
           created_by?: string;
           id?: string;
@@ -37,11 +35,18 @@ export type Database = {
           kode_kegiatan: string;
           kode_upt?: string | null;
           lokasi_id: string;
+          luas_lahan_ha?: number | null;
+          nomor_persetujuan?: string | null;
+          nomor_surat_perintah?: string | null;
           rencana_berakhir?: string | null;
+          rute?: string | null;
           tanggal_mulai: string;
+          titik_komunikasi?: string | null;
           updated_at?: string;
         };
         Update: {
+          akses_warga?: string | null;
+          batas_area?: string | null;
           created_at?: string;
           created_by?: string;
           id?: string;
@@ -49,30 +54,54 @@ export type Database = {
           kode_kegiatan?: string;
           kode_upt?: string | null;
           lokasi_id?: string;
+          luas_lahan_ha?: number | null;
+          nomor_persetujuan?: string | null;
+          nomor_surat_perintah?: string | null;
           rencana_berakhir?: string | null;
+          rute?: string | null;
           tanggal_mulai?: string;
+          titik_komunikasi?: string | null;
           updated_at?: string;
         };
-        Relationships: [
-          {
-            foreignKeyName: "activities_created_by_fkey";
-            columns: ["created_by"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "activities_lokasi_id_fkey";
-            columns: ["lokasi_id"];
-            isOneToOne: false;
-            referencedRelation: "master_locations";
-            referencedColumns: ["id"];
-          },
-        ];
+        Relationships: [];
+      };
+      audit_events: {
+        Row: {
+          aksi: string;
+          aktor_id: string | null;
+          aktor_nama: string | null;
+          detail: Json;
+          id: string;
+          sasaran_id: string | null;
+          sasaran_nama: string | null;
+          waktu: string;
+        };
+        Insert: {
+          aksi: string;
+          aktor_id?: string | null;
+          aktor_nama?: string | null;
+          detail?: Json;
+          id?: string;
+          sasaran_id?: string | null;
+          sasaran_nama?: string | null;
+          waktu?: string;
+        };
+        Update: {
+          aksi?: string;
+          aktor_id?: string | null;
+          aktor_nama?: string | null;
+          detail?: Json;
+          id?: string;
+          sasaran_id?: string | null;
+          sasaran_nama?: string | null;
+          waktu?: string;
+        };
+        Relationships: [];
       };
       daily_sessions: {
         Row: {
           activity_id: string;
+          bimker_penanggung_jawab: string | null;
           created_at: string;
           created_by: string;
           ditutup_at: string | null;
@@ -84,7 +113,9 @@ export type Database = {
           jumlah_alat_kerja: number;
           jumlah_narapidana: number;
           pakai_gelang_monitor: boolean;
+          petugas_blok: string | null;
           petugas_ids: string[];
+          petugas_p2u: string | null;
           rincian_alat: string | null;
           status_keamanan: Database["public"]["Enums"]["security_status"];
           status_kesiapan: Database["public"]["Enums"]["readiness_status"];
@@ -93,6 +124,7 @@ export type Database = {
         };
         Insert: {
           activity_id: string;
+          bimker_penanggung_jawab?: string | null;
           created_at?: string;
           created_by?: string;
           ditutup_at?: string | null;
@@ -104,7 +136,9 @@ export type Database = {
           jumlah_alat_kerja?: number;
           jumlah_narapidana: number;
           pakai_gelang_monitor?: boolean;
+          petugas_blok?: string | null;
           petugas_ids?: string[];
+          petugas_p2u?: string | null;
           rincian_alat?: string | null;
           status_keamanan?: Database["public"]["Enums"]["security_status"];
           status_kesiapan?: Database["public"]["Enums"]["readiness_status"];
@@ -113,6 +147,7 @@ export type Database = {
         };
         Update: {
           activity_id?: string;
+          bimker_penanggung_jawab?: string | null;
           created_at?: string;
           created_by?: string;
           ditutup_at?: string | null;
@@ -124,36 +159,16 @@ export type Database = {
           jumlah_alat_kerja?: number;
           jumlah_narapidana?: number;
           pakai_gelang_monitor?: boolean;
+          petugas_blok?: string | null;
           petugas_ids?: string[];
+          petugas_p2u?: string | null;
           rincian_alat?: string | null;
           status_keamanan?: Database["public"]["Enums"]["security_status"];
           status_kesiapan?: Database["public"]["Enums"]["readiness_status"];
           tanggal_sesi?: string;
           updated_at?: string;
         };
-        Relationships: [
-          {
-            foreignKeyName: "daily_sessions_activity_id_fkey";
-            columns: ["activity_id"];
-            isOneToOne: false;
-            referencedRelation: "activities";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "daily_sessions_created_by_fkey";
-            columns: ["created_by"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "daily_sessions_ditutup_oleh_fkey";
-            columns: ["ditutup_oleh"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-        ];
+        Relationships: [];
       };
       decisions: {
         Row: {
@@ -165,6 +180,7 @@ export type Database = {
           jenis_keputusan: string;
           pejabat_id: string;
           session_id: string;
+          status_baru: Database["public"]["Enums"]["security_status"] | null;
         };
         Insert: {
           bukti_url?: string | null;
@@ -175,6 +191,7 @@ export type Database = {
           jenis_keputusan: string;
           pejabat_id?: string;
           session_id: string;
+          status_baru?: Database["public"]["Enums"]["security_status"] | null;
         };
         Update: {
           bukti_url?: string | null;
@@ -185,30 +202,9 @@ export type Database = {
           jenis_keputusan?: string;
           pejabat_id?: string;
           session_id?: string;
+          status_baru?: Database["public"]["Enums"]["security_status"] | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: "decisions_incident_id_fkey";
-            columns: ["incident_id"];
-            isOneToOne: false;
-            referencedRelation: "incidents";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "decisions_pejabat_id_fkey";
-            columns: ["pejabat_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "decisions_session_id_fkey";
-            columns: ["session_id"];
-            isOneToOne: false;
-            referencedRelation: "daily_sessions";
-            referencedColumns: ["id"];
-          },
-        ];
+        Relationships: [];
       };
       field_logs: {
         Row: {
@@ -220,6 +216,7 @@ export type Database = {
           payload: Json;
           pengawal_id: string;
           session_id: string;
+          susulan: boolean;
           waktu_kejadian: string;
         };
         Insert: {
@@ -231,6 +228,7 @@ export type Database = {
           payload?: Json;
           pengawal_id?: string;
           session_id: string;
+          susulan?: boolean;
           waktu_kejadian: string;
         };
         Update: {
@@ -242,24 +240,73 @@ export type Database = {
           payload?: Json;
           pengawal_id?: string;
           session_id?: string;
+          susulan?: boolean;
           waktu_kejadian?: string;
         };
-        Relationships: [
-          {
-            foreignKeyName: "field_logs_pengawal_id_fkey";
-            columns: ["pengawal_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "field_logs_session_id_fkey";
-            columns: ["session_id"];
-            isOneToOne: false;
-            referencedRelation: "daily_sessions";
-            referencedColumns: ["id"];
-          },
-        ];
+        Relationships: [];
+      };
+      follow_ups: {
+        Row: {
+          bukti_url: string | null;
+          catatan_selesai: string | null;
+          created_at: string;
+          dibuat_oleh: string;
+          diverifikasi_at: string | null;
+          diverifikasi_oleh: string | null;
+          id: string;
+          incident_id: string | null;
+          pemeriksaan_ulang_at: string | null;
+          penanggung_jawab_id: string | null;
+          penanggung_jawab_nama: string;
+          selesai_at: string | null;
+          session_id: string;
+          status: string;
+          sumber: string;
+          tenggat: string;
+          updated_at: string;
+          uraian: string;
+        };
+        Insert: {
+          bukti_url?: string | null;
+          catatan_selesai?: string | null;
+          created_at?: string;
+          dibuat_oleh?: string;
+          diverifikasi_at?: string | null;
+          diverifikasi_oleh?: string | null;
+          id?: string;
+          incident_id?: string | null;
+          pemeriksaan_ulang_at?: string | null;
+          penanggung_jawab_id?: string | null;
+          penanggung_jawab_nama: string;
+          selesai_at?: string | null;
+          session_id: string;
+          status?: string;
+          sumber: string;
+          tenggat: string;
+          updated_at?: string;
+          uraian: string;
+        };
+        Update: {
+          bukti_url?: string | null;
+          catatan_selesai?: string | null;
+          created_at?: string;
+          dibuat_oleh?: string;
+          diverifikasi_at?: string | null;
+          diverifikasi_oleh?: string | null;
+          id?: string;
+          incident_id?: string | null;
+          pemeriksaan_ulang_at?: string | null;
+          penanggung_jawab_id?: string | null;
+          penanggung_jawab_nama?: string;
+          selesai_at?: string | null;
+          session_id?: string;
+          status?: string;
+          sumber?: string;
+          tenggat?: string;
+          updated_at?: string;
+          uraian?: string;
+        };
+        Relationships: [];
       };
       incidents: {
         Row: {
@@ -298,35 +345,14 @@ export type Database = {
           status_penyelesaian?: boolean;
           tindakan_awal?: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: "incidents_diverifikasi_oleh_fkey";
-            columns: ["diverifikasi_oleh"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "incidents_log_id_fkey";
-            columns: ["log_id"];
-            isOneToOne: true;
-            referencedRelation: "field_logs";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "incidents_session_id_fkey";
-            columns: ["session_id"];
-            isOneToOne: false;
-            referencedRelation: "daily_sessions";
-            referencedColumns: ["id"];
-          },
-        ];
+        Relationships: [];
       };
       master_inmates: {
         Row: {
           aktif: boolean;
           created_at: string;
           id: string;
+          kode_upt: string;
           nama: string;
           nomor_registrasi: string;
         };
@@ -334,6 +360,7 @@ export type Database = {
           aktif?: boolean;
           created_at?: string;
           id?: string;
+          kode_upt?: string;
           nama: string;
           nomor_registrasi: string;
         };
@@ -341,8 +368,27 @@ export type Database = {
           aktif?: boolean;
           created_at?: string;
           id?: string;
+          kode_upt?: string;
           nama?: string;
           nomor_registrasi?: string;
+        };
+        Relationships: [];
+      };
+      master_kanwil: {
+        Row: {
+          id: string;
+          kode: string;
+          nama: string;
+        };
+        Insert: {
+          id?: string;
+          kode: string;
+          nama: string;
+        };
+        Update: {
+          id?: string;
+          kode?: string;
+          nama?: string;
         };
         Relationships: [];
       };
@@ -353,8 +399,10 @@ export type Database = {
           id: string;
           keterangan: string | null;
           kode: string | null;
+          kode_upt: string;
           latitude: number | null;
           longitude: number | null;
+          luas_ha: number | null;
           nama: string;
         };
         Insert: {
@@ -363,8 +411,10 @@ export type Database = {
           id?: string;
           keterangan?: string | null;
           kode?: string | null;
+          kode_upt?: string;
           latitude?: number | null;
           longitude?: number | null;
+          luas_ha?: number | null;
           nama: string;
         };
         Update: {
@@ -373,8 +423,34 @@ export type Database = {
           id?: string;
           keterangan?: string | null;
           kode?: string | null;
+          kode_upt?: string;
           latitude?: number | null;
           longitude?: number | null;
+          luas_ha?: number | null;
+          nama?: string;
+        };
+        Relationships: [];
+      };
+      master_upt: {
+        Row: {
+          id: string;
+          jenis: string | null;
+          kanwil_id: string | null;
+          kode: string;
+          nama: string;
+        };
+        Insert: {
+          id?: string;
+          jenis?: string | null;
+          kanwil_id?: string | null;
+          kode: string;
+          nama: string;
+        };
+        Update: {
+          id?: string;
+          jenis?: string | null;
+          kanwil_id?: string | null;
+          kode?: string;
           nama?: string;
         };
         Relationships: [];
@@ -385,6 +461,7 @@ export type Database = {
           full_name: string;
           id: string;
           is_active: boolean;
+          kanwil_id: string | null;
           kode_upt: string | null;
           nip: string | null;
           role: Database["public"]["Enums"]["user_role"];
@@ -395,6 +472,7 @@ export type Database = {
           full_name: string;
           id: string;
           is_active?: boolean;
+          kanwil_id?: string | null;
           kode_upt?: string | null;
           nip?: string | null;
           role?: Database["public"]["Enums"]["user_role"];
@@ -405,6 +483,7 @@ export type Database = {
           full_name?: string;
           id?: string;
           is_active?: boolean;
+          kanwil_id?: string | null;
           kode_upt?: string | null;
           nip?: string | null;
           role?: Database["public"]["Enums"]["user_role"];
@@ -412,39 +491,256 @@ export type Database = {
         };
         Relationships: [];
       };
+      risk_register: {
+        Row: {
+          catatan: string | null;
+          diperbarui_oleh: string | null;
+          id: string;
+          mitigasi: string;
+          nomor: number;
+          risiko: string;
+          status: string;
+          updated_at: string;
+        };
+        Insert: {
+          catatan?: string | null;
+          diperbarui_oleh?: string | null;
+          id?: string;
+          mitigasi: string;
+          nomor: number;
+          risiko: string;
+          status?: string;
+          updated_at?: string;
+        };
+        Update: {
+          catatan?: string | null;
+          diperbarui_oleh?: string | null;
+          id?: string;
+          mitigasi?: string;
+          nomor?: number;
+          risiko?: string;
+          status?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      session_inmates: {
+        Row: {
+          inmate_id: string;
+          session_id: string;
+        };
+        Insert: {
+          inmate_id: string;
+          session_id: string;
+        };
+        Update: {
+          inmate_id?: string;
+          session_id?: string;
+        };
+        Relationships: [];
+      };
+      session_readiness: {
+        Row: {
+          catatan: string | null;
+          diperiksa_at: string | null;
+          diperiksa_oleh: string | null;
+          kode: string;
+          session_id: string;
+          terpenuhi: boolean;
+        };
+        Insert: {
+          catatan?: string | null;
+          diperiksa_at?: string | null;
+          diperiksa_oleh?: string | null;
+          kode: string;
+          session_id: string;
+          terpenuhi?: boolean;
+        };
+        Update: {
+          catatan?: string | null;
+          diperiksa_at?: string | null;
+          diperiksa_oleh?: string | null;
+          kode?: string;
+          session_id?: string;
+          terpenuhi?: boolean;
+        };
+        Relationships: [];
+      };
+      status_history: {
+        Row: {
+          alasan: string;
+          dari: Database["public"]["Enums"]["security_status"];
+          decision_id: string | null;
+          id: string;
+          ke: Database["public"]["Enums"]["security_status"];
+          log_id: string | null;
+          oleh: string | null;
+          session_id: string;
+          sumber: string;
+          waktu: string;
+        };
+        Insert: {
+          alasan: string;
+          dari: Database["public"]["Enums"]["security_status"];
+          decision_id?: string | null;
+          id?: string;
+          ke: Database["public"]["Enums"]["security_status"];
+          log_id?: string | null;
+          oleh?: string | null;
+          session_id: string;
+          sumber: string;
+          waktu?: string;
+        };
+        Update: {
+          alasan?: string;
+          dari?: Database["public"]["Enums"]["security_status"];
+          decision_id?: string | null;
+          id?: string;
+          ke?: Database["public"]["Enums"]["security_status"];
+          log_id?: string | null;
+          oleh?: string | null;
+          session_id?: string;
+          sumber?: string;
+          waktu?: string;
+        };
+        Relationships: [];
+      };
+      trainings: {
+        Row: {
+          created_at: string;
+          dibuat_oleh: string;
+          id: string;
+          judul: string;
+          jumlah_peserta: number;
+          keterangan: string | null;
+          kode_upt: string;
+          metode: string | null;
+          sasaran: string | null;
+          tanggal: string;
+        };
+        Insert: {
+          created_at?: string;
+          dibuat_oleh?: string;
+          id?: string;
+          judul: string;
+          jumlah_peserta: number;
+          keterangan?: string | null;
+          kode_upt?: string;
+          metode?: string | null;
+          sasaran?: string | null;
+          tanggal: string;
+        };
+        Update: {
+          created_at?: string;
+          dibuat_oleh?: string;
+          id?: string;
+          judul?: string;
+          jumlah_peserta?: number;
+          keterangan?: string | null;
+          kode_upt?: string;
+          metode?: string | null;
+          sasaran?: string | null;
+          tanggal?: string;
+        };
+        Relationships: [];
+      };
+      weekly_notes: {
+        Row: {
+          created_at: string;
+          ditulis_oleh: string;
+          id: string;
+          kendala: string;
+          kode_upt: string;
+          minggu_mulai: string;
+          tindak_lanjut: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          ditulis_oleh?: string;
+          id?: string;
+          kendala: string;
+          kode_upt?: string;
+          minggu_mulai: string;
+          tindak_lanjut?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          ditulis_oleh?: string;
+          id?: string;
+          kendala?: string;
+          kode_upt?: string;
+          minggu_mulai?: string;
+          tindak_lanjut?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: {
-      [_ in never]: never;
+      v_session_overview: {
+        Row: {
+          activity_id: string | null;
+          batas_periksa_berikut: string | null;
+          diperbarui_at: string | null;
+          ditutup_at: string | null;
+          fase: string | null;
+          gangguan_terbuka: number | null;
+          hitung_terakhir_at: string | null;
+          interval_pemeriksaan: number | null;
+          jenis_kegiatan: Database["public"]["Enums"]["activity_type"] | null;
+          jumlah_alat_kerja: number | null;
+          jumlah_narapidana: number | null;
+          jumlah_petugas: number | null;
+          keluar_at: string | null;
+          kembali_at: string | null;
+          kode_kegiatan: string | null;
+          kode_upt: string | null;
+          lokasi_id: string | null;
+          lokasi_nama: string | null;
+          luas_lahan_ha: number | null;
+          pakai_gelang_monitor: boolean | null;
+          session_id: string | null;
+          status_keamanan: Database["public"]["Enums"]["security_status"] | null;
+          status_kesiapan: Database["public"]["Enums"]["readiness_status"] | null;
+          tanggal_sesi: string | null;
+          terlambat_periksa: boolean | null;
+          tiba_at: string | null;
+          tindak_lanjut_terbuka: number | null;
+          tindak_lanjut_terlambat: number | null;
+          upt_nama: string | null;
+          wbp_keluar: number | null;
+          wbp_kembali: number | null;
+          wbp_terakhir_dihitung: number | null;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
+      admin_atur_kata_sandi: { Args: { p_password: string; p_user: string }; Returns: undefined };
+      admin_buat_akun: {
+        Args: { p_email: string; p_kanwil: string | null; p_kode_upt: string | null; p_nama: string; p_nip: string | null; p_password: string; p_role: Database["public"]["Enums"]["user_role"] };
+        Returns: string;
+      };
+      daftar_nominatif: { Args: { p_session: string }; Returns: { inmate_id: string; nama: string; nomor_registrasi: string }[] };
+      indikator_evaluasi: { Args: { p_dari: string; p_sampai: string }; Returns: Json };
       rekonsiliasi_sesi: { Args: { p_session: string }; Returns: Json };
+      tren_mingguan: { Args: { p_dari: string; p_sampai: string }; Returns: Json };
     };
     Enums: {
       activity_type: "Pertanian" | "Peternakan" | "Perikanan";
       log_type:
-        | "Serah terima di blok"
-        | "P2U keluar atau masuk"
-        | "Tiba di lokasi"
-        | "Pemeriksaan berkala"
-        | "Pindah area atau ganti pengawal"
-        | "Pihak luar dan kendaraan"
-        | "Pengembalian sebagian"
-        | "Alarm gelang"
-        | "Gangguan"
-        | "Naikkan status";
+        | "Serah terima di blok" | "P2U keluar atau masuk" | "Tiba di lokasi" | "Pemeriksaan berkala"
+        | "Pindah area atau ganti pengawal" | "Pihak luar dan kendaraan" | "Pengembalian sebagian"
+        | "Alarm gelang" | "Gangguan" | "Naikkan status" | "Pemeriksaan gelang";
       readiness_status: "Menunggu" | "Dapat Dimulai" | "Perbaiki Dulu" | "Ditunda";
       security_status: "HIJAU" | "KUNING" | "MERAH" | "KRITIS";
-      user_role: "administrator" | "operator" | "pengawal" | "kepala_pengamanan";
+      user_role: "operator" | "pengawal" | "kepala_pengamanan" | "administrator" | "pemantau_kanwil" | "pemantau_pusat";
     };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
+    CompositeTypes: { [_ in never]: never };
   };
 };
 
 type PublicSchema = Database["public"];
-
-export type Tables<T extends keyof PublicSchema["Tables"]> = PublicSchema["Tables"][T]["Row"];
-export type TablesInsert<T extends keyof PublicSchema["Tables"]> = PublicSchema["Tables"][T]["Insert"];
-export type TablesUpdate<T extends keyof PublicSchema["Tables"]> = PublicSchema["Tables"][T]["Update"];
-export type Enums<T extends keyof PublicSchema["Enums"]> = PublicSchema["Enums"][T];
+export type Tables<N extends keyof (PublicSchema["Tables"] & PublicSchema["Views"])> = (PublicSchema["Tables"] & PublicSchema["Views"])[N] extends { Row: infer R } ? R : never;
+export type TablesInsert<N extends keyof PublicSchema["Tables"]> = PublicSchema["Tables"][N] extends { Insert: infer I } ? I : never;
+export type TablesUpdate<N extends keyof PublicSchema["Tables"]> = PublicSchema["Tables"][N] extends { Update: infer U } ? U : never;
+export type Enums<N extends keyof PublicSchema["Enums"]> = PublicSchema["Enums"][N];

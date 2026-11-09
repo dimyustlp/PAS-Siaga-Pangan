@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { fieldLogSchema } from "../src/lib/validations/field-log.ts";
 import { activitySchema, sessionSchema, locationSchema } from "../src/lib/validations/planning.ts";
-import { closeSessionSchema, lowerStatusSchema, readinessDecisionSchema, verifyIncidentSchema } from "../src/lib/validations/decision.ts";
+import { closeSessionSchema, directiveSchema, lowerStatusSchema, readinessDecisionSchema, verifyIncidentSchema } from "../src/lib/validations/decision.ts";
 
 const SID = "11111111-1111-4111-8111-111111111111";
 const CID = "33333333-3333-4333-8333-333333333333";
@@ -61,16 +61,21 @@ test("jenis entri tidak dikenal ditolak", () => {
 test("pemeriksaan berkala, tiba di lokasi, P2U, alarm gelang, pihak luar, pengembalian sebagian, pindah area", () => {
   assert.equal(ok(entry("Pemeriksaan berkala", { jumlah_wbp: 10 })).success, true);
   assert.equal(ok(entry("Pemeriksaan berkala", {})).success, false);
-  assert.equal(ok(entry("Tiba di lokasi", {})).success, true);
+  assert.equal(ok(entry("Tiba di lokasi", { jumlah_wbp: 10 })).success, true);
+  assert.equal(ok(entry("Tiba di lokasi", {})).success, false); // hitungan WB wajib sejak RPP final
   assert.equal(ok(entry("P2U keluar atau masuk", { arah: "masuk", jumlah: 3 })).success, true);
   assert.equal(ok(entry("P2U keluar atau masuk", { arah: "samping" })).success, false);
-  assert.equal(ok(entry("Alarm gelang", { jenis_alarm: "Keluar zona" })).success, true);
+  assert.equal(ok(entry("Alarm gelang", { jenis_alarm: "Keluar zona", dikonfirmasi_langsung: false })).success, true);
+  assert.equal(ok(entry("Alarm gelang", { jenis_alarm: "Keluar zona" })).success, false); // konfirmasi langsung wajib diisi
   assert.equal(ok(entry("Alarm gelang", {})).success, false);
+  assert.equal(ok(entry("Pemeriksaan gelang", { jumlah_diperiksa: 10, jumlah_berfungsi: 9 })).success, true);
+  assert.equal(ok(entry("Pemeriksaan gelang", { jumlah_diperiksa: 10, jumlah_berfungsi: 11 })).success, false);
   assert.equal(ok(entry("Pihak luar dan kendaraan", { jenis: "Kendaraan", keterangan: "Truk pakan", nomor_kendaraan: "B 1234 XY" })).success, true);
   assert.equal(ok(entry("Pihak luar dan kendaraan", { jenis: "Kendaraan" })).success, false);
   assert.equal(ok(entry("Pengembalian sebagian", { jumlah_wbp: 4 })).success, true);
-  assert.equal(ok(entry("Pindah area atau ganti pengawal", { area_baru: "Kolam 2" })).success, true);
-  assert.equal(ok(entry("Pindah area atau ganti pengawal", { catatan: "pindah" })).success, false);
+  assert.equal(ok(entry("Pindah area atau ganti pengawal", { jumlah_wbp: 10, area_baru: "Kolam 2" })).success, true);
+  assert.equal(ok(entry("Pindah area atau ganti pengawal", { jumlah_wbp: 10, catatan: "pindah" })).success, false);
+  assert.equal(ok(entry("Pindah area atau ganti pengawal", { area_baru: "Kolam 2" })).success, false); // hitungan WB wajib
 });
 
 test("payload dibersihkan: kolom asing dibuang, teks dipangkas, string kosong hilang", () => {
@@ -96,8 +101,8 @@ test("waktu kejadian: boleh mundur (susulan offline), tidak boleh masa depan ata
 });
 
 test("pengenal wajib UUID", () => {
-  assert.equal(ok(entry("Tiba di lokasi", {}, { client_id: "bukan-uuid" })).success, false);
-  assert.equal(ok(entry("Tiba di lokasi", {}, { session_id: "bukan-uuid" })).success, false);
+  assert.equal(ok(entry("Tiba di lokasi", { jumlah_wbp: 1 }, { client_id: "bukan-uuid" })).success, false);
+  assert.equal(ok(entry("Tiba di lokasi", { jumlah_wbp: 1 }, { session_id: "bukan-uuid" })).success, false);
 });
 
 test("kegiatan dan sesi", () => {
@@ -127,7 +132,12 @@ test("keputusan Kepala Pengamanan", () => {
   assert.equal(readinessDecisionSchema.safeParse({ session_id: SID, keputusan: "Tutup Kegiatan" }).success, false);
   assert.equal(verifyIncidentSchema.safeParse({ session_id: SID, incident_id: CID, catatan: "ok" }).success, false);
   assert.equal(verifyIncidentSchema.safeParse({ session_id: SID, incident_id: CID, catatan: "Sudah kondusif" }).success, true);
-  assert.equal(lowerStatusSchema.safeParse({ session_id: SID, bukti_path: "" }).success, false);
-  assert.equal(lowerStatusSchema.safeParse({ session_id: SID, bukti_path: `${SID}/pulih.jpg` }).success, true);
+  assert.equal(lowerStatusSchema.safeParse({ session_id: SID, bukti_path: "", catatan: "Sudah pulih" }).success, false);
+  assert.equal(lowerStatusSchema.safeParse({ session_id: SID, bukti_path: `${SID}/pulih.jpg` }).success, false); // alasan wajib
+  assert.equal(lowerStatusSchema.safeParse({ session_id: SID, bukti_path: `${SID}/pulih.jpg`, catatan: "Sudah pulih" }).success, true);
+  assert.equal(lowerStatusSchema.safeParse({ session_id: SID, bukti_path: `${SID}/pulih.jpg`, catatan: "Turun satu tingkat", status_baru: "MERAH" }).success, true);
+  assert.equal(lowerStatusSchema.safeParse({ session_id: SID, bukti_path: `${SID}/pulih.jpg`, catatan: "Naik?", status_baru: "KRITIS" }).success, false);
+  assert.equal(directiveSchema.safeParse({ session_id: SID, catatan: "Tambah pengawal di pos 2" }).success, true);
+  assert.equal(directiveSchema.safeParse({ session_id: SID, catatan: " " }).success, false);
   assert.equal(closeSessionSchema.safeParse({ session_id: "x" }).success, false);
 });

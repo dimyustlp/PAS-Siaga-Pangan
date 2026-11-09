@@ -23,9 +23,16 @@ export const verifyIncidentSchema = z.object({
 
 export const lowerStatusSchema = z.object({
   session_id: sessionId,
+  /** Penurunan dilakukan bertahap. Bila kosong, dianggap turun ke HIJAU. */
+  status_baru: z.enum(["HIJAU", "KUNING", "MERAH"]).optional(),
   /** Alamat foto bukti di bucket pas-siaga-evidence, pola: {session_id}/{nama_berkas}. */
   bukti_path: z.string().min(1, "Foto bukti pemulihan keadaan wajib diunggah.").max(300),
-  catatan: z.string().trim().max(1000).optional(),
+  catatan: z.string().trim().min(3, "Alasan penurunan status wajib dicatat.").max(1000),
+});
+
+export const directiveSchema = z.object({
+  session_id: sessionId,
+  catatan: z.string().trim().min(3, "Isi arahan tindakan wajib dicatat.").max(1000),
 });
 
 export const closeSessionSchema = z.object({ session_id: sessionId });

@@ -2,7 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { authorize, fail, storageObjectExists, success, zodFail, type ActionResult } from "./_shared";
-import { activitySchema, documentKindSchema, sessionSchema, sessionUpdateSchema } from "@/lib/validations/planning";
+import {
+  activitySchema,
+  documentKindSchema,
+  nominatifSchema,
+  readinessItemSchema,
+  sessionSchema,
+  sessionUpdateSchema,
+} from "@/lib/validations/planning";
 import { isSafeStoragePath } from "@/lib/validations/storage";
 import { isUniqueViolation, mapDbError } from "@/lib/errors";
 import { z } from "zod";
@@ -112,4 +119,54 @@ export async function attachSessionDocument(input: unknown): Promise<ActionResul
   if (!data || data.length === 0) return fail("Sesi tidak ditemukan atau sudah tidak bisa diubah pada statusnya sekarang.");
   refresh();
   return success();
+}
+
+/** Operator mencentang satu dari enam indikator kesiapan (a–f) beserta catatannya. */
+export async function setReadinessItem(input: unknown): Promise<ActionResult> {
+  const auth = await authorize(["operator"]);
+  if (!auth.ok) return fail(auth.error);
+  const parsed = readinessItemSchema.safeParse(input);
+  if (!parsed.success) return zodFail(parsed.error);
+  const { session_id, kode, terpenuhi, catatan } = parsed.data;
+
+  const { data, error } = await auth.supabase
+    .from("session_readiness")
+    .update({ terpenuhi, catatan: catatan ?? null })
+    .eq("session_id", session_id)
+    .eq("kode", kode)
+    .select("kode");
+  if (error) return fail(mapDbError(error, DITOLAK));
+  if (!data || data.length === 0) return fail("Indikator tidak ditemukan atau sesi sudah tidak bisa diubah.");
+  refresh();
+  return success();
+}
+
+/**
+ * Menetapkan daftar nominatif WB untuk sesi. Daftar lama diganti seluruhnya; jumlah WB pada sesi
+ * ikut menyesuaikan otomatis di database. Hanya bisa selama sesi belum disetujui.
+ */
+export async function setNominatif(input: unknown): Promise<ActionResult<{ jumlah: number }>> {
+  const auth = await authorize(["operator"]);
+  if (!auth.ok) return fail(auth.error);
+  const parsed = nominatifSchema.safeParse(input);
+  if (!parsed.success) return zodFail(parsed.error);
+  const { session_id } = parsed.data;
+  const baru = Array.from(new Set(parsed.data.inmate_ids));
+
+  const { data: lama, error: e1 } = await auth.supabase.from("session_inmates").select("inmate_id").eq("session_id", session_id);
+  if (e1) return fail(mapDbError(e1, DITOLAK));
+  const ada = new Set((lama ?? []).map((r) => r.inmate_id));
+  const tambah = baru.filter((id) => !ada.has(id));
+  const hapus = [...ada].filter((id) => !baru.includes(id));
+
+  if (hapus.length > 0) {
+    const { error } = await auth.supabase.from("session_inmates").delete().eq("session_id", session_id).in("inmate_id", hapus);
+    if (error) return fail(mapDbError(error, DITOLAK));
+  }
+  if (tambah.length > 0) {
+    const { error } = await auth.supabase.from("session_inmates").insert(tambah.map((inmate_id) => ({ session_id, inmate_id })));
+    if (error) return fail(mapDbError(error, DITOLAK));
+  }
+  refresh();
+  return success({ jumlah: baru.length });
 }
