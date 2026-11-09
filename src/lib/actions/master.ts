@@ -5,10 +5,10 @@ import { authorize, fail, success, zodFail, type ActionResult } from "./_shared"
 import { inmateSchema, locationSchema } from "@/lib/validations/planning";
 import { isUniqueViolation, mapDbError } from "@/lib/errors";
 
-const DITOLAK = "Hanya Operator UPT yang dapat mengelola data induk.";
+const DITOLAK = "Hanya Administrator atau Operator UPT yang dapat mengelola data induk.";
 
 export async function createLocation(input: unknown): Promise<ActionResult<{ id: string }>> {
-  const auth = await authorize(["operator"]);
+  const auth = await authorize(["administrator", "operator"]);
   if (!auth.ok) return fail(auth.error);
   const parsed = locationSchema.safeParse(input);
   if (!parsed.success) return zodFail(parsed.error);
@@ -23,7 +23,7 @@ export async function createLocation(input: unknown): Promise<ActionResult<{ id:
 }
 
 export async function createInmate(input: unknown): Promise<ActionResult<{ id: string }>> {
-  const auth = await authorize(["operator"]);
+  const auth = await authorize(["administrator", "operator"]);
   if (!auth.ok) return fail(auth.error);
   const parsed = inmateSchema.safeParse(input);
   if (!parsed.success) return zodFail(parsed.error);

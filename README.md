@@ -14,11 +14,12 @@ Teknologi: Next.js 15 (App Router), TypeScript, Tailwind CSS, Supabase (database
 
 | Peran | Halaman |
 |---|---|
+| Administrator | `/` (baca semua data; kelola akun dan data induk, tanpa ikut memutus) |
 | Operator UPT | `/` dan `/kegiatan` |
 | Kepala Pengamanan | `/` dan `/keputusan` |
 | Pengawal | `/lapangan` dan `/lapangan/[sessionId]/entri` |
 
-Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu hanya memudahkan tampilan. Penjaga data yang sebenarnya adalah aturan RLS di database (`01-skema-pas-siaga-pangan.sql`).
+Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu hanya memudahkan tampilan. Penjaga data yang sebenarnya adalah aturan RLS di database (`01-skema-pas-siaga-pangan.sql`, ditambah `02-peran-administrator.sql`).
 
 ## Tahap pengembangan
 
@@ -33,10 +34,10 @@ Semua ada di `src/lib/actions/` dan hanya bisa dipanggil sesuai peran. Aturan al
 
 | Berkas | Fungsi | Peran |
 |---|---|---|
-| `master.ts` | `createLocation`, `createInmate` | Operator |
+| `master.ts` | `createLocation`, `createInmate` | Administrator, Operator |
 | `sessions.ts` | `createActivity`, `createSession`, `updateSession`, `resubmitSession`, `attachSessionDocument` | Operator |
 | `field-logs.ts` | `submitFieldLog`, `submitFieldLogBatch` (entri susulan setelah offline) | Pengawal |
-| `decisions.ts` | `decideReadiness`, `verifyIncident`, `lowerSecurityStatus`, `closeSession`, `checkReconciliation` | Kepala Pengamanan (cek rekonsiliasi: Operator juga) |
+| `decisions.ts` | `decideReadiness`, `verifyIncident`, `lowerSecurityStatus`, `closeSession`, `checkReconciliation` | Kepala Pengamanan (cek rekonsiliasi: Operator dan Administrator juga) |
 
 Pembacaan data: `src/lib/data/sessions.ts` (`listSessions`, `getSessionDetail` termasuk status jadwal pemeriksaan berkala).
 

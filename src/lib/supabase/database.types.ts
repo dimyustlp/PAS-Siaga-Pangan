@@ -434,7 +434,7 @@ export type Database = {
         | "Naikkan status";
       readiness_status: "Menunggu" | "Dapat Dimulai" | "Perbaiki Dulu" | "Ditunda";
       security_status: "HIJAU" | "KUNING" | "MERAH" | "KRITIS";
-      user_role: "operator" | "pengawal" | "kepala_pengamanan";
+      user_role: "administrator" | "operator" | "pengawal" | "kepala_pengamanan";
     };
     CompositeTypes: {
       [_ in never]: never;

@@ -99,7 +99,7 @@ export async function closeSession(input: unknown): Promise<ActionResult> {
 
 /** Cek syarat penutupan tanpa menutup (untuk menampilkan alasan di dasbor). */
 export async function checkReconciliation(sessionId: unknown): Promise<ActionResult<Rekonsiliasi>> {
-  const auth = await authorize(["operator", "kepala_pengamanan"]);
+  const auth = await authorize(["administrator", "operator", "kepala_pengamanan"]);
   if (!auth.ok) return fail(auth.error);
   const id = z.string().uuid().safeParse(sessionId);
   if (!id.success) return fail("Sesi tidak valid.");

@@ -1,6 +1,7 @@
-export type Role = "operator" | "pengawal" | "kepala_pengamanan";
+export type Role = "administrator" | "operator" | "pengawal" | "kepala_pengamanan";
 
 export const ROLE_LABEL: Record<Role, string> = {
+  administrator: "Administrator",
   operator: "Operator UPT",
   pengawal: "Pengawal",
   kepala_pengamanan: "Kepala Pengamanan",
@@ -8,6 +9,7 @@ export const ROLE_LABEL: Record<Role, string> = {
 
 /** Halaman pertama setelah masuk, menurut peran. */
 export const HOME: Record<Role, string> = {
+  administrator: "/",
   operator: "/",
   kepala_pengamanan: "/",
   pengawal: "/lapangan",
@@ -21,7 +23,7 @@ type Rule = { prefix: string; exact?: boolean; roles: Role[] };
  * Ini hanya pembatas tampilan. Penjaga yang sebenarnya adalah aturan RLS di database.
  */
 const RULES: Rule[] = [
-  { prefix: "/", exact: true, roles: ["operator", "kepala_pengamanan"] },
+  { prefix: "/", exact: true, roles: ["administrator", "operator", "kepala_pengamanan"] },
   { prefix: "/kegiatan", roles: ["operator"] },
   { prefix: "/keputusan", roles: ["kepala_pengamanan"] },
   { prefix: "/lapangan", roles: ["pengawal"] },

@@ -9,6 +9,7 @@ import type { Role } from "@/lib/rbac";
 const ICONS = { dasbor: LayoutDashboard, kegiatan: ClipboardList, keputusan: Gavel };
 
 const ITEMS: Record<Role, { href: string; label: string; icon: keyof typeof ICONS }[]> = {
+  administrator: [{ href: "/", label: "Dasbor", icon: "dasbor" }],
   operator: [
     { href: "/", label: "Dasbor", icon: "dasbor" },
     { href: "/kegiatan", label: "Kegiatan", icon: "kegiatan" },
