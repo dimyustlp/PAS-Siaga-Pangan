@@ -40,7 +40,8 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
   ]);
   const alarmMenunggu = alarm.count ?? 0;
   const luas = user.role === "administrator" || user.role === "pemantau_pusat" || user.role === "pemantau_kanwil";
-  const daftarUpt = luas ? semuaUpt : [];
+  // Pemantau Kanwil hanya perlu melihat UPT pada Kanwilnya.
+  const daftarUpt = !luas ? [] : user.role === "pemantau_kanwil" ? semuaUpt.filter((u) => u.kanwil_id === user.kanwilId) : semuaUpt;
 
   const now = new Date();
   const aktif = rows.filter((r) => !r.ditutup_at);

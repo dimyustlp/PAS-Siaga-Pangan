@@ -20,7 +20,7 @@ Teknologi: Next.js 15 (App Router), TypeScript, Tailwind CSS, Supabase (database
 | Pengawal | `/lapangan` (entri offline, bisa dipasang sebagai aplikasi), `/pedoman` |
 | Pemantau Kanwil / Pusat | Dasbor, `/sesi`, `/evaluasi`, `/risiko`, `/pedoman` (hanya baca, cakupan sesuai Kanwil/pusat) |
 
-Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu hanya memudahkan tampilan. Penjaga data yang sebenarnya adalah aturan RLS di database (`01-skema-pas-siaga-pangan.sql`, `02-peran-administrator.sql`, dan `03-fitur-rpp.sql`, `06-berkas-dan-akun.sql`, `07-gelang-alarm.sql`).
+Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu hanya memudahkan tampilan. Penjaga data yang sebenarnya adalah aturan RLS di database (`01-skema-pas-siaga-pangan.sql`, `02-peran-administrator.sql`, dan `03-fitur-rpp.sql`, `06-berkas-dan-akun.sql`, `07-gelang-alarm.sql`, `08-perketat-profil.sql`).
 
 ## Tahap pengembangan
 

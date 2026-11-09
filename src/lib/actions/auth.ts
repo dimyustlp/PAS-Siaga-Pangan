@@ -26,7 +26,7 @@ export async function signIn(_prev: LoginState, formData: FormData): Promise<Log
 
   if (!profile || !profile.is_active) {
     await supabase.auth.signOut();
-    return { error: "Akun belum aktif atau belum terdaftar. Hubungi Operator UPT." };
+    return { error: "Akun belum aktif atau belum terdaftar. Hubungi Administrator." };
   }
 
   const role = profile.role as Role;
