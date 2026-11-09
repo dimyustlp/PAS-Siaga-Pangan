@@ -7,8 +7,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const user = await requireUser();
 
   return (
-    <div className="min-h-screen md:grid md:grid-cols-[15rem_1fr]">
-      <aside className="border-b bg-card md:border-b-0 md:border-r">
+    <div className="min-h-screen md:grid md:grid-cols-[15rem_1fr] print:block">
+      <aside className="border-b bg-card md:border-b-0 md:border-r print:hidden">
         <div className="flex items-center gap-2.5 px-4 py-4">
           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <ShieldCheck className="h-5 w-5" aria-hidden />
@@ -20,10 +20,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
       </aside>
       <div className="flex min-w-0 flex-col">
-        <header className="flex items-center justify-end border-b bg-card px-4 py-3 md:px-8">
+        <header className="flex items-center justify-end border-b bg-card px-4 py-3 md:px-8 print:hidden">
           <UserBar name={user.fullName} role={user.role} />
         </header>
-        <main className="flex-1 px-4 py-6 md:px-8">{children}</main>
+        <main className="flex-1 px-4 py-6 md:px-8 print:p-0">{children}</main>
       </div>
     </div>
   );
