@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { authorize, fail, success, zodFail, type ActionResult } from "./_shared";
-import { riskUpdateSchema, trainingSchema, weeklyNoteSchema } from "@/lib/validations/admin";
+import { riskUpdateSchema, weeklyNoteSchema } from "@/lib/validations/admin";
 import { mapDbError } from "@/lib/errors";
 
 /** Catatan kendala mingguan UPT (dasar evaluasi per minggu). */
@@ -18,26 +18,6 @@ export async function addWeeklyNote(input: unknown): Promise<ActionResult> {
   });
   if (error) return fail(mapDbError(error));
   revalidatePath("/evaluasi");
-  return success();
-}
-
-/** Catatan pembekalan (briefing atau pelatihan) bagi petugas pengawal dan petugas pendukung. */
-export async function addTraining(input: unknown): Promise<ActionResult> {
-  const auth = await authorize(["administrator", "operator", "kepala_pengamanan"]);
-  if (!auth.ok) return fail(auth.error);
-  const parsed = trainingSchema.safeParse(input);
-  if (!parsed.success) return zodFail(parsed.error);
-  const p = parsed.data;
-  const { error } = await auth.supabase.from("trainings").insert({
-    judul: p.judul,
-    tanggal: p.tanggal,
-    sasaran: p.sasaran ?? null,
-    metode: p.metode ?? null,
-    jumlah_peserta: p.jumlah_peserta,
-    keterangan: p.keterangan ?? null,
-  });
-  if (error) return fail(mapDbError(error));
-  revalidatePath("/pembekalan");
   return success();
 }
 

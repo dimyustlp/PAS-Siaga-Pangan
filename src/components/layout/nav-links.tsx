@@ -8,7 +8,6 @@ import {
   ClipboardList,
   Database,
   Gavel,
-  GraduationCap,
   LayoutDashboard,
   ListChecks,
   MapPinned,
@@ -26,7 +25,6 @@ const ICONS = {
   tindak: ListChecks,
   evaluasi: ChartColumn,
   risiko: ShieldAlert,
-  pembekalan: GraduationCap,
   pedoman: BookOpen,
   akun: Users,
   wilayah: MapPinned,
@@ -40,7 +38,6 @@ const DASBOR: Item = { href: "/", label: "Dasbor", icon: "dasbor" };
 const BERSAMA: Item[] = [
   { href: "/evaluasi", label: "Evaluasi", icon: "evaluasi" },
   { href: "/risiko", label: "Risiko & mitigasi", icon: "risiko" },
-  { href: "/pembekalan", label: "Pembekalan", icon: "pembekalan" },
   { href: "/pedoman", label: "Pedoman & SOP", icon: "pedoman" },
 ];
 

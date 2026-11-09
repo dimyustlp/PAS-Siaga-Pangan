@@ -605,45 +605,6 @@ export type Database = {
         };
         Relationships: [];
       };
-      trainings: {
-        Row: {
-          created_at: string;
-          dibuat_oleh: string;
-          id: string;
-          judul: string;
-          jumlah_peserta: number;
-          keterangan: string | null;
-          kode_upt: string;
-          metode: string | null;
-          sasaran: string | null;
-          tanggal: string;
-        };
-        Insert: {
-          created_at?: string;
-          dibuat_oleh?: string;
-          id?: string;
-          judul: string;
-          jumlah_peserta: number;
-          keterangan?: string | null;
-          kode_upt?: string;
-          metode?: string | null;
-          sasaran?: string | null;
-          tanggal: string;
-        };
-        Update: {
-          created_at?: string;
-          dibuat_oleh?: string;
-          id?: string;
-          judul?: string;
-          jumlah_peserta?: number;
-          keterangan?: string | null;
-          kode_upt?: string;
-          metode?: string | null;
-          sasaran?: string | null;
-          tanggal?: string;
-        };
-        Relationships: [];
-      };
       weekly_notes: {
         Row: {
           created_at: string;

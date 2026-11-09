@@ -81,7 +81,7 @@ export const ALUR_KERJA: TahapAlur[] = [
     judul: "Evaluasi dan perbaikan",
     pelaku: ["Pemantau", "Kepala Pengamanan", "Administrator"],
     peran: ["pemantau_kanwil", "pemantau_pusat", "administrator", "kepala_pengamanan"],
-    isi: ["Lihat capaian indikator, tren mingguan, risiko dan mitigasi, serta pembekalan petugas.", "Catatan kendala mingguan menjadi dasar memperbaiki pedoman dan SOP."],
+    isi: ["Lihat capaian indikator, tren mingguan, serta risiko dan mitigasi.", "Catatan kendala mingguan menjadi dasar memperbaiki pedoman dan SOP."],
     tautan: { href: "/evaluasi", label: "Buka Evaluasi" },
   },
 ];

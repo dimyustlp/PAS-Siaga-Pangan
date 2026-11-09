@@ -14,11 +14,11 @@ Teknologi: Next.js 15 (App Router), TypeScript, Tailwind CSS, Supabase (database
 
 | Peran | Halaman |
 |---|---|
-| Administrator | Dasbor, `/sesi`, `/evaluasi`, `/risiko`, `/pembekalan`, `/pedoman`, `/admin/akun`, `/admin/wilayah`, `/admin/data-induk`, `/admin/audit` |
-| Operator UPT | Dasbor, `/kegiatan`, `/tindak-lanjut`, `/evaluasi`, `/pembekalan` |
+| Administrator | Dasbor, `/sesi`, `/evaluasi`, `/risiko`, `/pedoman`, `/admin/akun`, `/admin/wilayah`, `/admin/data-induk`, `/admin/audit` |
+| Operator UPT | Dasbor, `/kegiatan`, `/tindak-lanjut`, `/evaluasi` |
 | Kepala Pengamanan | Dasbor, `/keputusan`, `/tindak-lanjut`, `/evaluasi`, `/risiko` |
 | Pengawal | `/lapangan` (entri offline, bisa dipasang sebagai aplikasi), `/pedoman` |
-| Pemantau Kanwil / Pusat | Dasbor, `/sesi`, `/evaluasi`, `/risiko`, `/pembekalan`, `/pedoman` (hanya baca, cakupan sesuai Kanwil/pusat) |
+| Pemantau Kanwil / Pusat | Dasbor, `/sesi`, `/evaluasi`, `/risiko`, `/pedoman` (hanya baca, cakupan sesuai Kanwil/pusat) |
 
 Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu hanya memudahkan tampilan. Penjaga data yang sebenarnya adalah aturan RLS di database (`01-skema-pas-siaga-pangan.sql`, `02-peran-administrator.sql`, dan `03-fitur-rpp.sql`).
 
@@ -27,7 +27,7 @@ Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu 
 - Fase 1: skema database, RLS, penyimpanan berkas (selesai)
 - Fase 2: kerangka aplikasi, login, pembatas peran (selesai)
 - Fase 3: server actions dan lapisan data (selesai, lihat di bawah)
-- Fase 4: dasbor realtime, antarmuka Pengawal offline (PWA), evaluasi, pedoman, risiko, pembekalan, dan halaman Administrator (selesai)
+- Fase 4: dasbor realtime, antarmuka Pengawal offline (PWA), evaluasi, pedoman, risiko, dan halaman Administrator (selesai)
 
 ## Fase 3: fungsi sisi server
 

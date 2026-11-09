@@ -35,9 +35,9 @@ test("safeNext menolak alamat luar", () => {
   assert.equal(safeNext("/\\evil.com"), null);
 });
 
-test("Pemantau hanya membaca: dasbor, detail sesi, evaluasi, risiko, pembekalan, pedoman", () => {
+test("Pemantau hanya membaca: dasbor, detail sesi, evaluasi, risiko, pedoman", () => {
   for (const r of ["pemantau_kanwil", "pemantau_pusat"] as Role[]) {
-    for (const ok of ["/", "/sesi/abc", "/sesi/abc/laporan", "/evaluasi", "/risiko", "/pembekalan", "/pedoman"]) {
+    for (const ok of ["/", "/sesi/abc", "/sesi/abc/laporan", "/evaluasi", "/risiko", "/pedoman"]) {
       assert.equal(canAccess(r, ok), true, `${r} ${ok}`);
     }
     for (const no of ["/kegiatan", "/keputusan", "/tindak-lanjut", "/admin/akun", "/lapangan"]) {

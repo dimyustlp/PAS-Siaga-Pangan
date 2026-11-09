@@ -45,15 +45,6 @@ export const weeklyNoteSchema = z.object({
   tindak_lanjut: opt(2000),
 });
 
-export const trainingSchema = z.object({
-  judul: z.string().trim().min(3, "Judul wajib diisi.").max(200),
-  tanggal: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Tanggal tidak valid."),
-  sasaran: opt(200),
-  metode: opt(200),
-  jumlah_peserta: z.number().int("Isi dengan bilangan bulat.").min(0).max(100000),
-  keterangan: opt(1000),
-});
-
 export const riskUpdateSchema = z.object({
   id: z.string().uuid(),
   status: z.enum(["Dipantau", "Terjadi", "Terkendali"]),
