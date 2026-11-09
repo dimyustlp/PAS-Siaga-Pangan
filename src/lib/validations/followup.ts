@@ -11,9 +11,15 @@ export const followUpCreateSchema = z.object({
   sumber: z.enum(SUMBER_TINDAK_LANJUT),
   uraian: z.string().trim().min(3, "Uraian tindak lanjut wajib diisi.").max(1000),
   penanggung_jawab_id: z.string().uuid().optional(),
-  penanggung_jawab_nama: z.string().trim().min(1, "Penanggung jawab wajib diisi.").max(150),
+  /** Boleh kosong bila penanggung jawab dipilih dari daftar akun; namanya diisi dari profil. */
+  penanggung_jawab_nama: z.string().trim().max(150).optional().transform((v) => (v ? v : undefined)),
   tenggat: z.string().datetime({ offset: true, message: "Tenggat tidak valid." }),
   pemeriksaan_ulang_at: z.string().datetime({ offset: true }).optional(),
+});
+
+export const followUpCreateRefined = followUpCreateSchema.refine((v) => !!v.penanggung_jawab_id || !!v.penanggung_jawab_nama, {
+  path: ["penanggung_jawab_nama"],
+  message: "Penanggung jawab wajib diisi: pilih akun atau tulis namanya.",
 });
 
 export const followUpProgressSchema = z.object({

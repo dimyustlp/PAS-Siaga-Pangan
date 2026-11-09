@@ -37,3 +37,32 @@ export function keInputWib(d: Date): string {
   const wib = new Date(d.getTime() + 7 * 3600_000);
   return wib.toISOString().slice(0, 16);
 }
+
+/**
+ * Pemetaan isian formulir yang bisa dikirim dari Server Component (hanya data, tanpa fungsi).
+ * v = nilai tetap, s = teks, n = angka, b = kotak centang, yt = ya/tidak, w = waktu WIB (datetime-local), a = banyak nilai.
+ */
+export type Spec =
+  | { v: unknown }
+  | { s: string }
+  | { n: string }
+  | { b: string }
+  | { yt: string }
+  | { w: string }
+  | { a: string };
+
+export function buatMasukan(fd: FormData, fields: Record<string, Spec>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [key, spec] of Object.entries(fields)) {
+    let val: unknown;
+    if ("v" in spec) val = spec.v;
+    else if ("s" in spec) val = str(fd, spec.s);
+    else if ("n" in spec) val = num(fd, spec.n);
+    else if ("b" in spec) val = cek(fd, spec.b);
+    else if ("yt" in spec) val = yaTidak(fd, spec.yt);
+    else if ("w" in spec) val = waktuWib(str(fd, spec.w));
+    else if ("a" in spec) val = fd.getAll(spec.a).filter((x): x is string => typeof x === "string" && x !== "");
+    if (val !== undefined) out[key] = val;
+  }
+  return out;
+}

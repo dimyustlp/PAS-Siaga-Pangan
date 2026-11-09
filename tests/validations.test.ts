@@ -141,3 +141,13 @@ test("keputusan Kepala Pengamanan", () => {
   assert.equal(directiveSchema.safeParse({ session_id: SID, catatan: " " }).success, false);
   assert.equal(closeSessionSchema.safeParse({ session_id: "x" }).success, false);
 });
+
+test("tindak lanjut: wajib ada penanggung jawab (akun atau nama) dan tenggat", async () => {
+  const { followUpCreateRefined } = await import("../src/lib/validations/followup.ts");
+  const dasar = { session_id: SID, sumber: "Gangguan", uraian: "Perbaiki pagar", tenggat: "2026-11-12T09:00:00+07:00" };
+  assert.equal(followUpCreateRefined.safeParse(dasar).success, false);
+  assert.equal(followUpCreateRefined.safeParse({ ...dasar, penanggung_jawab_nama: "Budi" }).success, true);
+  assert.equal(followUpCreateRefined.safeParse({ ...dasar, penanggung_jawab_id: CID }).success, true);
+  assert.equal(followUpCreateRefined.safeParse({ ...dasar, penanggung_jawab_nama: "Budi", tenggat: "besok" }).success, false);
+  assert.equal(followUpCreateRefined.safeParse({ ...dasar, penanggung_jawab_nama: "Budi", sumber: "Lain" }).success, false);
+});

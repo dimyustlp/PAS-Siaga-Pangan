@@ -5,12 +5,15 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/form";
 import type { ActionResult } from "@/lib/actions/_shared";
+import { buatMasukan, type Spec } from "@/lib/form";
 import { cn } from "@/lib/utils";
 
 type Props<T> = {
   action: (input: unknown) => Promise<ActionResult<T>>;
-  /** Mengubah isian formulir menjadi masukan aksi server. */
-  build: (fd: FormData) => unknown;
+  /** Pemetaan isian ke masukan aksi (dapat dikirim dari Server Component). */
+  fields?: Record<string, Spec>;
+  /** Alternatif untuk Client Component: fungsi pengubah isian. */
+  build?: (fd: FormData) => unknown;
   submit: string;
   children: React.ReactNode;
   className?: string;
@@ -27,6 +30,7 @@ type Props<T> = {
 /** Formulir generik: kirim ke server action, tampilkan galat atau pesan sukses, lalu segarkan halaman. */
 export function ActionForm<T>({
   action,
+  fields,
   build,
   submit,
   children,
@@ -51,7 +55,7 @@ export function ActionForm<T>({
     setGalat(null);
     setOk(false);
     start(async () => {
-      const res = await action(build(fd));
+      const res = await action(build ? build(fd) : buatMasukan(fd, fields ?? {}));
       if (!res.ok) {
         setGalat(res.error);
         return;

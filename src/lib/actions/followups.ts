@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { authorize, fail, storageObjectExists, success, zodFail, type ActionResult } from "./_shared";
-import { followUpCreateSchema, followUpProgressSchema, followUpVerifySchema } from "@/lib/validations/followup";
+import { followUpCreateRefined, followUpProgressSchema, followUpVerifySchema } from "@/lib/validations/followup";
 import { isSafeStoragePath } from "@/lib/validations/storage";
 import { mapDbError } from "@/lib/errors";
 
@@ -19,9 +19,16 @@ function refresh() {
 export async function createFollowUp(input: unknown): Promise<ActionResult> {
   const auth = await authorize(["kepala_pengamanan"]);
   if (!auth.ok) return fail(auth.error);
-  const parsed = followUpCreateSchema.safeParse(input);
+  const parsed = followUpCreateRefined.safeParse(input);
   if (!parsed.success) return zodFail(parsed.error);
   const p = parsed.data;
+
+  let namaPj = p.penanggung_jawab_nama;
+  if (!namaPj && p.penanggung_jawab_id) {
+    const { data: prof } = await auth.supabase.from("profiles").select("full_name").eq("id", p.penanggung_jawab_id).maybeSingle();
+    namaPj = prof?.full_name;
+  }
+  if (!namaPj) return fail("Penanggung jawab tidak ditemukan. Tulis namanya.");
 
   const { error } = await auth.supabase.from("follow_ups").insert({
     session_id: p.session_id,
@@ -29,7 +36,7 @@ export async function createFollowUp(input: unknown): Promise<ActionResult> {
     sumber: p.sumber,
     uraian: p.uraian,
     penanggung_jawab_id: p.penanggung_jawab_id ?? null,
-    penanggung_jawab_nama: p.penanggung_jawab_nama,
+    penanggung_jawab_nama: namaPj,
     tenggat: p.tenggat,
     pemeriksaan_ulang_at: p.pemeriksaan_ulang_at ?? null,
   });
