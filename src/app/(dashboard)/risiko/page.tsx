@@ -13,9 +13,8 @@ export const dynamic = "force-dynamic";
 const NADA = { Dipantau: "biru", Terjadi: "merah", Terkendali: "hijau" } as const;
 
 export default async function RisikoPage() {
-  const user = await requireUser();
   const supabase = await createClient();
-  const { data, error } = await supabase.from("risk_register").select("*").order("nomor");
+  const [user, { data, error }] = await Promise.all([requireUser(), supabase.from("risk_register").select("*").order("nomor")]);
   const bisaUbah = user.role === "administrator" || user.role === "kepala_pengamanan";
 
   return (

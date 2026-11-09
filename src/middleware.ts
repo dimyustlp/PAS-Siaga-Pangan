@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
-  const { supabase, user, profile, getResponse } = await updateSession(request);
+  const { supabase, user, profile, getResponse } = await updateSession(request, pathname === "/login");
 
   const redirectTo = (path: string, params?: Record<string, string>) => {
     const url = request.nextUrl.clone();

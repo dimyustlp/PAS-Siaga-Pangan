@@ -27,11 +27,11 @@ function sapaan(jam: number) {
 }
 
 export default async function DasborPage({ searchParams }: { searchParams: Promise<{ upt?: string }> }) {
-  const user = await requireUser();
   const { upt } = await searchParams;
+  // Semua dibaca bersamaan; cakupan data tetap ditentukan RLS di database.
+  const [user, semuaUpt, { rows, error }] = await Promise.all([requireUser(), listUpt(), listOverview({ upt: upt || undefined })]);
   const luas = user.role === "administrator" || user.role === "pemantau_pusat" || user.role === "pemantau_kanwil";
-  const daftarUpt = luas ? await listUpt() : [];
-  const { rows, error } = await listOverview({ upt: luas && upt ? upt : undefined });
+  const daftarUpt = luas ? semuaUpt : [];
 
   const now = new Date();
   const aktif = rows.filter((r) => !r.ditutup_at);

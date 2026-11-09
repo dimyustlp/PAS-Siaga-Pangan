@@ -20,13 +20,13 @@ export const dynamic = "force-dynamic";
 const TGL = /^\d{4}-\d{2}-\d{2}$/;
 
 export default async function EvaluasiPage({ searchParams }: { searchParams: Promise<{ dari?: string; sampai?: string }> }) {
-  const user = await requireUser();
   const q = await searchParams;
   const sampai = q.sampai && TGL.test(q.sampai) ? q.sampai : hariIniWib();
   const dari = q.dari && TGL.test(q.dari) ? q.dari : tambahHari(sampai, -60);
 
   const supabase = await createClient();
-  const [ind, tren, catatan] = await Promise.all([
+  const [user, ind, tren, catatan] = await Promise.all([
+    requireUser(),
     supabase.rpc("indikator_evaluasi", { p_dari: dari, p_sampai: sampai }),
     supabase.rpc("tren_mingguan", { p_dari: dari, p_sampai: sampai }),
     supabase.from("weekly_notes").select("*").order("minggu_mulai", { ascending: false }).limit(20),

@@ -11,9 +11,8 @@ export const metadata = { title: "Pembekalan" };
 export const dynamic = "force-dynamic";
 
 export default async function PembekalanPage() {
-  const user = await requireUser();
   const supabase = await createClient();
-  const { data, error } = await supabase.from("trainings").select("*").order("tanggal", { ascending: false }).limit(100);
+  const [user, { data, error }] = await Promise.all([requireUser(), supabase.from("trainings").select("*").order("tanggal", { ascending: false }).limit(100)]);
   const bisaCatat = ["administrator", "operator", "kepala_pengamanan"].includes(user.role);
   const total = (data ?? []).reduce((a, t) => a + t.jumlah_peserta, 0);
 
