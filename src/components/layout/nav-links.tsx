@@ -67,7 +67,10 @@ const ITEMS: Record<Role, Item[]> = {
   ],
   pemantau_kanwil: [DASBOR, ...BERSAMA],
   pemantau_pusat: [DASBOR, ...BERSAMA],
-  pengawal: [],
+  pengawal: [
+    { href: "/lapangan", label: "Tugas lapangan", icon: "kegiatan" },
+    { href: "/pedoman", label: "Pedoman & SOP", icon: "pedoman" },
+  ],
 };
 
 export function NavLinks({ role }: { role: Role }) {

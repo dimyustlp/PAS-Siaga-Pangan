@@ -1,39 +1,53 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { z } from "zod";
+import { EntriLapangan } from "@/components/lapangan/entri-lapangan";
+import { Alert } from "@/components/ui/form";
+import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Entri lapangan" };
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+export const dynamic = "force-dynamic";
 
 export default async function EntriPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = await params;
-  if (!UUID.test(sessionId)) notFound();
-
+  if (!z.string().uuid().safeParse(sessionId).success) notFound();
+  const user = await requireUser();
   const supabase = await createClient();
-  const { data: sesi } = await supabase
-    .from("daily_sessions")
-    .select("id,tanggal_sesi,status_kesiapan,interval_pemeriksaan")
-    .eq("id", sessionId)
-    .maybeSingle();
-  if (!sesi) notFound();
 
+  const { data: o } = await supabase.from("v_session_overview").select("*").eq("session_id", sessionId).maybeSingle();
+  if (!o) notFound();
+
+  const [logs, nom] = await Promise.all([
+    supabase.from("field_logs").select("id,jenis_entri,payload,waktu_kejadian,susulan").eq("session_id", sessionId).order("waktu_kejadian", { ascending: false }).limit(200),
+    supabase.rpc("daftar_nominatif", { p_session: sessionId }),
+  ]);
+
+  const siap = o.status_kesiapan === "Dapat Dimulai";
   return (
     <div className="space-y-4">
-      <Link href="/lapangan" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" aria-hidden /> Kembali
-      </Link>
-      <Card>
-        <CardHeader>
-          <CardTitle>Entri lapangan</CardTitle>
-          <CardDescription>
-            Formulir entri (serah terima, pemeriksaan berkala, gangguan, naikkan status) dan mode tanpa sinyal dibangun pada
-            Fase 4. Interval pemeriksaan sesi ini: {sesi.interval_pemeriksaan} menit.
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <Link href="/lapangan" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="h-4 w-4" aria-hidden /> Kembali</Link>
+      <div>
+        <h1 className="text-lg font-semibold">{o.jenis_kegiatan} · {o.lokasi_nama}</h1>
+        <p className="text-xs text-muted-foreground">{o.kode_kegiatan} · {o.upt_nama ?? o.kode_upt}</p>
+      </div>
+      {!siap ? (
+        <Alert tone="waspada">Sesi ini belum mendapat izin mulai dari Kepala Pengamanan ({o.status_kesiapan}). Pencatatan dibuka setelah disetujui.</Alert>
+      ) : (
+        <EntriLapangan
+          userId={user.id}
+          sessionId={sessionId}
+          status={o.status_keamanan ?? "HIJAU"}
+          rencanaWb={o.jumlah_narapidana ?? 0}
+          pakaiGelang={!!o.pakai_gelang_monitor}
+          intervalMenit={o.interval_pemeriksaan ?? 60}
+          batasPeriksaBerikut={o.batas_periksa_berikut}
+          nominatif={Array.isArray(nom.data) ? nom.data : []}
+          logs={logs.data ?? []}
+          tutup={!!o.ditutup_at}
+        />
+      )}
     </div>
   );
 }

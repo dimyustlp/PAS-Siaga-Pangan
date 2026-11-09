@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
+import { RegisterSw } from "@/components/lapangan/register-sw";
 import { UserBar } from "@/components/layout/user-bar";
 import { requireUser } from "@/lib/auth";
 
@@ -16,6 +17,7 @@ export default async function LapanganLayout({ children }: { children: React.Rea
         <UserBar name={user.fullName} role={user.role} />
       </header>
       <main className="flex-1 px-4 py-5">{children}</main>
+      <RegisterSw />
     </div>
   );
 }

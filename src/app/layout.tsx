@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   description:
     "Sistem pemantauan dan pengamanan kegiatan ketahanan pangan pemasyarakatan.",
   robots: { index: false, follow: false },
+  manifest: "/manifest.webmanifest",
+  icons: { icon: "/icon.svg" },
 };
 
 export const viewport: Viewport = {
