@@ -120,7 +120,12 @@ test("kegiatan dan sesi", () => {
   assert.equal(sessionSchema.safeParse({ ...s, interval_pemeriksaan: 3 }).success, false);
   assert.equal(sessionSchema.safeParse({ ...s, interval_pemeriksaan: 600 }).success, false);
   assert.equal(sessionSchema.safeParse({ ...s, jumlah_narapidana: -1 }).success, false);
-  assert.equal(locationSchema.safeParse({ nama: "Sawah A", latitude: 95 }).success, false);
+  assert.equal(locationSchema.safeParse({ nama: "Sawah A", titik: "95, 106" }).success, false);
+  assert.equal(locationSchema.safeParse({ nama: "Sawah A", posisi: "Luar UPT" }).success, false, "luar UPT wajib titik");
+  const ok = locationSchema.safeParse({ nama: "Sawah A", posisi: "Luar UPT", titik: "-6.2995, 106.5960" });
+  assert.ok(ok.success && ok.data.latitude === -6.2995 && ok.data.longitude === 106.596);
+  const dalam = locationSchema.safeParse({ nama: "Kebun dalam" });
+  assert.ok(dalam.success && dalam.data.posisi === "Dalam UPT" && dalam.data.latitude === undefined);
   assert.equal(locationSchema.safeParse({ nama: "" }).success, false);
 });
 

@@ -379,22 +379,34 @@ export type Database = {
           id: string;
           kode: string;
           nama: string;
+          provinsi: string[] | null;
           tautan_folder: string | null;
           tautan_form: string | null;
+          tipe: string | null;
+          urutan: number | null;
+          wilayah: string | null;
         };
         Insert: {
           id?: string;
           kode: string;
           nama: string;
+          provinsi?: string[] | null;
           tautan_folder?: string | null;
           tautan_form?: string | null;
+          tipe?: string | null;
+          urutan?: number | null;
+          wilayah?: string | null;
         };
         Update: {
           id?: string;
           kode?: string;
           nama?: string;
+          provinsi?: string[] | null;
           tautan_folder?: string | null;
           tautan_form?: string | null;
+          tipe?: string | null;
+          urutan?: number | null;
+          wilayah?: string | null;
         };
         Relationships: [];
       };
@@ -548,6 +560,7 @@ export type Database = {
           longitude: number | null;
           luas_ha: number | null;
           nama: string;
+          posisi: string;
         };
         Insert: {
           aktif?: boolean;
@@ -560,6 +573,7 @@ export type Database = {
           longitude?: number | null;
           luas_ha?: number | null;
           nama: string;
+          posisi?: string;
         };
         Update: {
           aktif?: boolean;
@@ -572,6 +586,7 @@ export type Database = {
           longitude?: number | null;
           luas_ha?: number | null;
           nama?: string;
+          posisi?: string;
         };
         Relationships: [];
       };
@@ -579,23 +594,41 @@ export type Database = {
         Row: {
           id: string;
           jenis: string | null;
+          kab_kota: string | null;
           kanwil_id: string | null;
+          kelas: string | null;
           kode: string;
+          latitude: number | null;
+          longitude: number | null;
           nama: string;
+          provinsi: string | null;
+          titik_perkiraan: boolean;
         };
         Insert: {
           id?: string;
           jenis?: string | null;
+          kab_kota?: string | null;
           kanwil_id?: string | null;
+          kelas?: string | null;
           kode: string;
+          latitude?: number | null;
+          longitude?: number | null;
           nama: string;
+          provinsi?: string | null;
+          titik_perkiraan?: boolean;
         };
         Update: {
           id?: string;
           jenis?: string | null;
+          kab_kota?: string | null;
           kanwil_id?: string | null;
+          kelas?: string | null;
           kode?: string;
+          latitude?: number | null;
+          longitude?: number | null;
           nama?: string;
+          provinsi?: string | null;
+          titik_perkiraan?: boolean;
         };
         Relationships: [];
       };

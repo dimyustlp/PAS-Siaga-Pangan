@@ -1,4 +1,4 @@
-import { ShieldCheck } from "lucide-react";
+import { Logo } from "@/components/layout/logo";
 import { NavLinks } from "@/components/layout/nav-links";
 import { UserBar } from "@/components/layout/user-bar";
 import { requireUser } from "@/lib/auth";
@@ -7,27 +7,29 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const user = await requireUser();
 
   return (
-    <div className="min-h-screen md:grid md:grid-cols-[16rem_1fr] print:block">
-      <aside className="bg-sidebar text-white md:sticky md:top-0 md:h-screen md:overflow-y-auto print:hidden">
-        <div className="flex items-center gap-3 px-4 py-4 md:px-5 md:py-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[hsl(173_66%_40%)] to-[hsl(205_70%_45%)] shadow-lg shadow-black/30">
-            <ShieldCheck className="h-5 w-5 text-white" aria-hidden />
+    <div className="min-h-[100dvh] md:grid md:grid-cols-[17rem_1fr] print:block">
+      <aside className="sticky top-0 z-30 md:h-[100dvh] md:p-3 print:hidden">
+        <div className="bg-sidebar flex h-full flex-col border-b border-white/[0.06] backdrop-blur-xl md:rounded-[1.6rem] md:border md:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_30px_60px_-30px_rgba(0,0,0,0.8)]">
+          <div className="flex items-center gap-3 px-4 py-3 md:px-5 md:pb-5 md:pt-6">
+            <Logo />
+            <div className="leading-tight">
+              <p className="text-[15px] font-semibold tracking-tight">PAS-SIAGA</p>
+              <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-muted-foreground">Pangan</p>
+            </div>
+            <div className="ml-auto md:hidden">
+              <UserBar name={user.fullName} role={user.role} ringkas />
+            </div>
           </div>
-          <div className="leading-tight">
-            <p className="font-bold tracking-tight">PAS-SIAGA</p>
-            <p className="text-[11px] uppercase tracking-[0.14em] text-white/55">Pangan</p>
+          <p className="hidden px-6 pb-2 text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground/70 md:block">Menu</p>
+          <div className="px-3 pb-3 md:flex-1 md:overflow-y-auto md:pb-4">
+            <NavLinks role={user.role} />
           </div>
-        </div>
-        <div className="px-3 pb-3 md:pb-6">
-          <NavLinks role={user.role} />
+          <div className="hidden border-t border-white/[0.06] p-3 md:block">
+            <UserBar name={user.fullName} role={user.role} />
+          </div>
         </div>
       </aside>
-      <div className="flex min-w-0 flex-col">
-        <header className="sticky top-0 z-20 flex items-center justify-end border-b border-border/60 bg-background/80 px-4 py-3 backdrop-blur md:px-8 print:hidden">
-          <UserBar name={user.fullName} role={user.role} />
-        </header>
-        <main className="halaman-masuk flex-1 px-4 py-6 md:px-8 md:py-8 print:p-0">{children}</main>
-      </div>
+      <main className="halaman-masuk min-w-0 px-4 py-6 md:px-8 md:py-8 print:p-0">{children}</main>
     </div>
   );
 }

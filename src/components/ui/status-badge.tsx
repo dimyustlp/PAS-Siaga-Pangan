@@ -4,16 +4,16 @@ export type SecurityStatus = "HIJAU" | "KUNING" | "MERAH" | "KRITIS";
 
 const STYLE: Record<SecurityStatus, string> = {
   HIJAU: "bg-status-hijau/12 text-status-hijau border-status-hijau/30",
-  KUNING: "bg-status-kuning/15 text-[hsl(38_90%_28%)] border-status-kuning/40",
+  KUNING: "bg-status-kuning/12 text-status-kuning border-status-kuning/35",
   MERAH: "bg-status-merah/12 text-status-merah border-status-merah/30",
-  KRITIS: "bg-status-kritis text-white border-status-kritis",
+  KRITIS: "bg-status-kritis/20 text-[hsl(322_90%_80%)] border-status-kritis/50",
 };
 
 const DOT: Record<SecurityStatus, string> = {
   HIJAU: "bg-status-hijau",
   KUNING: "bg-status-kuning",
   MERAH: "bg-status-merah",
-  KRITIS: "bg-white",
+  KRITIS: "bg-status-kritis",
 };
 
 export function StatusBadge({ status, className }: { status: SecurityStatus; className?: string }) {
@@ -25,7 +25,7 @@ export function StatusBadge({ status, className }: { status: SecurityStatus; cla
         className
       )}
     >
-      <span className={cn("mr-1.5 h-1.5 w-1.5 rounded-full", DOT[status])} aria-hidden />
+      <span className={cn("mr-1.5 h-1.5 w-1.5 rounded-full", DOT[status], (status === "MERAH" || status === "KRITIS") && "titik-hidup")} aria-hidden />
       {status}
     </span>
   );

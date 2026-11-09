@@ -46,7 +46,7 @@ export function RealtimeRefresh({ tabel = TABEL_BAWAAN, intervalDetik = 60 }: { 
 
   return (
     <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground" aria-live="polite">
-      <span className={cn("h-2 w-2 rounded-full", langsung ? "bg-status-hijau" : "bg-status-kuning")} aria-hidden />
+      <span className={cn("h-2 w-2 rounded-full", langsung ? "titik-hidup bg-primary text-primary" : "bg-muted-foreground/60")} aria-hidden />
       {langsung ? "Pembaruan langsung aktif" : "Memuat ulang berkala"}
     </span>
   );

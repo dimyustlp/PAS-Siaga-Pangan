@@ -12,6 +12,7 @@ import {
   Radio,
   LayoutDashboard,
   ListChecks,
+  Map as IkonPeta,
   MapPinned,
   ScrollText,
   ShieldAlert,
@@ -34,11 +35,13 @@ const ICONS = {
   audit: ScrollText,
   berkas: FolderOpen,
   gelang: Radio,
+  peta: IkonPeta,
 };
 
 type Item = { href: string; label: string; icon: keyof typeof ICONS };
 
 const DASBOR: Item = { href: "/", label: "Dasbor", icon: "dasbor" };
+const PETA: Item = { href: "/peta", label: "Peta kegiatan", icon: "peta" };
 const BERSAMA: Item[] = [
   { href: "/berkas", label: "Berkas", icon: "berkas" },
   { href: "/gelang", label: "Gelang", icon: "gelang" },
@@ -50,6 +53,7 @@ const BERSAMA: Item[] = [
 const ITEMS: Record<Role, Item[]> = {
   administrator: [
     DASBOR,
+    PETA,
     ...BERSAMA,
     { href: "/admin/akun", label: "Akun", icon: "akun" },
     { href: "/admin/wilayah", label: "UPT & Kanwil", icon: "wilayah" },
@@ -59,18 +63,20 @@ const ITEMS: Record<Role, Item[]> = {
   ],
   operator: [
     DASBOR,
+    PETA,
     { href: "/kegiatan", label: "Kegiatan", icon: "kegiatan" },
     { href: "/tindak-lanjut", label: "Tindak lanjut", icon: "tindak" },
     ...BERSAMA,
   ],
   kepala_pengamanan: [
     DASBOR,
+    PETA,
     { href: "/keputusan", label: "Keputusan", icon: "keputusan" },
     { href: "/tindak-lanjut", label: "Tindak lanjut", icon: "tindak" },
     ...BERSAMA,
   ],
-  pemantau_kanwil: [DASBOR, ...BERSAMA],
-  pemantau_pusat: [DASBOR, ...BERSAMA],
+  pemantau_kanwil: [DASBOR, PETA, ...BERSAMA],
+  pemantau_pusat: [DASBOR, PETA, ...BERSAMA],
   pengawal: [
     { href: "/lapangan", label: "Tugas lapangan", icon: "kegiatan" },
     { href: "/berkas", label: "Berkas", icon: "berkas" },
@@ -92,14 +98,14 @@ export function NavLinks({ role }: { role: Role }) {
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "group relative flex shrink-0 items-center gap-3 whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
+              "group relative flex shrink-0 items-center gap-3 whitespace-nowrap rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition-[background-color,color,transform] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]",
               active
-                ? "bg-white/14 text-white shadow-[inset_0_0_0_1px_hsl(0_0%_100%/0.08)]"
-                : "text-white/70 hover:bg-white/8 hover:text-white"
+                ? "bg-white/[0.07] text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+                : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
             )}
           >
-            {active && <span className="absolute inset-y-2 left-0 hidden w-1 rounded-full bg-[hsl(173_70%_55%)] md:block" aria-hidden />}
-            <Icon className={cn("h-4 w-4 shrink-0 transition-transform group-hover:scale-110", active && "text-[hsl(173_70%_65%)]")} aria-hidden />
+            {active && <span className="absolute inset-y-2.5 left-0 hidden w-[3px] rounded-full bg-primary md:block" aria-hidden />}
+            <Icon className={cn("h-[18px] w-[18px] shrink-0 transition-transform duration-500 group-hover:translate-x-0.5", active && "text-primary")} aria-hidden />
             {label}
           </Link>
         );

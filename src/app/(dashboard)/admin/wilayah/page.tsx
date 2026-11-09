@@ -1,8 +1,8 @@
 import { ActionForm } from "@/components/shared/action-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, PageHeader, Select } from "@/components/ui/form";
+import { Field, PageHeader, Pill, Select } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createKanwil, createUpt, updateKanwilTautan } from "@/lib/actions/admin";
+import { createKanwil, createUpt, ubahTitikUpt, updateKanwilTautan } from "@/lib/actions/admin";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "UPT & Kanwil" };
@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 export default async function WilayahPage() {
   const supabase = await createClient();
   const [kanwil, upt] = await Promise.all([
-    supabase.from("master_kanwil").select("*").order("nama"),
+    supabase.from("master_kanwil").select("*").order("urutan", { nullsFirst: false }),
     supabase.from("master_upt").select("*").order("nama"),
   ]);
   const daftarKanwil = kanwil.data ?? [];
@@ -65,16 +65,62 @@ export default async function WilayahPage() {
         </CardContent>
       </Card>
       <Card>
-        <CardHeader><CardTitle>Daftar UPT</CardTitle><CardDescription>{daftarKanwil.length} Kanwil, {daftarUpt.length} UPT.</CardDescription></CardHeader>
-        <CardContent className="overflow-x-auto">
-          <table className="w-full min-w-[32rem] text-sm">
-            <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="py-2 pr-3">Kode</th><th className="py-2 pr-3">Nama</th><th className="py-2 pr-3">Jenis</th><th className="py-2">Kanwil</th></tr></thead>
-            <tbody className="divide-y">
-              {daftarUpt.map((u) => (
-                <tr key={u.id}><td className="py-2 pr-3 font-mono text-xs">{u.kode}</td><td className="py-2 pr-3">{u.nama}</td><td className="py-2 pr-3">{u.jenis ?? "-"}</td><td className="py-2">{daftarKanwil.find((k) => k.id === u.kanwil_id)?.nama ?? "-"}</td></tr>
-              ))}
-            </tbody>
-          </table>
+        <CardHeader>
+          <CardTitle>Perbarui titik peta UPT</CardTitle>
+          <CardDescription>Titik awal UPT masih perkiraan (pusat kabupaten/kota). Buka Google Maps, klik kanan gedung UPT, klik angka koordinatnya, lalu tempel di sini.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ActionForm action={ubahTitikUpt} submit="Simpan titik" success="Titik UPT diperbarui." fields={{ kode: { s: "kode" }, titik: { s: "titik" } }}>
+            <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr]">
+              <Field label="UPT" htmlFor="t-upt">
+                <Select id="t-upt" name="kode" required defaultValue="">
+                  <option value="" disabled>Pilih UPT</option>
+                  {daftarKanwil.map((k) => (
+                    <optgroup key={k.id} label={k.wilayah ?? k.nama}>
+                      {daftarUpt.filter((u) => u.kanwil_id === k.id).map((u) => <option key={u.kode} value={u.kode}>{u.nama}{u.titik_perkiraan ? "" : " (sudah diverifikasi)"}</option>)}
+                    </optgroup>
+                  ))}
+                </Select>
+              </Field>
+              <Field label="Titik koordinat" htmlFor="t-titik"><Input id="t-titik" name="titik" required placeholder="-6.2995, 106.5960" inputMode="decimal" /></Field>
+            </div>
+          </ActionForm>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Daftar UPT per Kanwil</CardTitle>
+          <CardDescription>{daftarKanwil.length} Kanwil, {daftarUpt.length} UPT. {daftarUpt.filter((u) => !u.titik_perkiraan).length} titik sudah diverifikasi.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {daftarKanwil.map((k) => {
+            const isi = daftarUpt.filter((u) => u.kanwil_id === k.id);
+            return (
+              <details key={k.id} className="group rounded-xl border border-white/[0.07] bg-white/[0.02]">
+                <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 text-sm [&::-webkit-details-marker]:hidden">
+                  <span className="flex-1 font-medium">{k.wilayah ?? k.nama}</span>
+                  {k.tipe && <Pill>Tipe {k.tipe}</Pill>}
+                  <span className="font-mono text-xs text-muted-foreground">{isi.length} UPT</span>
+                </summary>
+                <div className="overflow-x-auto border-t border-white/[0.06]">
+                  <table className="w-full min-w-[40rem] text-sm">
+                    <thead className="text-left text-[11px] uppercase tracking-wider text-muted-foreground"><tr><th className="px-4 py-2">Kode</th><th className="py-2 pr-3">Nama</th><th className="py-2 pr-3">Jenis</th><th className="py-2 pr-3">Kab/Kota</th><th className="py-2 pr-4">Titik</th></tr></thead>
+                    <tbody className="divide-y divide-white/[0.05]">
+                      {isi.map((u) => (
+                        <tr key={u.id}>
+                          <td className="px-4 py-2 font-mono text-xs">{u.kode}</td>
+                          <td className="py-2 pr-3">{u.nama}</td>
+                          <td className="py-2 pr-3 text-muted-foreground">{u.jenis ?? "-"}</td>
+                          <td className="py-2 pr-3 text-muted-foreground">{u.kab_kota ?? "-"}</td>
+                          <td className="py-2 pr-4">{u.titik_perkiraan ? <Pill>Perkiraan</Pill> : <Pill tone="biru">Terverifikasi</Pill>}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </details>
+            );
+          })}
         </CardContent>
       </Card>
     </div>

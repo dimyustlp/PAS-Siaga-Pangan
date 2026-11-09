@@ -4,18 +4,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "group/btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-[transform,background-color,border-color,box-shadow,filter] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-br from-primary to-[hsl(205_62%_28%)] text-primary-foreground shadow-sm hover:brightness-110",
-        outline: "border border-input bg-card hover:border-brand/50 hover:bg-brand-soft hover:text-accent-foreground",
-        ghost: "hover:bg-secondary",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        default: "bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_10px_24px_-12px_hsl(214_96%_63%/0.7)] hover:-translate-y-px hover:brightness-110",
+        outline: "border border-white/10 bg-white/[0.03] text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] hover:-translate-y-px hover:border-primary/40 hover:bg-primary/10",
+        ghost: "hover:bg-white/[0.06]",
+        destructive: "border border-destructive/40 bg-destructive/15 text-[hsl(0_90%_75%)] hover:bg-destructive/25",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 px-3",
+        default: "h-10 px-5 py-2",
+        sm: "h-9 px-4",
         lg: "h-11 px-6",
       },
     },

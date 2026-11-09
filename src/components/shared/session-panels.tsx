@@ -62,7 +62,7 @@ export function SesiTabel({ rows, now, tampilkanUpt }: { rows: Overview[]; now: 
                   {p.length > 0 && (
                     <ul className="mt-1 space-y-0.5">
                       {p.map((x) => (
-                        <li key={x.teks} className={cn("flex items-start gap-1 text-xs", x.tingkat === "kritis" ? "text-status-merah" : "text-[hsl(38_90%_28%)]")}>
+                        <li key={x.teks} className={cn("flex items-start gap-1 text-xs", x.tingkat === "kritis" ? "text-status-merah" : "text-status-kuning")}>
                           <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
                           {x.teks}
                         </li>

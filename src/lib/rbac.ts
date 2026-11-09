@@ -45,6 +45,7 @@ type Rule = { prefix: string; exact?: boolean; roles: Role[] };
 const RULES: Rule[] = [
   { prefix: "/", exact: true, roles: NON_PENGAWAL },
   { prefix: "/sesi", roles: NON_PENGAWAL },
+  { prefix: "/peta", roles: NON_PENGAWAL },
   { prefix: "/kegiatan", roles: ["operator"] },
   { prefix: "/keputusan", roles: ["kepala_pengamanan"] },
   { prefix: "/tindak-lanjut", roles: ["operator", "kepala_pengamanan"] },

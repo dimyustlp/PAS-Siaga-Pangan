@@ -20,7 +20,7 @@ Teknologi: Next.js 15 (App Router), TypeScript, Tailwind CSS, Supabase (database
 | Pengawal | `/lapangan` (entri offline, bisa dipasang sebagai aplikasi), `/pedoman` |
 | Pemantau Kanwil / Pusat | Dasbor, `/sesi`, `/evaluasi`, `/risiko`, `/pedoman` (hanya baca, cakupan sesuai Kanwil/pusat) |
 
-Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu hanya memudahkan tampilan. Penjaga data yang sebenarnya adalah aturan RLS di database (`01-skema-pas-siaga-pangan.sql`, `02-peran-administrator.sql`, dan `03-fitur-rpp.sql`, `06-berkas-dan-akun.sql`, `07-gelang-alarm.sql`, `08-perketat-profil.sql`).
+Pembatas halaman ada di `src/middleware.ts` dan `src/lib/rbac.ts`. Pembatas itu hanya memudahkan tampilan. Penjaga data yang sebenarnya adalah aturan RLS di database (`01-skema-pas-siaga-pangan.sql`, `02-peran-administrator.sql`, dan `03-fitur-rpp.sql`, `06-berkas-dan-akun.sql`, `07-gelang-alarm.sql`, `08-perketat-profil.sql`, `09-kanwil-upt-nasional.sql`).
 
 ## Tahap pengembangan
 
@@ -57,3 +57,13 @@ Sistem pemantauan gelang (imipas.kittways.com) tidak punya API yang kami ketahui
 - Nama unit di sistem gelang diawali kode (`0834_M Hendi F`). Kode itu dipetakan ke UPT dan WB di menu Gelang.
 - Alarm masuk ke sesi aktif UPT (yang memakai gelang) dan menunggu konfirmasi petugas di menu Gelang.
 - Tidak ada pemantauan posisi terus-menerus di aplikasi ini.
+
+## Peta kegiatan
+
+Menu Peta (`/peta`) menampilkan seluruh 611 UPT dari 33 Kanwil (data di `data/upt-nasional.json`, `data/kanwil-33.json`).
+
+- Bentuk penanda = letak kegiatan: lingkaran di dalam UPT, belah ketupat di luar UPT (dengan garis putus-putus ke UPT induknya).
+- Warna penanda = kondisi lapangan memakai warna status yang sudah ditetapkan (hijau, kuning, merah, kritis). Kegiatan yang belum diizinkan mulai hanya bergaris putih; tanpa sesi bergaris abu-abu putus-putus.
+- Titik UPT awalnya perkiraan (pusat kabupaten/kota). Administrator memperbaikinya di menu UPT & Kanwil dengan menempel koordinat dari Google Maps.
+- Lokasi kegiatan di luar UPT wajib diberi titik koordinat saat Operator mencatat lokasi.
+- Peta dasar: CARTO Dark Matter (MapLibre GL), dengan ubin raster CARTO sebagai cadangan.

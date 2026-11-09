@@ -2,17 +2,17 @@ import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TONE = {
-  biru: { ikon: "bg-primary/10 text-primary", garis: "before:bg-primary" },
-  teal: { ikon: "bg-brand-soft text-brand", garis: "before:bg-brand" },
-  hijau: { ikon: "bg-status-hijau/12 text-status-hijau", garis: "before:bg-status-hijau" },
-  kuning: { ikon: "bg-status-kuning/15 text-[hsl(38_90%_30%)]", garis: "before:bg-status-kuning" },
-  merah: { ikon: "bg-status-merah/12 text-status-merah", garis: "before:bg-status-merah" },
-  kritis: { ikon: "bg-status-kritis/12 text-status-kritis", garis: "before:bg-status-kritis" },
+  biru: { ikon: "text-[hsl(214_96%_75%)] bg-primary/12 ring-primary/25", garis: "from-primary/70" },
+  teal: { ikon: "text-[hsl(195_85%_75%)] bg-[hsl(195_80%_55%/0.12)] ring-[hsl(195_80%_55%/0.25)]", garis: "from-[hsl(195_80%_55%)]" },
+  hijau: { ikon: "text-status-hijau bg-status-hijau/12 ring-status-hijau/25", garis: "from-status-hijau/80" },
+  kuning: { ikon: "text-status-kuning bg-status-kuning/12 ring-status-kuning/25", garis: "from-status-kuning/80" },
+  merah: { ikon: "text-status-merah bg-status-merah/12 ring-status-merah/25", garis: "from-status-merah/80" },
+  kritis: { ikon: "text-status-kritis bg-status-kritis/12 ring-status-kritis/25", garis: "from-status-kritis/80" },
 } as const;
 
 export type NadaKartu = keyof typeof TONE;
 
-/** Kartu angka ringkas: ikon berwarna, angka besar, keterangan. */
+/** Kartu angka ringkas: angka besar berhuruf mono, ikon bercincin, garis warna tipis di atas. */
 export function StatCard({
   icon: Icon,
   nilai,
@@ -28,20 +28,15 @@ export function StatCard({
 }) {
   const t = TONE[nada];
   return (
-    <div
-      className={cn(
-        "lift relative flex items-center gap-4 overflow-hidden rounded-xl border border-border/70 bg-card p-4 shadow-soft before:absolute before:inset-y-0 before:left-0 before:w-1",
-        t.garis,
-        className
-      )}
-    >
-      <span className={cn("flex h-11 w-11 shrink-0 items-center justify-center rounded-xl", t.ikon)}>
-        <Icon className="h-5 w-5" aria-hidden />
-      </span>
-      <div className="min-w-0">
-        <p className="text-2xl font-bold leading-none tabular-nums">{nilai}</p>
-        <p className="mt-1 text-xs text-muted-foreground">{label}</p>
+    <div className={cn("kaca lift group relative overflow-hidden rounded-2xl p-4 md:p-5", className)}>
+      <span className={cn("pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r to-transparent", t.garis)} aria-hidden />
+      <div className="flex items-start justify-between gap-3">
+        <p className="font-mono text-3xl font-medium leading-none tracking-tight tabular-nums">{nilai}</p>
+        <span className={cn("flex h-9 w-9 shrink-0 items-center justify-center rounded-full ring-1 ring-inset transition-transform duration-500 group-hover:scale-110", t.ikon)}>
+          <Icon className="h-4 w-4" aria-hidden />
+        </span>
       </div>
+      <p className="mt-3 text-xs leading-snug text-muted-foreground">{label}</p>
     </div>
   );
 }

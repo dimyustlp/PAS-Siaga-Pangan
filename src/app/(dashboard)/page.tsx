@@ -54,24 +54,29 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      <section className="bg-brand-gradient relative overflow-hidden rounded-2xl p-6 text-white shadow-soft md:p-8">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/10 blur-2xl" aria-hidden />
-        <div className="pointer-events-none absolute -bottom-20 right-1/3 h-56 w-56 rounded-full bg-[hsl(173_70%_50%)]/20 blur-3xl" aria-hidden />
-        <div className="relative flex flex-wrap items-end justify-between gap-4">
+      <section className="bg-brand-gradient relative overflow-hidden rounded-[1.75rem] border border-white/[0.08] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] md:p-8">
+        <div className="pointer-events-none absolute -right-24 -top-28 h-80 w-80 rounded-full border border-white/[0.06]" aria-hidden />
+        <div className="pointer-events-none absolute -right-10 -top-14 h-52 w-52 rounded-full border border-primary/20" aria-hidden />
+        <div className="relative grid gap-6 md:grid-cols-[1.6fr_1fr] md:items-end">
           <div className="min-w-0">
-            <p className="text-sm text-white/75">{fmtTanggal(now)} · {ROLE_LABEL[user.role]}</p>
-            <h1 className="mt-1 text-2xl font-extrabold tracking-tight md:text-3xl">{sapaan(Number(new Intl.DateTimeFormat("id-ID", { hour: "numeric", hourCycle: "h23", timeZone: "Asia/Jakarta" }).format(now)))}, {user.fullName.split(" ")[0]}</h1>
-            <p className="mt-2 max-w-xl text-sm text-white/80">
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              {fmtTanggal(now)} · {ROLE_LABEL[user.role]}
+            </p>
+            <h1 className="mt-4 text-3xl font-semibold tracking-tighter md:text-[2.5rem] md:leading-[1.05]">
+              {sapaan(Number(new Intl.DateTimeFormat("id-ID", { hour: "numeric", hourCycle: "h23", timeZone: "Asia/Jakarta" }).format(now)))}, {user.fullName.split(" ")[0]}
+            </h1>
+            <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-muted-foreground">
               {perlu.length > 0 ? `${perlu.length} kegiatan perlu perhatian sekarang.` : "Tidak ada kegiatan yang perlu perhatian khusus saat ini."}
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full bg-white/12 px-3 py-1.5 text-white ring-1 ring-white/20 [&_*]:!text-white"><RealtimeRefresh /></span>
+          <div className="flex flex-wrap items-center gap-2 md:justify-end">
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5"><RealtimeRefresh /></span>
+            <Button asChild size="sm" variant="outline"><Link href="/peta">Buka peta</Link></Button>
             {user.role === "operator" && (
-              <Button asChild size="sm" variant="outline" className="border-white/30 bg-white text-primary hover:bg-white/90"><Link href="/kegiatan">Siapkan kegiatan</Link></Button>
+              <Button asChild size="sm"><Link href="/kegiatan">Siapkan kegiatan</Link></Button>
             )}
             {user.role === "kepala_pengamanan" && (
-              <Button asChild size="sm" variant="outline" className="border-white/30 bg-white text-primary hover:bg-white/90"><Link href="/keputusan">Antrean keputusan</Link></Button>
+              <Button asChild size="sm"><Link href="/keputusan">Antrean keputusan</Link></Button>
             )}
           </div>
         </div>
@@ -92,13 +97,13 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
         </form>
       )}
 
-      <section aria-label="Status keamanan kegiatan berjalan" className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <section aria-label="Status keamanan kegiatan berjalan" className="muncul grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
         {URUTAN.map(({ st, label, ikon, nada }) => (
           <StatCard key={st} icon={ikon} nada={nada} nilai={hitung(st)} label={`${label} · kegiatan berjalan`} />
         ))}
       </section>
 
-      <section aria-label="Ringkasan perhatian" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section aria-label="Ringkasan perhatian" className="muncul grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4">
         <StatCard icon={ClipboardCheck} nada="biru" nilai={menunggu} label="menunggu keputusan kesiapan" />
         <StatCard icon={OctagonAlert} nada="kuning" nilai={perlu.length} label="kegiatan perlu perhatian" />
         <StatCard icon={Clock} nada="merah" nilai={tlTerlambat} label="tindak lanjut lewat tenggat" />
@@ -106,7 +111,7 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
       </section>
 
       <section aria-label="Daftar sesi" className="space-y-3">
-        <h2 className="text-lg font-bold tracking-tight">Sesi kegiatan</h2>
+        <h2 className="text-lg font-semibold tracking-tight">Sesi kegiatan</h2>
         <SesiTabel rows={urut} now={now} tampilkanUpt={luas} />
       </section>
     </div>

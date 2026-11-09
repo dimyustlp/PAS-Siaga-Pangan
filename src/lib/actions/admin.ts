@@ -12,6 +12,7 @@ import {
 } from "@/lib/validations/admin";
 import { isUniqueViolation, mapDbError } from "@/lib/errors";
 import { kanwilTautanSchema } from "@/lib/validations/berkas";
+import { bacaTitik, titikUptSchema } from "@/lib/validations/planning";
 import type { TablesUpdate } from "@/lib/supabase/database.types";
 
 const DITOLAK = "Hanya Administrator yang dapat melakukan tindakan ini.";
@@ -148,5 +149,25 @@ export async function updateKanwilTautan(input: unknown): Promise<ActionResult> 
   if (!data || data.length === 0) return fail("Kanwil tidak ditemukan.");
   revalidatePath("/admin/wilayah");
   revalidatePath("/berkas");
+  return success();
+}
+
+/** Memperbarui titik peta UPT dari koordinat yang ditempel dari Google Maps. Titik dianggap sudah diverifikasi. */
+export async function ubahTitikUpt(input: unknown): Promise<ActionResult> {
+  const auth = await authorize(["administrator"]);
+  if (!auth.ok) return fail(auth.error);
+  const parsed = titikUptSchema.safeParse(input);
+  if (!parsed.success) return zodFail(parsed.error);
+  const t = bacaTitik(parsed.data.titik);
+  if (!t || t === "salah") return fail("Titik tidak terbaca.");
+  const { data, error } = await auth.supabase
+    .from("master_upt")
+    .update({ latitude: t.lat, longitude: t.lng, titik_perkiraan: false })
+    .eq("kode", parsed.data.kode)
+    .select("id");
+  if (error) return fail(mapDbError(error, DITOLAK));
+  if (!data?.length) return fail("UPT tidak ditemukan.");
+  revalidatePath("/admin/wilayah");
+  revalidatePath("/peta");
   return success();
 }

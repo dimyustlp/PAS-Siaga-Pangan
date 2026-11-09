@@ -1,5 +1,4 @@
 import { LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { signOut } from "@/lib/actions/auth";
 import { ROLE_LABEL, type Role } from "@/lib/rbac";
 
@@ -8,21 +7,31 @@ function inisial(nama: string) {
   return ((bagian[0]?.[0] ?? "") + (bagian.length > 1 ? bagian[bagian.length - 1][0] : "")).toUpperCase() || "?";
 }
 
-export function UserBar({ name, role, gelap = false }: { name: string; role: Role; gelap?: boolean }) {
+/** Identitas pengguna dan tombol keluar. `ringkas` untuk bilah atas di layar kecil. */
+export function UserBar({ name, role, ringkas = false }: { name: string; role: Role; ringkas?: boolean; gelap?: boolean }) {
   return (
-    <div className="flex items-center gap-3">
-      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-gradient text-xs font-bold text-white shadow-sm" aria-hidden>
+    <div className="flex min-w-0 items-center gap-3">
+      <span
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[hsl(214_96%_63%)] to-[hsl(234_70%_55%)] font-mono text-[11px] font-semibold text-white ring-2 ring-white/10"
+        aria-hidden
+      >
         {inisial(name)}
       </span>
-      <div className={gelap ? "hidden leading-tight text-white sm:block" : "hidden leading-tight sm:block"}>
-        <p className="text-sm font-semibold">{name}</p>
-        <p className={gelap ? "text-xs text-white/65" : "text-xs text-muted-foreground"}>{ROLE_LABEL[role]}</p>
-      </div>
+      {!ringkas && (
+        <div className="min-w-0 flex-1 leading-tight">
+          <p className="truncate text-sm font-medium">{name}</p>
+          <p className="truncate text-[11px] text-muted-foreground">{ROLE_LABEL[role]}</p>
+        </div>
+      )}
       <form action={signOut}>
-        <Button type="submit" variant="outline" size="sm" aria-label="Keluar" className={gelap ? "border-white/25 bg-white/10 text-white hover:bg-white/20 hover:text-white" : undefined}>
+        <button
+          type="submit"
+          aria-label="Keluar"
+          title="Keluar"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-muted-foreground transition-[color,background-color,transform] duration-500 hover:bg-destructive/15 hover:text-[hsl(0_90%_78%)] active:scale-95"
+        >
           <LogOut className="h-4 w-4" aria-hidden />
-          <span className="hidden sm:inline">Keluar</span>
-        </Button>
+        </button>
       </form>
     </div>
   );

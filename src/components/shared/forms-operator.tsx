@@ -53,7 +53,7 @@ export function FormKegiatan({ lokasi }: { lokasi: Tables<"master_locations">[] 
         <Field label="Lokasi" htmlFor="lokasi">
           <Select id="lokasi" name="lokasi" required defaultValue="">
             <option value="" disabled>{lokasi.length ? "Pilih lokasi" : "Tambahkan lokasi dulu di bawah"}</option>
-            {lokasi.map((l) => <option key={l.id} value={l.id}>{l.nama}</option>)}
+            {lokasi.map((l) => <option key={l.id} value={l.id}>{l.nama} · {l.posisi}</option>)}
           </Select>
         </Field>
         <Field label="Tanggal mulai" htmlFor="mulai"><Input id="mulai" name="mulai" type="date" required /></Field>
@@ -142,10 +142,16 @@ export function FormLokasi() {
     <ActionForm
       action={createLocation}
       submit="Simpan lokasi"
-      fields={{ nama: { s: "nama" }, kode: { s: "kode" }, keterangan: { s: "ket" }, luas_ha: { n: "luas" } }}
+      fields={{ nama: { s: "nama" }, kode: { s: "kode" }, keterangan: { s: "ket" }, luas_ha: { n: "luas" }, posisi: { s: "posisi" }, titik: { s: "titik" } }}
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Nama lokasi" htmlFor="l-nama"><Input id="l-nama" name="nama" required /></Field>
+        <Field label="Letak lokasi" htmlFor="l-posisi" hint="Menentukan bentuk penanda di peta: lingkaran untuk di dalam UPT, belah ketupat untuk di luar UPT.">
+          <Select id="l-posisi" name="posisi" defaultValue="Dalam UPT"><option>Dalam UPT</option><option>Luar UPT</option></Select>
+        </Field>
+        <Field label="Titik koordinat" htmlFor="l-titik" hint="Wajib untuk lokasi di luar UPT. Di Google Maps, klik kanan titik lokasi lalu klik angka koordinatnya, kemudian tempel di sini.">
+          <Input id="l-titik" name="titik" placeholder="-6.2995, 106.5960" inputMode="decimal" />
+        </Field>
         <Field label="Kode (opsional)" htmlFor="l-kode"><Input id="l-kode" name="kode" /></Field>
         <Field label="Luas (hektare)" htmlFor="l-luas"><Input id="l-luas" name="luas" inputMode="decimal" /></Field>
         <Field label="Keterangan" htmlFor="l-ket"><Input id="l-ket" name="ket" /></Field>

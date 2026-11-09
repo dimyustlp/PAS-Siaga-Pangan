@@ -18,14 +18,47 @@ const tanggal = z
     return !Number.isNaN(d.getTime()) && d.toISOString().startsWith(s);
   }, "Tanggal tidak valid.");
 
-export const locationSchema = z.object({
-  nama: z.string().trim().min(1, "Nama lokasi wajib diisi.").max(150),
-  kode: opt(40),
-  keterangan: opt(500),
-  latitude: z.number().min(-90).max(90).optional(),
-  longitude: z.number().min(-180).max(180).optional(),
-  luas_ha: z.number().min(0).max(100000).optional(),
-});
+/**
+ * Membaca titik koordinat yang ditempel dari Google Maps ("-6.2995, 106.5960" atau "-6,2995 106,5960").
+ * Hanya menerima titik di wilayah Indonesia. Kosong = tidak diisi.
+ */
+export function bacaTitik(v: string | undefined | null): { lat: number; lng: number } | null | "salah" {
+  const t = (v ?? "").trim();
+  if (!t) return null;
+  const angka = t.match(/-?\d+(?:[.,]\d+)?/g);
+  if (!angka || angka.length !== 2) return "salah";
+  // Koma desimal hanya bila pemisahnya spasi; "x, y" dianggap pemisah koma.
+  const [a, b] = angka.map((x) => Number(x.replace(",", ".")));
+  if (!(a >= -11 && a <= 7 && b >= 94 && b <= 142)) return "salah";
+  return { lat: Math.round(a * 1e6) / 1e6, lng: Math.round(b * 1e6) / 1e6 };
+}
+
+export const POSISI_LOKASI = ["Dalam UPT", "Luar UPT"] as const;
+
+export const locationSchema = z
+  .object({
+    nama: z.string().trim().min(1, "Nama lokasi wajib diisi.").max(150),
+    kode: opt(40),
+    keterangan: opt(500),
+    posisi: z.enum(POSISI_LOKASI, { errorMap: () => ({ message: "Pilih lokasi di dalam atau di luar UPT." }) }).default("Dalam UPT"),
+    titik: z.string().trim().max(80).optional(),
+    luas_ha: z.number().min(0).max(100000).optional(),
+  })
+  .superRefine((v, ctx) => {
+    if (bacaTitik(v.titik) === "salah") ctx.addIssue({ code: "custom", path: ["titik"], message: "Titik tidak terbaca. Tempel dari Google Maps, contoh: -6.2995, 106.5960" });
+    if (v.posisi === "Luar UPT" && !bacaTitik(v.titik)) ctx.addIssue({ code: "custom", path: ["titik"], message: "Lokasi di luar UPT wajib diberi titik koordinat agar tampil di peta." });
+  })
+  .transform(({ titik, ...rest }) => {
+    const t = bacaTitik(titik);
+    return { ...rest, latitude: t && t !== "salah" ? t.lat : undefined, longitude: t && t !== "salah" ? t.lng : undefined };
+  });
+
+export const titikUptSchema = z
+  .object({ kode: z.string().trim().min(2).max(30), titik: z.string().trim().min(3, "Isi titik koordinat.").max(80) })
+  .superRefine((v, ctx) => {
+    const t = bacaTitik(v.titik);
+    if (!t || t === "salah") ctx.addIssue({ code: "custom", path: ["titik"], message: "Titik tidak terbaca. Tempel dari Google Maps, contoh: -6.2995, 106.5960" });
+  });
 
 export const inmateSchema = z.object({
   nomor_registrasi: z.string().trim().min(1, "Nomor registrasi wajib diisi.").max(40),
