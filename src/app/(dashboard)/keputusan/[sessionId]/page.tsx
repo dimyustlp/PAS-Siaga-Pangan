@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { z } from "zod";
 import { ActionForm } from "@/components/shared/action-form";
 import { AksiTindakLanjut, FormTindakLanjutBaru } from "@/components/shared/followup-forms";
+import { TautanGelang } from "@/components/shared/tautan-gelang";
 import { RealtimeRefresh } from "@/components/shared/realtime-refresh";
 import {
   DaftarKeputusan,
@@ -49,7 +50,7 @@ export default async function KeputusanSesiPage({ params }: { params: Promise<{ 
     <div className="mx-auto max-w-5xl space-y-6">
       <PageHeader
         title="Keputusan sesi"
-        actions={<><RealtimeRefresh /><Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}`}>Detail & laporan</Link></Button></>}
+        actions={<><RealtimeRefresh />{data.sesi.pakai_gelang_monitor && <TautanGelang />}<Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}`}>Detail & laporan</Link></Button></>}
       />
       {peringatan.map((p) => <Alert key={p.teks} tone={p.tingkat === "kritis" ? "bahaya" : "waspada"}>{p.teks}</Alert>)}
       <KepalaSesi data={data} />

@@ -4,6 +4,7 @@ import { Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, PageHeader } from "@/components/ui/form";
+import { TautanGelang } from "@/components/shared/tautan-gelang";
 import { RealtimeRefresh } from "@/components/shared/realtime-refresh";
 import {
   DaftarGangguan,
@@ -44,6 +45,7 @@ export default async function DetailSesiPage({ params }: { params: Promise<{ ses
         actions={
           <>
             <RealtimeRefresh />
+            {data.sesi.pakai_gelang_monitor && <TautanGelang />}
             {user.role === "kepala_pengamanan" && <Button asChild size="sm"><Link href={`/keputusan/${sessionId}`}>Buka keputusan</Link></Button>}
             {user.role === "operator" && <Button asChild size="sm"><Link href={`/kegiatan/${sessionId}`}>Buka persiapan</Link></Button>}
             <Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}/laporan`}><Printer className="h-4 w-4" aria-hidden />Laporan cetak</Link></Button>

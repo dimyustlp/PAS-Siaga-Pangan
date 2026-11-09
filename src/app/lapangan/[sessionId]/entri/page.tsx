@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TautanGelang } from "@/components/shared/tautan-gelang";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
@@ -32,6 +33,7 @@ export default async function EntriPage({ params }: { params: Promise<{ sessionI
         <h1 className="text-lg font-semibold">{o.jenis_kegiatan} · {o.lokasi_nama}</h1>
         <p className="text-xs text-muted-foreground">{o.kode_kegiatan} · {o.upt_nama ?? o.kode_upt}</p>
       </div>
+      {o.pakai_gelang_monitor && siap && <TautanGelang kecil={false} className="w-full" />}
       {!siap ? (
         <Alert tone="waspada">Sesi ini belum mendapat izin mulai dari Kepala Pengamanan ({o.status_kesiapan}). Pencatatan dibuka setelah disetujui.</Alert>
       ) : (
