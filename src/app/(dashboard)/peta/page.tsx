@@ -58,7 +58,7 @@ export default async function PetaPage() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
             {kanwil.length} Kanwil · {upt.length} UPT
           </p>
@@ -67,7 +67,7 @@ export default async function PetaPage() {
             Bentuk penanda menunjukkan letak kegiatan, warna menunjukkan kondisi lapangan. Titik abu-abu kecil adalah UPT tanpa kegiatan aktif.
           </p>
         </div>
-        <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
+        <span className="rounded-full border border-border bg-white/80 px-3 py-1.5">
           <RealtimeRefresh tabel={["daily_sessions", "status_history", "activities", "gelang_alarm"]} intervalDetik={90} />
         </span>
       </div>

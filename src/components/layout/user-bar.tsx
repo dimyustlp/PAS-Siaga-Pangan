@@ -12,7 +12,7 @@ export function UserBar({ name, role, ringkas = false }: { name: string; role: R
   return (
     <div className="flex min-w-0 items-center gap-3">
       <span
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[hsl(214_96%_63%)] to-[hsl(234_70%_55%)] font-mono text-[11px] font-semibold text-white ring-2 ring-white/10"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[hsl(214_96%_63%)] to-[hsl(234_70%_55%)] font-mono text-[11px] font-semibold text-white ring-2 ring-white"
         aria-hidden
       >
         {inisial(name)}
@@ -28,7 +28,7 @@ export function UserBar({ name, role, ringkas = false }: { name: string; role: R
           type="submit"
           aria-label="Keluar"
           title="Keluar"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-muted-foreground transition-[color,background-color,transform] duration-500 hover:bg-destructive/15 hover:text-[hsl(0_90%_78%)] active:scale-95"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white text-muted-foreground transition-[color,background-color,transform] duration-500 hover:bg-destructive/15 hover:text-[hsl(0_70%_42%)] active:scale-95"
         >
           <LogOut className="h-4 w-4" aria-hidden />
         </button>

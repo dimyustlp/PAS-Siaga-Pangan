@@ -54,12 +54,12 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      <section className="bg-brand-gradient relative overflow-hidden rounded-[1.75rem] border border-white/[0.08] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] md:p-8">
-        <div className="pointer-events-none absolute -right-24 -top-28 h-80 w-80 rounded-full border border-white/[0.06]" aria-hidden />
-        <div className="pointer-events-none absolute -right-10 -top-14 h-52 w-52 rounded-full border border-primary/20" aria-hidden />
+      <section className="bg-brand-gradient relative overflow-hidden rounded-[1.75rem] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_28px_50px_-28px_hsl(236_80%_45%/0.7)] md:p-8 [&_.text-muted-foreground]:!text-white/80">
+        <div className="pointer-events-none absolute -right-24 -top-28 h-80 w-80 rounded-full border border-white/25" aria-hidden />
+        <div className="pointer-events-none absolute -right-10 -top-14 h-52 w-52 rounded-full border border-white/30" aria-hidden />
         <div className="relative grid gap-6 md:grid-cols-[1.6fr_1fr] md:items-end">
           <div className="min-w-0">
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
               {fmtTanggal(now)} · {ROLE_LABEL[user.role]}
             </p>
             <h1 className="mt-4 text-3xl font-semibold tracking-tighter md:text-[2.5rem] md:leading-[1.05]">
@@ -70,13 +70,13 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2 md:justify-end">
-            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5"><RealtimeRefresh /></span>
+            <span className="rounded-full border border-white/30 bg-white/15 px-3 py-1.5"><RealtimeRefresh /></span>
             <Button asChild size="sm" variant="outline"><Link href="/peta">Buka peta</Link></Button>
             {user.role === "operator" && (
-              <Button asChild size="sm"><Link href="/kegiatan">Siapkan kegiatan</Link></Button>
+              <Button asChild size="sm" variant="outline"><Link href="/kegiatan">Siapkan kegiatan</Link></Button>
             )}
             {user.role === "kepala_pengamanan" && (
-              <Button asChild size="sm"><Link href="/keputusan">Antrean keputusan</Link></Button>
+              <Button asChild size="sm" variant="outline"><Link href="/keputusan">Antrean keputusan</Link></Button>
             )}
           </div>
         </div>

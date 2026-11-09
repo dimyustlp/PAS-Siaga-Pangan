@@ -96,16 +96,16 @@ export default async function WilayahPage() {
           {daftarKanwil.map((k) => {
             const isi = daftarUpt.filter((u) => u.kanwil_id === k.id);
             return (
-              <details key={k.id} className="group rounded-xl border border-white/[0.07] bg-white/[0.02]">
+              <details key={k.id} className="group rounded-xl border border-ink/[0.07] bg-ink/[0.02]">
                 <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 text-sm [&::-webkit-details-marker]:hidden">
                   <span className="flex-1 font-medium">{k.wilayah ?? k.nama}</span>
                   {k.tipe && <Pill>Tipe {k.tipe}</Pill>}
                   <span className="font-mono text-xs text-muted-foreground">{isi.length} UPT</span>
                 </summary>
-                <div className="overflow-x-auto border-t border-white/[0.06]">
+                <div className="overflow-x-auto border-t border-ink/[0.06]">
                   <table className="w-full min-w-[40rem] text-sm">
                     <thead className="text-left text-[11px] uppercase tracking-wider text-muted-foreground"><tr><th className="px-4 py-2">Kode</th><th className="py-2 pr-3">Nama</th><th className="py-2 pr-3">Jenis</th><th className="py-2 pr-3">Kab/Kota</th><th className="py-2 pr-4">Titik</th></tr></thead>
-                    <tbody className="divide-y divide-white/[0.05]">
+                    <tbody className="divide-y divide-ink/[0.05]">
                       {isi.map((u) => (
                         <tr key={u.id}>
                           <td className="px-4 py-2 font-mono text-xs">{u.kode}</td>

@@ -4,9 +4,9 @@ export type SecurityStatus = "HIJAU" | "KUNING" | "MERAH" | "KRITIS";
 
 const STYLE: Record<SecurityStatus, string> = {
   HIJAU: "bg-status-hijau/12 text-status-hijau border-status-hijau/30",
-  KUNING: "bg-status-kuning/12 text-status-kuning border-status-kuning/35",
+  KUNING: "bg-status-kuning/12 text-[hsl(34_92%_30%)] border-status-kuning/35",
   MERAH: "bg-status-merah/12 text-status-merah border-status-merah/30",
-  KRITIS: "bg-status-kritis/20 text-[hsl(322_90%_80%)] border-status-kritis/50",
+  KRITIS: "bg-status-kritis/20 text-[hsl(322_80%_34%)] border-status-kritis/50",
 };
 
 const DOT: Record<SecurityStatus, string> = {

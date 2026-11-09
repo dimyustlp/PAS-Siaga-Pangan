@@ -100,8 +100,8 @@ export function NavLinks({ role }: { role: Role }) {
             className={cn(
               "group relative flex shrink-0 items-center gap-3 whitespace-nowrap rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition-[background-color,color,transform] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]",
               active
-                ? "bg-white/[0.07] text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
-                : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
+                ? "bg-gradient-to-r from-primary/15 to-primary/5 font-medium text-primary shadow-[inset_0_0_0_1px_hsl(224_86%_55%/0.2)]"
+                : "text-muted-foreground hover:bg-primary/[0.06] hover:text-foreground"
             )}
           >
             {active && <span className="absolute inset-y-2.5 left-0 hidden w-[3px] rounded-full bg-primary md:block" aria-hidden />}

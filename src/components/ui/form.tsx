@@ -7,7 +7,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTML
     <textarea
       ref={ref}
       className={cn(
-        "flex min-h-20 w-full rounded-xl border border-input bg-[hsl(228_16%_7%)] px-3.5 py-2 transition-[border-color,box-shadow] duration-300 text-base placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-4 focus-visible:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "flex min-h-20 w-full rounded-xl border border-input bg-white px-3.5 py-2 transition-[border-color,box-shadow] duration-300 text-base placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-4 focus-visible:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
         className
       )}
       {...props}
@@ -21,7 +21,7 @@ export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttrib
     <select
       ref={ref}
       className={cn(
-        "flex h-10 w-full rounded-xl border border-input bg-[hsl(228_16%_7%)] px-3.5 py-2 transition-[border-color,box-shadow] duration-300 text-base placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-4 focus-visible:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "flex h-10 w-full rounded-xl border border-input bg-white px-3.5 py-2 transition-[border-color,box-shadow] duration-300 text-base placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-4 focus-visible:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
         className
       )}
       {...props}
@@ -56,9 +56,9 @@ export function Field({
 
 const TONE = {
   info: "border-primary/25 bg-primary/5 text-foreground",
-  waspada: "border-status-kuning/40 bg-status-kuning/10 text-[hsl(42_96%_80%)]",
-  bahaya: "border-destructive/40 bg-destructive/10 text-[hsl(0_90%_78%)]",
-  sukses: "border-status-hijau/40 bg-status-hijau/10 text-[hsl(152_62%_78%)]",
+  waspada: "border-status-kuning/40 bg-status-kuning/15 text-[hsl(32_90%_26%)]",
+  bahaya: "border-destructive/40 bg-destructive/10 text-[hsl(0_70%_38%)]",
+  sukses: "border-status-hijau/40 bg-status-hijau/10 text-[hsl(152_70%_22%)]",
 } as const;
 
 export function Alert({ tone = "info", children, className }: { tone?: keyof typeof TONE; children: React.ReactNode; className?: string }) {
@@ -70,10 +70,10 @@ export function Alert({ tone = "info", children, className }: { tone?: keyof typ
 }
 
 const PILL = {
-  netral: "bg-white/[0.06] text-secondary-foreground ring-1 ring-inset ring-white/10",
-  biru: "bg-primary/12 text-[hsl(214_96%_78%)] ring-1 ring-inset ring-primary/25",
+  netral: "bg-ink/[0.06] text-secondary-foreground ring-1 ring-inset ring-ink/10",
+  biru: "bg-primary/12 text-[hsl(224_76%_40%)] ring-1 ring-inset ring-primary/25",
   hijau: "bg-status-hijau/12 text-status-hijau ring-1 ring-inset ring-status-hijau/25",
-  kuning: "bg-status-kuning/12 text-status-kuning ring-1 ring-inset ring-status-kuning/25",
+  kuning: "bg-status-kuning/12 text-[hsl(34_92%_30%)] ring-1 ring-inset ring-status-kuning/25",
   merah: "bg-status-merah/12 text-status-merah ring-1 ring-inset ring-status-merah/25",
 } as const;
 
@@ -87,7 +87,7 @@ export function PageHeader({ title, description, actions }: { title: string; des
   return (
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div className="min-w-0">
-        <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+        <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
           <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
           PAS-SIAGA Pangan
         </p>

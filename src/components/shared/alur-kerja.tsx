@@ -7,10 +7,10 @@ import { cn } from "@/lib/utils";
 const WARNA: Record<PelakuAlur, string> = {
   Administrator: "bg-secondary text-secondary-foreground",
   Operator: "bg-primary/10 text-primary",
-  "Kepala Pengamanan": "bg-[hsl(234_70%_60%/0.14)] text-[hsl(234_90%_82%)]",
-  Pengawal: "bg-[hsl(195_80%_55%/0.12)] text-[hsl(195_85%_75%)]",
-  Sistem: "bg-white/[0.06] text-muted-foreground",
-  Pemantau: "bg-[hsl(250_40%_60%/0.14)] text-[hsl(250_60%_84%)]",
+  "Kepala Pengamanan": "bg-[hsl(234_80%_60%/0.12)] text-[hsl(234_70%_40%)]",
+  Pengawal: "bg-[hsl(188_80%_42%/0.14)] text-[hsl(188_85%_26%)]",
+  Sistem: "bg-ink/[0.06] text-muted-foreground",
+  Pemantau: "bg-[hsl(262_60%_58%/0.12)] text-[hsl(262_55%_40%)]",
 };
 
 /** Peta alur kerja sistem. Tahap milik peran pengguna ditandai agar langsung tahu bagiannya. */
@@ -45,17 +45,17 @@ export function AlurKerja({ role }: { role: Role }) {
                 key={t.no}
                 className={cn(
                   "relative rounded-xl border p-4",
-                  saya ? "border-primary/40 bg-primary/[0.07] shadow-[inset_0_1px_0_hsl(214_96%_63%/0.2)]" : "border-white/[0.06] bg-white/[0.02]"
+                  saya ? "border-primary/40 bg-primary/[0.07]" : "border-border bg-white"
                 )}
               >
                 <div className="flex items-start gap-3">
-                  <span className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold", saya ? "bg-primary text-primary-foreground" : "bg-white/[0.06] text-secondary-foreground")}>
+                  <span className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold", saya ? "bg-primary text-primary-foreground" : "bg-ink/[0.06] text-secondary-foreground")}>
                     {t.no}
                   </span>
                   <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <h3 className="font-semibold leading-tight">{t.judul}</h3>
-                      {saya && <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-[hsl(214_96%_80%)] ring-1 ring-primary/30">Bagian Anda</span>}
+                      {saya && <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-[hsl(224_76%_40%)] ring-1 ring-primary/30">Bagian Anda</span>}
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       {t.pelaku.map((p) => (

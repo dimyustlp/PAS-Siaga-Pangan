@@ -8,10 +8,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_10px_24px_-12px_hsl(214_96%_63%/0.7)] hover:-translate-y-px hover:brightness-110",
-        outline: "border border-white/10 bg-white/[0.03] text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] hover:-translate-y-px hover:border-primary/40 hover:bg-primary/10",
-        ghost: "hover:bg-white/[0.06]",
-        destructive: "border border-destructive/40 bg-destructive/15 text-[hsl(0_90%_75%)] hover:bg-destructive/25",
+        default: "bg-primary text-primary-foreground bg-gradient-to-b from-[hsl(224_90%_60%)] to-[hsl(228_84%_50%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_10px_24px_-12px_hsl(224_86%_45%/0.75)] hover:-translate-y-px hover:brightness-110",
+        outline: "border border-border bg-white text-foreground shadow-[0_1px_0_rgba(255,255,255,1)_inset,0_6px_14px_-10px_hsl(224_60%_40%/0.4)] hover:-translate-y-px hover:border-primary/50 hover:bg-accent",
+        ghost: "hover:bg-ink/[0.06]",
+        destructive: "border border-destructive/40 bg-destructive/15 text-[hsl(0_70%_40%)] hover:bg-destructive/25",
       },
       size: {
         default: "h-10 px-5 py-2",

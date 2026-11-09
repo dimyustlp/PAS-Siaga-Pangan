@@ -19,6 +19,7 @@ const config: Config = {
         card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
         brand: { DEFAULT: "hsl(var(--brand))", soft: "hsl(var(--brand-soft))" },
         gold: "hsl(var(--gold))",
+        ink: "hsl(var(--ink) / <alpha-value>)",
         status: {
           hijau: "hsl(var(--status-hijau))",
           kuning: "hsl(var(--status-kuning))",

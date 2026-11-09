@@ -27,9 +27,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
 
   return (
     <main className="grid min-h-[100dvh] lg:grid-cols-[1.15fr_1fr]">
-      <section className="relative hidden overflow-hidden border-r border-white/[0.06] p-12 lg:flex lg:flex-col lg:justify-between">
+      <section className="bg-brand-gradient relative hidden overflow-hidden p-12 lg:flex lg:flex-col lg:justify-between [&_.text-muted-foreground]:!text-white/75">
         <div className="pointer-events-none absolute inset-0" aria-hidden>
-          <svg viewBox="0 10 100 66" className="absolute -right-[4%] top-0 w-[60%] opacity-60 [mask-image:linear-gradient(to_left,black_55%,transparent)]">
+          <svg viewBox="0 10 100 66" className="absolute -right-[4%] top-0 w-[60%] opacity-90 [mask-image:linear-gradient(to_left,black_55%,transparent)]">
             {TITIK.map(([x, y, t], i) => (
               <g key={i}>
                 {t && (
@@ -38,7 +38,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
                     <animate attributeName="opacity" values="0.6;0;0.6" dur={`${2.4 + (i % 4) * 0.5}s`} repeatCount="indefinite" />
                   </circle>
                 )}
-                <circle cx={x} cy={y} r="0.55" fill={t ? (t === "h" ? "hsl(152 62% 46%)" : t === "k" ? "hsl(42 96% 56%)" : "hsl(0 82% 61%)") : "hsl(224 15% 45%)"} />
+                <circle cx={x} cy={y} r="0.55" fill={t ? (t === "h" ? "hsl(152 62% 46%)" : t === "k" ? "hsl(42 96% 56%)" : "hsl(0 82% 61%)") : "hsl(0 0% 100% / 0.7)"} />
               </g>
             ))}
           </svg>
@@ -47,30 +47,30 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <div className="relative flex items-center gap-3">
           <Logo />
           <div className="leading-tight">
-            <p className="font-semibold tracking-tight">PAS-SIAGA Pangan</p>
+            <p className="font-semibold tracking-tight text-white">PAS-SIAGA Pangan</p>
             <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Ditjen Pemasyarakatan</p>
           </div>
         </div>
 
         <div className="relative max-w-xl space-y-10">
           <div className="space-y-4">
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-status-hijau text-status-hijau titik-hidup" aria-hidden />
               33 Kanwil · 611 UPT
             </p>
             <h1 className="text-4xl font-semibold leading-[1.05] tracking-tighter xl:text-5xl">
               Kegiatan pangan di luar tembok,
-              <span className="text-muted-foreground"> tetap terkendali.</span>
+              <span className="text-white/75"> tetap terkendali.</span>
             </h1>
           </div>
-          <ul className="grid gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.06]">
+          <ul className="grid gap-px overflow-hidden rounded-2xl border border-white/25 bg-white/25">
             {POIN.map(({ ikon: Ikon, judul, teks }) => (
-              <li key={judul} className="flex items-start gap-4 bg-[hsl(228_18%_7%)] p-4">
-                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/12 text-primary ring-1 ring-inset ring-primary/25">
+              <li key={judul} className="flex items-start gap-4 bg-white/15 p-4 backdrop-blur-sm">
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/20 text-white ring-1 ring-inset ring-white/40">
                   <Ikon className="h-4 w-4" aria-hidden />
                 </span>
                 <span>
-                  <span className="block text-sm font-medium">{judul}</span>
+                  <span className="block text-sm font-medium text-white">{judul}</span>
                   <span className="block text-sm leading-relaxed text-muted-foreground">{teks}</span>
                 </span>
               </li>
@@ -94,7 +94,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               <h2 className="text-2xl font-semibold tracking-tight">Masuk</h2>
               <p className="mb-6 mt-1 text-sm text-muted-foreground">Gunakan akun yang diberikan Administrator.</p>
               {error && PESAN[error] && (
-                <p role="alert" className="mb-4 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-[hsl(0_90%_78%)]">
+                <p role="alert" className="mb-4 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-[hsl(0_70%_38%)]">
                   {PESAN[error]}
                 </p>
               )}

@@ -2,10 +2,10 @@ import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TONE = {
-  biru: { ikon: "text-[hsl(214_96%_75%)] bg-primary/12 ring-primary/25", garis: "from-primary/70" },
-  teal: { ikon: "text-[hsl(195_85%_75%)] bg-[hsl(195_80%_55%/0.12)] ring-[hsl(195_80%_55%/0.25)]", garis: "from-[hsl(195_80%_55%)]" },
+  biru: { ikon: "text-primary bg-primary/10 ring-primary/20", garis: "from-primary/70" },
+  teal: { ikon: "text-[hsl(188_80%_30%)] bg-[hsl(188_80%_45%/0.12)] ring-[hsl(188_80%_40%/0.28)]", garis: "from-[hsl(188_80%_42%)]" },
   hijau: { ikon: "text-status-hijau bg-status-hijau/12 ring-status-hijau/25", garis: "from-status-hijau/80" },
-  kuning: { ikon: "text-status-kuning bg-status-kuning/12 ring-status-kuning/25", garis: "from-status-kuning/80" },
+  kuning: { ikon: "text-[hsl(34_92%_30%)] bg-status-kuning/12 ring-status-kuning/25", garis: "from-status-kuning/80" },
   merah: { ikon: "text-status-merah bg-status-merah/12 ring-status-merah/25", garis: "from-status-merah/80" },
   kritis: { ikon: "text-status-kritis bg-status-kritis/12 ring-status-kritis/25", garis: "from-status-kritis/80" },
 } as const;

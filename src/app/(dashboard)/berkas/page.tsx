@@ -121,7 +121,7 @@ export default async function BerkasPage({ searchParams }: { searchParams: Promi
                                 {n > 0 ? (
                                   <span className="inline-flex items-center gap-1 text-status-hijau"><CheckCircle2 className="h-4 w-4" aria-hidden />{n}</span>
                                 ) : (
-                                  <span className="inline-flex items-center gap-1 text-status-kuning"><MinusCircle className="h-4 w-4" aria-hidden /><span className="sr-only">belum ada</span>0</span>
+                                  <span className="inline-flex items-center gap-1 text-[hsl(34_92%_30%)]"><MinusCircle className="h-4 w-4" aria-hidden /><span className="sr-only">belum ada</span>0</span>
                                 )}
                               </td>
                             );

@@ -4,7 +4,7 @@
 // - BENTUK penanda membedakan letak: lingkaran = kegiatan di dalam UPT, belah ketupat = di luar UPT.
 // - WARNA penanda hanya untuk kondisi lapangan, memakai warna status yang sudah ditetapkan
 //   (hijau, kuning, merah, kritis). Kegiatan yang belum berjalan tidak diberi warna status:
-//   "menunggu" = garis putih, "tanpa sesi" = garis abu-abu.
+//   "menunggu" = garis biru-abu berisi putih, "tanpa sesi" = garis abu-abu putus-putus.
 
 export type Kondisi = "KRITIS" | "MERAH" | "KUNING" | "HIJAU" | "MENUNGGU" | "TANPA_SESI";
 export type Letak = "Dalam UPT" | "Luar UPT";

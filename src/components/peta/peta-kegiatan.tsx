@@ -4,7 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import * as React from "react";
 import Link from "next/link";
 import maplibregl, { type GeoJSONSource, type LngLatBoundsLike, type StyleSpecification } from "maplibre-gl";
-import { Bell, Crosshair, ExternalLink, Layers, Minus, Plus, Search, X } from "lucide-react";
+import { Bell, Crosshair, ExternalLink, Globe2, Layers, Minus, Plus, Search, X } from "lucide-react";
 import { LABEL_KONDISI, URUTAN_KONDISI, type Kondisi, type Letak, type Penanda, type UptPeta } from "@/lib/domain/peta";
 import { cn } from "@/lib/utils";
 
@@ -16,27 +16,29 @@ export type PetaProps = {
 };
 
 export const WARNA_KONDISI: Record<Kondisi, string> = {
-  KRITIS: "hsl(322 78% 58%)",
-  MERAH: "hsl(0 82% 61%)",
-  KUNING: "hsl(42 96% 56%)",
-  HIJAU: "hsl(152 62% 46%)",
-  MENUNGGU: "hsl(220 20% 94%)",
-  TANPA_SESI: "hsl(224 10% 58%)",
+  KRITIS: "hsl(322 80% 46%)",
+  MERAH: "hsl(0 78% 54%)",
+  KUNING: "hsl(40 96% 48%)",
+  HIJAU: "hsl(152 66% 36%)",
+  MENUNGGU: "hsl(226 34% 38%)",
+  TANPA_SESI: "hsl(218 14% 55%)",
 };
 const BERWARNA = (k: Kondisi) => k !== "MENUNGGU" && k !== "TANPA_SESI";
 
+/** Sabang sampai Merauke, Miangas sampai Rote, dengan sisa ruang tipis. Dipakai sebagai tampilan awal. */
 const INDONESIA: LngLatBoundsLike = [
-  [94.6, -11.2],
-  [141.2, 6.4],
+  [94.2, -11.6],
+  [141.6, 6.6],
 ];
+const BINGKAI_AWAL = { top: 28, bottom: 28, left: 28, right: 60 };
 
-const GAYA_GELAP = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
+const GAYA_TERANG = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
 const GAYA_CADANGAN: StyleSpecification = {
   version: 8,
   sources: {
     dasar: {
       type: "raster",
-      tiles: ["a", "b", "c", "d"].map((s) => `https://${s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png`),
+      tiles: ["a", "b", "c", "d"].map((s) => `https://${s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png`),
       tileSize: 256,
       attribution: "© OpenStreetMap · © CARTO",
     },
@@ -48,7 +50,7 @@ const GAYA_CADANGAN: StyleSpecification = {
 export function Bentuk({ letak, kondisi, ukuran = 14 }: { letak: Letak; kondisi: Kondisi; ukuran?: number }) {
   const warna = WARNA_KONDISI[kondisi];
   const isi = BERWARNA(kondisi) ? warna : "transparent";
-  const garis = BERWARNA(kondisi) ? "hsl(228 18% 6%)" : warna;
+  const garis = BERWARNA(kondisi) ? "#fff" : warna;
   return (
     <svg width={ukuran} height={ukuran} viewBox="0 0 16 16" aria-hidden className="shrink-0">
       {letak === "Dalam UPT" ? (
@@ -159,18 +161,31 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
     if (!wadah.current || peta.current) return;
     const m = new maplibregl.Map({
       container: wadah.current,
-      style: GAYA_GELAP,
+      style: GAYA_TERANG,
       bounds: INDONESIA,
-      fitBoundsOptions: { padding: 24 },
+      fitBoundsOptions: { padding: BINGKAI_AWAL },
+      minZoom: 1.8,
       attributionControl: { compact: true },
       dragRotate: false,
       pitchWithRotate: false,
-      maxBounds: [
-        [80, -20],
-        [155, 16],
-      ],
     });
     peta.current = m;
+    // Tampilan awal selalu seluruh Indonesia. Ukuran wadah bisa berubah saat tata letak selesai,
+    // jadi dipasang ulang sampai pengguna sendiri menggeser atau memperbesar.
+    let disentuh = false;
+    const tandaiSentuh = (e: { originalEvent?: unknown }) => {
+      if (e.originalEvent) disentuh = true;
+    };
+    m.on("dragstart", tandaiSentuh);
+    m.on("zoomstart", tandaiSentuh);
+    const pasUlang = () => {
+      if (disentuh) return;
+      m.resize();
+      m.fitBounds(INDONESIA, { padding: BINGKAI_AWAL, duration: 0 });
+    };
+    const pengamat = new ResizeObserver(pasUlang);
+    pengamat.observe(wadah.current);
+    m.once("load", pasUlang);
     let dasarSiap = false;
     m.on("error", (e) => {
       // Bila gaya vektor tidak bisa diambil, pakai ubin raster supaya peta tetap tampil.
@@ -189,7 +204,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
           id: "garis-luar",
           type: "line",
           source: "garis",
-          paint: { "line-color": "hsl(220, 20%, 94%)", "line-opacity": 0.45, "line-width": 1.3, "line-dasharray": [2, 2] },
+          paint: { "line-color": "hsl(226, 50%, 28%)", "line-opacity": 0.55, "line-width": 1.4, "line-dasharray": [2, 2] },
         });
         m.addLayer({
           id: "upt-titik",
@@ -197,10 +212,10 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
           source: "upt",
           paint: {
             "circle-radius": ["interpolate", ["linear"], ["zoom"], 3, 1.8, 6, 2.8, 10, 4.5],
-            "circle-color": "hsl(224, 14%, 62%)",
-            "circle-opacity": 0.55,
-            "circle-stroke-color": "hsl(228, 18%, 6%)",
-            "circle-stroke-width": 0.6,
+            "circle-color": "hsl(224, 45%, 48%)",
+            "circle-opacity": 0.7,
+            "circle-stroke-color": "#ffffff",
+            "circle-stroke-width": 0.8,
           },
         });
         if (m.getStyle().glyphs) {
@@ -210,7 +225,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
             source: "upt",
             minzoom: 8.5,
             layout: { "text-field": ["get", "nama"], "text-size": 11, "text-offset": [0, 1.1], "text-anchor": "top", "text-max-width": 10 },
-            paint: { "text-color": "hsl(224, 12%, 72%)", "text-halo-color": "hsl(228, 18%, 6%)", "text-halo-width": 1.2 },
+            paint: { "text-color": "hsl(226, 44%, 22%)", "text-halo-color": "#ffffff", "text-halo-width": 1.4 },
           });
         }
         const sembul = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10, className: "peta-sembul" });
@@ -231,6 +246,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
       setSiap(true);
     });
     return () => {
+      pengamat.disconnect();
       daftarPenanda.current.forEach((x) => x.remove());
       m.remove();
       peta.current = null;
@@ -274,21 +290,12 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
     (id: string) => {
       const m = peta.current;
       if (!m) return;
-      const b = id ? batasDari(upt.filter((u) => u.kanwilId === id)) : INDONESIA;
+      const b = id ? batasDari(upt.filter((u) => u.kanwilId === id)) : null;
       if (b) m.fitBounds(b, { padding: 48, duration: 1200, maxZoom: 9 });
+      else m.fitBounds(INDONESIA, { padding: BINGKAI_AWAL, duration: 1200 });
     },
     [upt]
   );
-  React.useEffect(() => {
-    if (!siap) return;
-    if (fokus.kodeUpt && uptMap.get(fokus.kodeUpt)) {
-      const u = uptMap.get(fokus.kodeUpt)!;
-      peta.current?.flyTo({ center: [u.lng, u.lat], zoom: 10, duration: 1400 });
-    } else if (fokus.kanwilId) arahkanKanwil(fokus.kanwilId);
-    // Hanya saat peta pertama siap.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [siap]);
-
   const pilihDanTerbang = (kode: string) => {
     setPilihUpt(kode);
     const u = uptMap.get(kode);
@@ -310,13 +317,13 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
     <div className="grid gap-4 lg:grid-cols-[22rem_1fr]">
       {/* Panel kiri: ringkasan, saringan, daftar */}
       <aside className="kaca order-2 flex min-h-0 flex-col rounded-[1.6rem] lg:order-1 lg:h-[calc(100dvh-12rem)] lg:min-h-[34rem]">
-        <div className="grid grid-cols-3 gap-px overflow-hidden rounded-t-[1.6rem] border-b border-white/[0.06] bg-white/[0.06]">
+        <div className="grid grid-cols-3 gap-px overflow-hidden rounded-t-[1.6rem] border-b border-border bg-border">
           {[
             { n: ringkas.upt, l: "UPT berkegiatan" },
             { n: ringkas.dalam, l: "Dalam UPT", b: "Dalam UPT" as Letak },
             { n: ringkas.luar, l: "Luar UPT", b: "Luar UPT" as Letak },
           ].map((x) => (
-            <div key={x.l} className="bg-[hsl(228_16%_9%)] px-3 py-3.5">
+            <div key={x.l} className="bg-white px-3 py-3.5">
               <p className="font-mono text-2xl font-medium leading-none tabular-nums">{x.n}</p>
               <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
                 {x.b && <Bentuk letak={x.b} kondisi="MENUNGGU" ukuran={11} />}
@@ -326,7 +333,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
           ))}
         </div>
 
-        <div className="space-y-3 border-b border-white/[0.06] p-4">
+        <div className="space-y-3 border-b border-ink/[0.06] p-4">
           <label className="block space-y-1.5">
             <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Kanwil</span>
             <select
@@ -335,7 +342,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
                 setKanwilId(e.target.value);
                 arahkanKanwil(e.target.value);
               }}
-              className="h-10 w-full rounded-xl border border-input bg-[hsl(228_16%_7%)] px-3 text-sm focus-visible:border-primary/70 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15"
+              className="h-10 w-full rounded-xl border border-input bg-white px-3 text-sm focus-visible:border-primary/70 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15"
             >
               <option value="">Seluruh Indonesia</option>
               {kanwil.map((k) => (
@@ -343,7 +350,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
               ))}
             </select>
           </label>
-          <div className="grid grid-cols-3 rounded-full border border-white/10 bg-white/[0.03] p-1 text-xs" role="radiogroup" aria-label="Letak kegiatan">
+          <div className="grid grid-cols-3 rounded-full border border-border bg-white/80 p-1 text-xs" role="radiogroup" aria-label="Letak kegiatan">
             {(["Semua", "Dalam UPT", "Luar UPT"] as const).map((x) => (
               <button
                 key={x}
@@ -353,7 +360,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
                 onClick={() => setLetak(x)}
                 className={cn(
                   "flex items-center justify-center gap-1.5 rounded-full py-1.5 font-medium transition-colors duration-300",
-                  letak === x ? "bg-white/[0.1] text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]" : "text-muted-foreground hover:text-foreground"
+                  letak === x ? "bg-white text-primary shadow-[0_1px_3px_hsl(224_60%_40%/0.25)]" : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {x !== "Semua" && <Bentuk letak={x} kondisi="MENUNGGU" ukuran={10} />}
@@ -370,7 +377,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
                 onClick={() => ubahKondisi(k)}
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-[opacity,background-color] duration-300",
-                  kondisiAktif.has(k) ? "border-white/12 bg-white/[0.05]" : "border-white/[0.05] opacity-40"
+                  kondisiAktif.has(k) ? "border-border bg-white shadow-sm" : "border-transparent bg-ink/[0.04] opacity-50"
                 )}
               >
                 <Bentuk letak="Dalam UPT" kondisi={k} ukuran={10} />
@@ -386,15 +393,15 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
               onChange={(e) => setCari(e.target.value)}
               placeholder="Cari UPT atau kota"
               aria-label="Cari UPT"
-              className="h-10 w-full rounded-xl border border-input bg-[hsl(228_16%_7%)] pl-9 pr-3 text-sm placeholder:text-muted-foreground/70 focus-visible:border-primary/70 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15"
+              className="h-10 w-full rounded-xl border border-input bg-white pl-9 pr-3 text-sm placeholder:text-muted-foreground/70 focus-visible:border-primary/70 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15"
             />
           </label>
         </div>
 
-        <ul className="muncul min-h-[12rem] flex-1 divide-y divide-white/[0.05] overflow-y-auto">
+        <ul className="muncul min-h-[12rem] flex-1 divide-y divide-ink/[0.05] overflow-y-auto">
           {uptBerkegiatan.length === 0 && (
             <li className="flex flex-col items-center gap-3 px-6 py-10 text-center">
-              <span className="relative flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-white/15">
+              <span className="relative flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-primary/30">
                 <Bentuk letak="Dalam UPT" kondisi="TANPA_SESI" ukuran={18} />
               </span>
               <span className="text-sm font-medium">Belum ada kegiatan pangan aktif</span>
@@ -409,7 +416,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
                 type="button"
                 onClick={() => pilihDanTerbang(u.kode)}
                 className={cn(
-                  "flex w-full items-start gap-3 px-4 py-3 text-left transition-colors duration-300 hover:bg-white/[0.04]",
+                  "flex w-full items-start gap-3 px-4 py-3 text-left transition-colors duration-300 hover:bg-ink/[0.04]",
                   pilihUpt === u.kode && "bg-primary/[0.08]"
                 )}
               >
@@ -424,7 +431,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
                   </span>
                 </span>
                 {u.alarm > 0 && (
-                  <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] text-foreground ring-1 ring-white/10" title="Alarm gelang menunggu konfirmasi">
+                  <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-ink/[0.06] px-2 py-0.5 font-mono text-[10px] text-foreground ring-1 ring-ink/10" title="Alarm gelang menunggu konfirmasi">
                     <Bell className="h-3 w-3" aria-hidden />
                     {u.alarm}
                   </span>
@@ -436,7 +443,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
       </aside>
 
       {/* Peta */}
-      <section className="relative order-1 h-[62dvh] min-h-[26rem] overflow-hidden rounded-[1.6rem] border border-white/[0.07] bg-[hsl(228_20%_5%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] lg:order-2 lg:h-[calc(100dvh-12rem)] lg:min-h-[34rem]">
+      <section className="relative order-1 h-[62dvh] min-h-[26rem] overflow-hidden rounded-[1.6rem] border border-ink/[0.07] bg-[hsl(205_60%_90%)] shadow-[0_24px_50px_-30px_hsl(224_70%_40%/0.4)] lg:order-2 lg:h-[calc(100dvh-12rem)] lg:min-h-[34rem]">
         <div ref={wadah} className="!absolute inset-0" aria-label="Peta sebaran kegiatan pangan UPT" role="region" />
         {!siap && <div className="kilau absolute inset-0" aria-hidden />}
 
@@ -445,7 +452,10 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
           {[
             { ikon: Plus, label: "Perbesar", aksi: () => peta.current?.zoomIn() },
             { ikon: Minus, label: "Perkecil", aksi: () => peta.current?.zoomOut() },
-            { ikon: Crosshair, label: "Kembali ke cakupan", aksi: () => arahkanKanwil(kanwilId) },
+            { ikon: Globe2, label: "Seluruh Indonesia", aksi: () => arahkanKanwil("") },
+            ...(fokus.kodeUpt || fokus.kanwilId
+              ? [{ ikon: Crosshair, label: "Wilayah saya", aksi: () => (fokus.kodeUpt && uptMap.get(fokus.kodeUpt) ? pilihDanTerbang(fokus.kodeUpt) : arahkanKanwil(fokus.kanwilId ?? "")) }]
+              : []),
           ].map(({ ikon: Ikon, label, aksi }) => (
             <button
               key={label}
@@ -453,7 +463,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
               onClick={aksi}
               aria-label={label}
               title={label}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-[hsl(228_18%_9%/0.85)] text-foreground backdrop-blur-md transition-[transform,background-color] duration-300 hover:bg-[hsl(228_18%_14%)] active:scale-95"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white/95 text-foreground shadow-[0_6px_14px_-8px_hsl(224_60%_30%/0.5)] backdrop-blur-md transition-[transform,background-color] duration-300 hover:bg-accent active:scale-95"
             >
               <Ikon className="h-4 w-4" aria-hidden />
             </button>
@@ -466,7 +476,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
             aria-label="Tampilkan semua UPT"
             className={cn(
               "flex h-9 w-9 items-center justify-center rounded-full border backdrop-blur-md transition-colors duration-300",
-              tampilSemuaUpt ? "border-primary/40 bg-primary/20 text-primary" : "border-white/10 bg-[hsl(228_18%_9%/0.85)] text-muted-foreground"
+              tampilSemuaUpt ? "border-primary/40 bg-primary text-primary-foreground shadow-[0_6px_14px_-8px_hsl(224_60%_30%/0.5)]" : "border-border bg-white/95 text-muted-foreground"
             )}
           >
             <Layers className="h-4 w-4" aria-hidden />
@@ -474,7 +484,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
         </div>
 
         {/* Legenda */}
-        <div className="absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] rounded-2xl border border-white/10 bg-[hsl(228_18%_8%/0.88)] p-3 text-[11px] backdrop-blur-md">
+        <div className="absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] rounded-2xl border border-border bg-white/92 p-3 text-[11px] shadow-[0_14px_30px_-16px_hsl(224_60%_30%/0.45)] backdrop-blur-md">
           <button type="button" onClick={() => setLegenda((v) => !v)} aria-expanded={legenda} className="mb-2 flex w-full items-center justify-between gap-4 font-medium uppercase tracking-[0.16em] text-muted-foreground">
             Legenda <span className="font-mono normal-case tracking-normal">{legenda ? "−" : "+"}</span>
           </button>
@@ -483,7 +493,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
           <div className="mb-3 flex flex-wrap gap-x-4 gap-y-1.5">
             <span className="flex items-center gap-1.5"><Bentuk letak="Dalam UPT" kondisi="MENUNGGU" />Dalam UPT</span>
             <span className="flex items-center gap-1.5"><Bentuk letak="Luar UPT" kondisi="MENUNGGU" />Luar UPT</span>
-            <span className="flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-[hsl(224_14%_62%)]" />UPT lain</span>
+            <span className="flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-[hsl(224_45%_48%)]" />UPT lain</span>
           </div>
           <p className="mb-2 font-medium uppercase tracking-[0.16em] text-muted-foreground">Warna · kondisi lapangan</p>
           <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 sm:grid-cols-3">
@@ -504,25 +514,25 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
           aria-hidden={!terpilih}
         >
           {terpilih && (
-            <div className="flex h-full flex-col overflow-hidden rounded-[1.4rem] border border-white/10 bg-[hsl(228_18%_8%/0.92)] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl">
-              <div className="flex items-start gap-3 border-b border-white/[0.06] p-4">
+            <div className="flex h-full flex-col overflow-hidden rounded-[1.4rem] border border-border bg-white/96 shadow-[0_30px_60px_-30px_hsl(224_60%_30%/0.55)] backdrop-blur-xl">
+              <div className="flex items-start gap-3 border-b border-ink/[0.06] p-4">
                 <div className="min-w-0 flex-1">
                   <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">{terpilih.kanwilId ? namaKanwil.get(terpilih.kanwilId) : "Tanpa Kanwil"}</p>
                   <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight">{terpilih.nama}</h2>
                   <p className="mt-0.5 text-xs text-muted-foreground">{[terpilih.jenis, terpilih.kab].filter(Boolean).join(" · ")}</p>
                 </div>
-                <button type="button" onClick={() => setPilihUpt(null)} aria-label="Tutup rincian" className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-muted-foreground transition-colors hover:text-foreground">
+                <button type="button" onClick={() => setPilihUpt(null)} aria-label="Tutup rincian" className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-white text-muted-foreground transition-colors hover:text-foreground">
                   <X className="h-4 w-4" aria-hidden />
                 </button>
               </div>
               <div className="flex-1 space-y-3 overflow-y-auto p-4">
                 {terpilih.perkiraan && (
-                  <p className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs leading-relaxed text-muted-foreground">
+                  <p className="rounded-xl border border-border bg-white/80 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
                     Titik UPT ini masih perkiraan (pusat kabupaten/kota). Administrator dapat memperbaikinya di menu UPT &amp; Kanwil.
                   </p>
                 )}
                 {terpilih.alarm > 0 && (
-                  <Link href="/gelang" className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs transition-colors hover:bg-white/[0.07]">
+                  <Link href="/gelang" className="flex items-center gap-2 rounded-xl border border-border bg-accent/60 px-3 py-2 text-xs transition-colors hover:bg-accent">
                     <Bell className="h-4 w-4" aria-hidden />
                     {terpilih.alarm} alarm gelang menunggu konfirmasi
                     <ExternalLink className="ml-auto h-3.5 w-3.5 text-muted-foreground" aria-hidden />
@@ -530,7 +540,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
                 )}
                 {penandaTerpilih.length === 0 && <p className="text-sm text-muted-foreground">Tidak ada kegiatan pangan aktif di UPT ini.</p>}
                 {penandaTerpilih.flatMap((p) => p.kegiatan).map((k) => (
-                  <article key={k.id} className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-3.5">
+                  <article key={k.id} className="rounded-2xl border border-border bg-white p-3.5 shadow-sm">
                     <div className="flex items-start gap-2.5">
                       <span className="mt-0.5"><Bentuk letak={k.letak} kondisi={k.kondisi} ukuran={16} /></span>
                       <div className="min-w-0 flex-1">

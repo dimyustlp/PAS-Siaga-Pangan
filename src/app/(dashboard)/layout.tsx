@@ -9,7 +9,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="min-h-[100dvh] md:grid md:grid-cols-[17rem_1fr] print:block">
       <aside className="sticky top-0 z-30 md:h-[100dvh] md:p-3 print:hidden">
-        <div className="bg-sidebar flex h-full flex-col border-b border-white/[0.06] backdrop-blur-xl md:rounded-[1.6rem] md:border md:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_30px_60px_-30px_rgba(0,0,0,0.8)]">
+        <div className="bg-sidebar flex h-full flex-col border-b border-ink/[0.06] backdrop-blur-xl md:rounded-[1.6rem] md:border md:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_30px_60px_-34px_hsl(224_70%_40%/0.35)]">
           <div className="flex items-center gap-3 px-4 py-3 md:px-5 md:pb-5 md:pt-6">
             <Logo />
             <div className="leading-tight">
@@ -24,7 +24,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <div className="px-3 pb-3 md:flex-1 md:overflow-y-auto md:pb-4">
             <NavLinks role={user.role} />
           </div>
-          <div className="hidden border-t border-white/[0.06] p-3 md:block">
+          <div className="hidden border-t border-ink/[0.06] p-3 md:block">
             <UserBar name={user.fullName} role={user.role} />
           </div>
         </div>

@@ -9,7 +9,7 @@ export default async function LapanganLayout({ children }: { children: React.Rea
 
   return (
     <div className="mx-auto flex min-h-[100dvh] max-w-md flex-col">
-      <header className="bg-sidebar sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-white/[0.06] px-4 py-3 backdrop-blur-xl">
+      <header className="bg-sidebar sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-ink/[0.06] px-4 py-3 backdrop-blur-xl">
         <Link href="/lapangan" className="flex items-center gap-2">
           <Logo kecil />
           <span className="font-bold tracking-tight">PAS-SIAGA</span>
