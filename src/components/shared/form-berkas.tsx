@@ -11,22 +11,34 @@ import { BERKAS_ACCEPT, KATEGORI_BERKAS } from "@/lib/domain/berkas";
 
 type Props = {
   /** UPT yang boleh dipilih. Satu UPT = pilihan terkunci. */
-  upt: { kode: string; nama: string }[];
+  upt: { kode: string; nama: string; kanwil_id?: string | null }[];
+  /** Kanwil untuk memilah UPT bila daftarnya panjang. */
+  kanwil?: { id: string; nama: string }[];
+  /** Pilihan awal, mis. mengikuti saringan di halaman. */
+  awal?: { kanwil?: string; upt?: string };
   hariIni: string;
 };
 
-export function FormBerkas({ upt, hariIni }: Props) {
+/** Di atas batas ini, UPT dipilih bertingkat: Kanwil dulu. */
+const BATAS_DAFTAR_UPT = 40;
+
+export function FormBerkas({ upt, kanwil = [], awal, hariIni }: Props) {
   const router = useRouter();
   const [mode, setMode] = React.useState<"unggah" | "tautan">("unggah");
   const [pending, start] = React.useTransition();
   const [galat, setGalat] = React.useState<string | null>(null);
   const [ok, setOk] = React.useState(false);
+  const bertingkat = upt.length > BATAS_DAFTAR_UPT && kanwil.length > 1;
+  const [kw, setKw] = React.useState(awal?.kanwil ?? "");
+  const [kodeUpt, setKodeUpt] = React.useState(awal?.upt ?? (upt.length === 1 ? upt[0].kode : ""));
+  const uptTampil = bertingkat ? upt.filter((u) => u.kanwil_id === kw) : upt;
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const fd = new FormData(form);
-    const kode = String(fd.get("upt") ?? upt[0]?.kode ?? "");
+    const kode = kodeUpt || String(fd.get("upt") ?? upt[0]?.kode ?? "");
+    if (!kode) return setGalat("Pilih UPT yang memiliki berkas ini.");
     const file = fd.get("berkas");
     setGalat(null);
     setOk(false);
@@ -74,11 +86,19 @@ export function FormBerkas({ upt, hariIni }: Props) {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
+        {bertingkat && (
+          <Field label="Kanwil" htmlFor="b-kanwil">
+            <Select id="b-kanwil" value={kw} onChange={(e) => { setKw(e.target.value); setKodeUpt(""); }}>
+              <option value="">Pilih Kanwil</option>
+              {kanwil.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
+            </Select>
+          </Field>
+        )}
         <Field label="UPT" htmlFor="b-upt">
-          <Select id="b-upt" name="upt" defaultValue={upt[0]?.kode} disabled={upt.length === 1}>
-            {upt.map((u) => <option key={u.kode} value={u.kode}>{u.nama}</option>)}
+          <Select id="b-upt" name="upt" required value={kodeUpt} onChange={(e) => setKodeUpt(e.target.value)} disabled={upt.length === 1 || (bertingkat && !kw)}>
+            <option value="" disabled>{bertingkat && !kw ? "Pilih Kanwil dulu" : "Pilih UPT"}</option>
+            {uptTampil.map((u) => <option key={u.kode} value={u.kode}>{u.nama}</option>)}
           </Select>
-          {upt.length === 1 && <input type="hidden" name="upt" value={upt[0].kode} />}
         </Field>
         <Field label="Kategori" htmlFor="b-kat">
           <Select id="b-kat" name="kategori" required defaultValue="">

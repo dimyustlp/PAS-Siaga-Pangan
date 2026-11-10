@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { KATEGORI_BERKAS as KAT_VALIDASI, createBerkasSchema, kanwilTautanSchema } from "../src/lib/validations/berkas.ts";
-import { KATEGORI_BERKAS, ringkasPerUpt, fmtUkuran } from "../src/lib/domain/berkas.ts";
+import { KATEGORI_BERKAS, ringkasPerUpt, ringkasPerKanwil, fmtUkuran } from "../src/lib/domain/berkas.ts";
 import { canAccess, ALL_ROLES } from "../src/lib/rbac.ts";
 
 const dasar = { kode_upt: "LPTB", kategori: "Laporan Kegiatan", judul: "Laporan panen", tanggal: "2026-11-09" };
@@ -55,4 +55,27 @@ test("semua peran boleh membuka halaman Berkas", () => {
 
 test("daftar kategori di validasi sama dengan di domain", () => {
   assert.deepEqual([...KAT_VALIDASI], [...KATEGORI_BERKAS]);
+});
+
+test("ringkasan per Kanwil: hitung UPT lengkap, total, dan berkas terakhir", () => {
+  const upt = [
+    { kode: "A", kanwil_id: "k1" },
+    { kode: "B", kanwil_id: "k1" },
+    { kode: "C", kanwil_id: "k2" },
+    { kode: "D", kanwil_id: null },
+  ];
+  const berkas = [
+    ...["Surat Perintah", "Rencana Pengamanan", "Laporan Kegiatan", "Berita Acara"].map((kategori) => ({ kode_upt: "A", kategori, tanggal: "2026-11-02" })),
+    { kode_upt: "B", kategori: "Berita Acara", tanggal: "2026-11-08" },
+    { kode_upt: "D", kategori: "Dokumentasi", tanggal: "2026-11-03" },
+  ];
+  const r = ringkasPerKanwil([{ id: "k1", nama: "Kanwil Satu" }, { id: "k2", nama: "Kanwil Dua" }, { id: "k3", nama: "Kanwil Tiga" }], upt, ringkasPerUpt(upt, berkas));
+  const satu = r.find((x) => x.id === "k1")!;
+  assert.equal(satu.jumlahUpt, 2);
+  assert.equal(satu.uptLengkap, 1);
+  assert.equal(satu.total, 5);
+  assert.equal(satu.terakhir, "2026-11-08");
+  assert.equal(r.find((x) => x.id === "k2")?.total, 0);
+  assert.equal(r.find((x) => x.id === "k3"), undefined, "Kanwil tanpa UPT pada cakupan disembunyikan");
+  assert.equal(r.find((x) => x.id === null)?.nama, "Tanpa Kanwil");
 });

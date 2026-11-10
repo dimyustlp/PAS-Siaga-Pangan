@@ -43,3 +43,40 @@ export function ringkasPerUpt(
   }
   return peta;
 }
+
+export type RingkasKanwil = {
+  /** null = UPT yang belum terhubung ke Kanwil. */
+  id: string | null;
+  nama: string;
+  jumlahUpt: number;
+  /** UPT yang sudah punya berkas di semua kategori pokok. */
+  uptLengkap: number;
+  total: number;
+  terakhir: string | null;
+};
+
+/** Merangkum berkas per Kanwil dari ringkasan per UPT. Kanwil tanpa UPT pada cakupan tidak dimunculkan. */
+export function ringkasPerKanwil(
+  daftarKanwil: { id: string; nama: string }[],
+  daftarUpt: { kode: string; kanwil_id: string | null }[],
+  perUpt: Map<string, RingkasUpt>
+): RingkasKanwil[] {
+  const hasil = new Map<string | null, RingkasKanwil>();
+  for (const k of daftarKanwil) hasil.set(k.id, { id: k.id, nama: k.nama, jumlahUpt: 0, uptLengkap: 0, total: 0, terakhir: null });
+  for (const u of daftarUpt) {
+    const kunci = u.kanwil_id ?? null;
+    let r = hasil.get(kunci);
+    if (!r) {
+      if (kunci !== null) continue;
+      r = { id: null, nama: "Tanpa Kanwil", jumlahUpt: 0, uptLengkap: 0, total: 0, terakhir: null };
+      hasil.set(null, r);
+    }
+    const s = perUpt.get(u.kode);
+    r.jumlahUpt += 1;
+    if (!s) continue;
+    r.total += s.total;
+    if (KATEGORI_POKOK.every((k) => (s.perKategori[k] ?? 0) > 0)) r.uptLengkap += 1;
+    if (s.terakhir && (!r.terakhir || s.terakhir > r.terakhir)) r.terakhir = s.terakhir;
+  }
+  return [...hasil.values()].filter((r) => r.jumlahUpt > 0);
+}
