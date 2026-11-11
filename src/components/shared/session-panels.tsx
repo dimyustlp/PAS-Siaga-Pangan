@@ -57,7 +57,7 @@ export function SesiTabel({ rows, now, tampilkanUpt }: { rows: Overview[]; now: 
                     {o.jenis_kegiatan} · {o.lokasi_nama}
                   </Link>
                   <p className="text-xs text-muted-foreground">
-                    {o.kode_kegiatan} · {fmtTanggalPendek(o.tanggal_sesi)}
+                    {o.kode_kegiatan}{o.latihan ? " · LATIHAN" : ""} · {fmtTanggalPendek(o.tanggal_sesi)}
                   </p>
                   {p.length > 0 && (
                     <ul className="mt-1 space-y-0.5">
@@ -322,7 +322,7 @@ export function KepalaSesi({ data }: { data: SesiLengkap }) {
         <div className="space-y-1">
           <p className="text-xs text-muted-foreground">Kegiatan</p>
           <p className="font-semibold">{kegiatan.jenis_kegiatan} · {lokasi?.nama ?? "-"}</p>
-          <p className="text-xs text-muted-foreground">{kegiatan.kode_kegiatan} · {o.upt_nama ?? o.kode_upt}</p>
+          <p className="text-xs text-muted-foreground">{kegiatan.kode_kegiatan}{kegiatan.latihan ? " · LATIHAN" : ""} · {o.upt_nama ?? o.kode_upt}</p>
         </div>
         <div className="space-y-1">
           <p className="text-xs text-muted-foreground">Tanggal sesi</p>

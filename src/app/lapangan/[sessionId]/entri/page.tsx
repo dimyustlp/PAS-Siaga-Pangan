@@ -31,7 +31,7 @@ export default async function EntriPage({ params }: { params: Promise<{ sessionI
       <Link href="/lapangan" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="h-4 w-4" aria-hidden /> Kembali</Link>
       <div>
         <h1 className="text-lg font-semibold">{o.jenis_kegiatan} · {o.lokasi_nama}</h1>
-        <p className="text-xs text-muted-foreground">{o.kode_kegiatan} · {o.upt_nama ?? o.kode_upt}</p>
+        <p className="text-xs text-muted-foreground">{o.kode_kegiatan}{o.latihan ? " · LATIHAN" : ""} · {o.upt_nama ?? o.kode_upt}</p>
       </div>
       {o.pakai_gelang_monitor && siap && <TautanGelang kecil={false} className="w-full" />}
       {!siap ? (

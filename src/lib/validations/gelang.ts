@@ -49,3 +49,10 @@ export function bacaWaktuAlarm(v: string | null | undefined): string | null {
   }
   return Number.isNaN(d.getTime()) ? null : d.toISOString();
 }
+
+export const zonaUnitSchema = z.object({
+  id: z.string().uuid("Pilih unit gelang."),
+  zona_nama: z.string().trim().max(150).optional().transform((v) => (v ? v : undefined)),
+  zona_radius_m: z.number().int("Radius berupa bilangan bulat.").min(10, "Radius minimal 10 meter.").max(100000, "Radius maksimal 100.000 meter.").optional(),
+  ambang_baterai: z.number().int("Ambang berupa bilangan bulat.").min(1, "Ambang minimal 1%.").max(90, "Ambang maksimal 90%."),
+});

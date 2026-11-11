@@ -41,7 +41,7 @@ export default async function LapanganPage() {
             <Card className={`lift flex items-center gap-3 p-4 ${siap ? "border-l-4 border-l-brand" : "border-l-4 border-l-border opacity-90"}`}>
               <div className="min-w-0 flex-1 space-y-1">
                 <p className="truncate font-medium">{s.jenis_kegiatan} · {s.lokasi_nama}</p>
-                <p className="text-xs text-muted-foreground">{s.kode_kegiatan} · {fmtTanggalPendek(s.tanggal_sesi)} · {s.jumlah_narapidana} WB</p>
+                <p className="text-xs text-muted-foreground">{s.kode_kegiatan}{s.latihan ? " · LATIHAN" : ""} · {fmtTanggalPendek(s.tanggal_sesi)} · {s.jumlah_narapidana} WB</p>
                 <div className="flex flex-wrap items-center gap-2 pt-1">
                   {s.status_keamanan && <StatusBadge status={s.status_keamanan} />}
                   <FasePill fase={s.fase} />

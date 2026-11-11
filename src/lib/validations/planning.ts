@@ -43,6 +43,13 @@ export const locationSchema = z
     posisi: z.enum(POSISI_LOKASI, { errorMap: () => ({ message: "Pilih lokasi di dalam atau di luar UPT." }) }).default("Dalam UPT"),
     titik: z.string().trim().max(80).optional(),
     luas_ha: z.number().min(0).max(100000).optional(),
+    kode_upt: opt(40),
+    jenis_lahan: opt(60),
+    status_lahan: z.enum(["Milik UPT", "Pinjam pakai", "Kerja sama", "Lainnya"]).optional(),
+    komoditas_utama: opt(120),
+    jarak_km: z.number().min(0).max(100000).optional(),
+    daya_tampung_wbp: z.number().int().min(0).max(100000).optional(),
+    pj_lokasi: opt(150),
   })
   .superRefine((v, ctx) => {
     if (bacaTitik(v.titik) === "salah") ctx.addIssue({ code: "custom", path: ["titik"], message: "Titik tidak terbaca. Tempel dari Google Maps, contoh: -6.2995, 106.5960" });

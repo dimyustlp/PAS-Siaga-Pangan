@@ -11,6 +11,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { addWeeklyNote } from "@/lib/actions/notes";
 import { requireUser } from "@/lib/auth";
 import { hitungEvaluasi, parseIndikator } from "@/lib/domain/evaluasi";
+import { bandingkan, jumlahBulan, rataKondisiAwal } from "@/lib/domain/pembanding";
 import { awalMinggu, fmtTanggal, fmtTanggalPendek, hariIniWib, tambahHari } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 
@@ -25,17 +26,32 @@ export default async function EvaluasiPage({ searchParams }: { searchParams: Pro
   const dari = q.dari && TGL.test(q.dari) ? q.dari : tambahHari(sampai, -60);
 
   const supabase = await createClient();
-  const [user, ind, tren, catatan] = await Promise.all([
+  const [user, ind, tren, catatan, awalRes, pembRes] = await Promise.all([
     requireUser(),
     supabase.rpc("indikator_evaluasi", { p_dari: dari, p_sampai: sampai }),
     supabase.rpc("tren_mingguan", { p_dari: dari, p_sampai: sampai }),
     supabase.from("weekly_notes").select("*").order("minggu_mulai", { ascending: false }).limit(20),
+    supabase.from("kondisi_awal").select("kegiatan_per_bulan,pct_catatan_lengkap,pct_serah_terima_cocok,pct_temuan_tindak_lanjut,pct_tindak_lanjut_selesai,menit_pelaporan_kejadian,gangguan_per_bulan").limit(1000),
+    supabase.rpc("pembanding_sesudah", { p_dari: dari, p_sampai: sampai }),
   ]);
   const indikator = parseIndikator(ind.data);
   const baris = indikator ? hitungEvaluasi(indikator) : [];
   const titik: TitikTren[] = Array.isArray(tren.data)
     ? (tren.data as { minggu: string; sesi: number; ditutup: number; merah_kritis: number; gangguan: number }[]).map((t) => ({ ...t, minggu: fmtTanggalPendek(t.minggu) }))
     : [];
+  const awalBaris = awalRes.data ?? [];
+  const bulan = jumlahBulan(dari, sampai);
+  const pemb = (pembRes.data ?? {}) as { menit_pelaporan_median?: number | null; jumlah_gangguan?: number | null };
+  const nilaiE = (kode: string) => baris.find((b) => b.kode === kode)?.nilai ?? null;
+  const banding = bandingkan(rataKondisiAwal(awalBaris), {
+    kegiatan_per_bulan: indikator && bulan ? Math.round((indikator.sesi_dijalankan / bulan) * 10) / 10 : null,
+    pct_catatan_lengkap: nilaiE("E3"),
+    pct_serah_terima_cocok: nilaiE("E2"),
+    pct_temuan_tindak_lanjut: nilaiE("E5"),
+    pct_tindak_lanjut_selesai: nilaiE("E6"),
+    menit_pelaporan_kejadian: typeof pemb.menit_pelaporan_median === "number" ? Math.round(pemb.menit_pelaporan_median * 10) / 10 : null,
+    gangguan_per_bulan: bulan && typeof pemb.jumlah_gangguan === "number" ? Math.round((pemb.jumlah_gangguan / bulan) * 10) / 10 : null,
+  });
   const bisaCatat = ["administrator", "operator", "kepala_pengamanan"].includes(user.role);
 
   return (
@@ -77,6 +93,35 @@ export default async function EvaluasiPage({ searchParams }: { searchParams: Pro
                       <td className="py-2.5 pr-3 tabular-nums">{b.tampil}</td>
                       <td className="py-2.5 pr-3">{b.target}</td>
                       <td className="py-2.5"><Pill tone={b.tercapai === null ? "netral" : b.tercapai ? "hijau" : "merah"}>{b.tercapai === null ? "Belum dinilai" : b.tercapai ? "Tercapai" : "Belum tercapai"}</Pill></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Sebelum dan sesudah</CardTitle>
+              <CardDescription>
+                {awalBaris.length === 0
+                  ? "Kondisi awal belum diisi. Isi di Data induk, bagian Kondisi awal, agar perbandingan muncul."
+                  : `Kondisi awal dirata-ratakan dari ${awalBaris.length} UPT. Hasil sistem dihitung dari periode yang dipilih (latihan tidak dihitung).`}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="overflow-x-auto">
+              <table className="w-full min-w-[40rem] text-sm">
+                <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground">
+                  <tr><th className="py-2 pr-3">Indikator</th><th className="py-2 pr-3 text-right">Sebelum</th><th className="py-2 pr-3 text-right">Sesudah</th><th className="py-2 pr-3 text-right">Selisih</th><th className="py-2">Arah</th></tr>
+                </thead>
+                <tbody className="divide-y">
+                  {banding.map((b) => (
+                    <tr key={b.kunci}>
+                      <td className="py-2.5 pr-3 font-medium">{b.nama}</td>
+                      <td className="py-2.5 pr-3 text-right tabular-nums">{b.awal === null ? "-" : `${b.awal} ${b.satuan}`}</td>
+                      <td className="py-2.5 pr-3 text-right tabular-nums">{b.sesudah === null ? "-" : `${b.sesudah} ${b.satuan}`}</td>
+                      <td className="py-2.5 pr-3 text-right tabular-nums">{b.selisih === null ? "-" : `${b.selisih > 0 ? "+" : ""}${b.selisih}`}</td>
+                      <td className="py-2.5">{b.membaik === null ? <Pill tone="netral">{b.selisih === 0 ? "Tetap" : "Belum bisa dinilai"}</Pill> : <Pill tone={b.membaik ? "hijau" : "merah"}>{b.membaik ? "Membaik" : "Memburuk"}</Pill>}</td>
                     </tr>
                   ))}
                 </tbody>

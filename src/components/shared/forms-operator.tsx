@@ -137,12 +137,17 @@ export function FormSesiUbah({ sesi, pengawal }: { sesi: Tables<"daily_sessions"
   );
 }
 
-export function FormLokasi() {
+export function FormLokasi({ kodeUpt }: { kodeUpt?: string }) {
   return (
     <ActionForm
       action={createLocation}
       submit="Simpan lokasi"
-      fields={{ nama: { s: "nama" }, kode: { s: "kode" }, keterangan: { s: "ket" }, luas_ha: { n: "luas" }, posisi: { s: "posisi" }, titik: { s: "titik" } }}
+      fields={{
+        ...(kodeUpt ? { kode_upt: { v: kodeUpt } } : {}),
+        nama: { s: "nama" }, kode: { s: "kode" }, keterangan: { s: "ket" }, luas_ha: { n: "luas" }, posisi: { s: "posisi" }, titik: { s: "titik" },
+        jenis_lahan: { s: "jenis" }, status_lahan: { s: "status" }, komoditas_utama: { s: "komoditas" },
+        jarak_km: { n: "jarak" }, daya_tampung_wbp: { n: "daya" }, pj_lokasi: { s: "pj" },
+      }}
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Nama lokasi" htmlFor="l-nama"><Input id="l-nama" name="nama" required /></Field>
@@ -153,19 +158,27 @@ export function FormLokasi() {
           <Input id="l-titik" name="titik" placeholder="-6.2995, 106.5960" inputMode="decimal" />
         </Field>
         <Field label="Kode (opsional)" htmlFor="l-kode"><Input id="l-kode" name="kode" /></Field>
+        <Field label="Jenis lahan" htmlFor="l-jenis" hint="Mis. sawah, kebun, kolam, kandang."><Input id="l-jenis" name="jenis" maxLength={60} /></Field>
+        <Field label="Status lahan" htmlFor="l-status">
+          <Select id="l-status" name="status" defaultValue=""><option value="">Belum diisi</option><option>Milik UPT</option><option>Pinjam pakai</option><option>Kerja sama</option><option>Lainnya</option></Select>
+        </Field>
+        <Field label="Komoditas utama" htmlFor="l-kom"><Input id="l-kom" name="komoditas" maxLength={120} placeholder="Mis. padi, lele" /></Field>
         <Field label="Luas (hektare)" htmlFor="l-luas"><Input id="l-luas" name="luas" inputMode="decimal" /></Field>
+        <Field label="Jarak dari UPT (km)" htmlFor="l-jarak"><Input id="l-jarak" name="jarak" inputMode="decimal" /></Field>
+        <Field label="Daya tampung WB" htmlFor="l-daya" hint="Jumlah WB paling banyak yang aman bekerja di lokasi ini."><Input id="l-daya" name="daya" type="number" min={0} /></Field>
+        <Field label="Penanggung jawab lokasi" htmlFor="l-pj"><Input id="l-pj" name="pj" maxLength={150} /></Field>
         <Field label="Keterangan" htmlFor="l-ket"><Input id="l-ket" name="ket" /></Field>
       </div>
     </ActionForm>
   );
 }
 
-export function FormImporWb() {
+export function FormImporWb({ kodeUpt }: { kodeUpt?: string }) {
   return (
     <ActionForm
       action={importInmates}
       submit="Impor warga binaan"
-      fields={{ teks: { s: "teks" } }}
+      fields={{ teks: { s: "teks" }, ...(kodeUpt ? { kode_upt: { v: kodeUpt } } : {}) }}
       success="Impor selesai."
     >
       <Field label="Data warga binaan" htmlFor="wb-teks" hint="Satu baris per orang: nomor registrasi, lalu nama (dipisah koma, titik koma, atau tab). Yang sudah terdaftar dilewati.">

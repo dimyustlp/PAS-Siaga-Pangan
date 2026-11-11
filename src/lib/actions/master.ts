@@ -13,13 +13,19 @@ export async function createLocation(input: unknown): Promise<ActionResult<{ id:
   const parsed = locationSchema.safeParse(input);
   if (!parsed.success) return zodFail(parsed.error);
 
-  const { data, error } = await auth.supabase.from("master_locations").insert(parsed.data).select("id").single();
+  const { kode_upt, ...isi } = parsed.data;
+  if (auth.role === "administrator" && !kode_upt) return fail("Pilih UPT pemilik lokasi.");
+  const { data, error } = await auth.supabase
+    .from("master_locations")
+    .insert({ ...isi, ...(auth.role === "administrator" ? { kode_upt } : {}) })
+    .select("id")
+    .single();
   if (error) {
     if (isUniqueViolation(error)) return fail("Kode lokasi sudah dipakai.");
     return fail(mapDbError(error, DITOLAK));
   }
   revalidatePath("/kegiatan");
-  revalidatePath("/admin/data-induk");
+  revalidatePath("/data-induk");
   return success({ id: data.id });
 }
 
@@ -35,7 +41,7 @@ export async function createInmate(input: unknown): Promise<ActionResult<{ id: s
     return fail(mapDbError(error, DITOLAK));
   }
   revalidatePath("/kegiatan");
-  revalidatePath("/admin/data-induk");
+  revalidatePath("/data-induk");
   return success({ id: data.id });
 }
 
@@ -44,6 +50,8 @@ export async function importInmates(input: unknown): Promise<ActionResult<{ dita
   const auth = await authorize(["administrator", "operator"]);
   if (!auth.ok) return fail(auth.error);
   const teks = typeof (input as { teks?: unknown })?.teks === "string" ? (input as { teks: string }).teks : "";
+  const kodeUpt = typeof (input as { kode_upt?: unknown })?.kode_upt === "string" ? (input as { kode_upt: string }).kode_upt.trim() : "";
+  if (auth.role === "administrator" && !kodeUpt) return fail("Pilih UPT tempat warga binaan ini.");
   const baris = teks.split(/\r?\n/).map((b) => b.trim()).filter(Boolean);
   if (baris.length === 0) return fail("Tempel minimal satu baris data.");
   if (baris.length > 1000) return fail("Maksimal 1000 baris per impor.");
@@ -66,10 +74,12 @@ export async function importInmates(input: unknown): Promise<ActionResult<{ dita
   const sudah = new Set((ada ?? []).map((a) => a.nomor_registrasi));
   const baru = valid.filter((v) => !sudah.has(v.nomor_registrasi));
   if (baru.length > 0) {
-    const { error } = await auth.supabase.from("master_inmates").insert(baru);
+    const { error } = await auth.supabase
+      .from("master_inmates")
+      .insert(auth.role === "administrator" ? baru.map((b) => ({ ...b, kode_upt: kodeUpt })) : baru);
     if (error) return fail(mapDbError(error, DITOLAK));
   }
   revalidatePath("/kegiatan");
-  revalidatePath("/admin/data-induk");
+  revalidatePath("/data-induk");
   return success({ ditambah: baru.length, dilewati: valid.length - baru.length, salah: salah.slice(0, 5) });
 }

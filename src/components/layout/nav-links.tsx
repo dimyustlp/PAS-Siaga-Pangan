@@ -14,6 +14,10 @@ import {
   ListChecks,
   Map as IkonPeta,
   MapPinned,
+  Bell,
+  Newspaper,
+  Sprout,
+  ArrowLeftRight,
   ScrollText,
   ShieldAlert,
   Users,
@@ -36,6 +40,10 @@ const ICONS = {
   berkas: FolderOpen,
   gelang: Radio,
   peta: IkonPeta,
+  notifikasi: Bell,
+  berita: Newspaper,
+  pangan: Sprout,
+  lalulintas: ArrowLeftRight,
 };
 
 type Item = { href: string; label: string; icon: keyof typeof ICONS };
@@ -43,10 +51,14 @@ type Item = { href: string; label: string; icon: keyof typeof ICONS };
 const DASBOR: Item = { href: "/", label: "Dasbor", icon: "dasbor" };
 const PETA: Item = { href: "/peta", label: "Peta kegiatan", icon: "peta" };
 const BERSAMA: Item[] = [
+  { href: "/lalu-lintas", label: "Lalu lintas WBP", icon: "lalulintas" },
+  { href: "/pangan", label: "Hasil pangan", icon: "pangan" },
+  { href: "/data-induk", label: "Data induk", icon: "induk" },
   { href: "/berkas", label: "Berkas", icon: "berkas" },
   { href: "/gelang", label: "Gelang", icon: "gelang" },
   { href: "/evaluasi", label: "Evaluasi", icon: "evaluasi" },
   { href: "/risiko", label: "Risiko & mitigasi", icon: "risiko" },
+  { href: "/berita", label: "Berita", icon: "berita" },
   { href: "/pedoman", label: "Pedoman & SOP", icon: "pedoman" },
 ];
 
@@ -58,7 +70,7 @@ const ITEMS: Record<Role, Item[]> = {
     { href: "/admin/akun", label: "Akun", icon: "akun" },
     { href: "/admin/wilayah", label: "UPT & Kanwil", icon: "wilayah" },
     { href: "/admin/gelang", label: "Penerima gelang", icon: "gelang" },
-    { href: "/admin/data-induk", label: "Data induk", icon: "induk" },
+    { href: "/admin/notifikasi", label: "Notifikasi & latihan", icon: "notifikasi" },
     { href: "/admin/audit", label: "Jejak audit", icon: "audit" },
   ],
   operator: [
@@ -81,6 +93,7 @@ const ITEMS: Record<Role, Item[]> = {
     { href: "/lapangan", label: "Tugas lapangan", icon: "kegiatan" },
     { href: "/berkas", label: "Berkas", icon: "berkas" },
     { href: "/gelang", label: "Gelang", icon: "gelang" },
+    { href: "/berita", label: "Berita", icon: "berita" },
     { href: "/pedoman", label: "Pedoman & SOP", icon: "pedoman" },
   ],
 };

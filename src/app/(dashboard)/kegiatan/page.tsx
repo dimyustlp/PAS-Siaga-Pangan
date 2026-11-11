@@ -45,7 +45,7 @@ export default async function KegiatanPage() {
                 <Link href={`/kegiatan/${s.session_id}`} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 hover:bg-secondary/60">
                   <span className="min-w-0 flex-1">
                     <span className="block font-medium">{s.jenis_kegiatan} · {s.lokasi_nama}</span>
-                    <span className="block text-xs text-muted-foreground">{s.kode_kegiatan} · {fmtTanggalPendek(s.tanggal_sesi)} · {s.jumlah_narapidana} WB</span>
+                    <span className="block text-xs text-muted-foreground">{s.kode_kegiatan}{s.latihan ? " · LATIHAN" : ""} · {fmtTanggalPendek(s.tanggal_sesi)} · {s.jumlah_narapidana} WB</span>
                   </span>
                   <FasePill fase={s.fase} />
                   {s.status_keamanan && <StatusBadge status={s.status_keamanan} />}

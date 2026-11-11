@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { BellRing, CheckCircle2 } from "lucide-react";
+import { BatteryLow, BellRing, CheckCircle2 } from "lucide-react";
 import { ActionButton, ActionForm } from "@/components/shared/action-form";
 import { RealtimeRefresh } from "@/components/shared/realtime-refresh";
 import { TautanGelang } from "@/components/shared/tautan-gelang";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, Field, PageHeader, Pill, Select, Textarea } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { hapusUnitGelang, konfirmasiAlarm, simpanUnitGelang } from "@/lib/actions/gelang";
+import { aturZonaUnit, hapusUnitGelang, konfirmasiAlarm, simpanUnitGelang } from "@/lib/actions/gelang";
 import { requireUser } from "@/lib/auth";
 import { fmtWaktu, sejak } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
@@ -16,13 +16,24 @@ export const dynamic = "force-dynamic";
 
 export default async function GelangPage() {
   const supabase = await createClient();
-  const [user, menunggu, riwayat, unit, upt] = await Promise.all([
+  const [user, menunggu, riwayat, unit, upt, statusUnit] = await Promise.all([
     requireUser(),
     supabase.from("v_gelang_alarm").select("*").eq("status", "Menunggu").order("waktu", { ascending: false }).limit(200),
     supabase.from("v_gelang_alarm").select("*").neq("status", "Menunggu").order("waktu", { ascending: false }).limit(50),
     supabase.from("gelang_unit").select("*").order("kode_unit").limit(1000),
     supabase.from("master_upt").select("kode,nama").order("nama"),
+    supabase.from("v_gelang_unit_status").select("*").eq("aktif", true).order("alarm_menunggu", { ascending: false }).order("kode_unit").limit(500),
   ]);
+  const daftarStatus = statusUnit.data ?? [];
+  const angkaBaterai = (v: string | null) => {
+    const m = v?.match(/\d+/);
+    return m ? Number(m[0]) : null;
+  };
+  const baterai = (u: (typeof daftarStatus)[number]) => angkaBaterai(u.baterai_nilai);
+  const bateraiRendah = daftarStatus.filter((u) => {
+    const b = baterai(u);
+    return b !== null && b <= (u.ambang_baterai ?? 20);
+  }).length;
   const daftarMenunggu = menunggu.data ?? [];
   const daftarRiwayat = riwayat.data ?? [];
   const daftarUnit = unit.data ?? [];
@@ -76,6 +87,47 @@ export default async function GelangPage() {
           </Card>
         ))}
       </section>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Kondisi unit</CardTitle>
+          <CardDescription>
+            Zona pemantauan, baterai, dan sinyal terakhir dari setiap gelang aktif.{bateraiRendah > 0 ? ` ${bateraiRendah} unit baterainya sudah di bawah ambang.` : ""}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-5 overflow-x-auto">
+          {daftarStatus.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Belum ada unit gelang aktif. Daftarkan unit pada bagian Pemetaan unit gelang.</p>
+          ) : (
+            <table className="w-full min-w-[48rem] text-sm">
+              <thead className="text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"><tr><th className="py-2 pr-3">Unit / WB</th><th className="py-2 pr-3">Zona</th><th className="py-2 pr-3">Baterai</th><th className="py-2 pr-3">Sinyal</th><th className="py-2">Alarm</th></tr></thead>
+              <tbody className="divide-y">
+                {daftarStatus.map((u) => {
+                  const b = baterai(u);
+                  const rendah = b !== null && b <= (u.ambang_baterai ?? 20);
+                  return (
+                    <tr key={u.id} className="align-top">
+                      <td className="py-2.5 pr-3"><span className="font-medium">{u.wb_nama ?? u.nama_unit ?? u.kode_unit}</span><span className="block text-xs text-muted-foreground">{u.kode_unit} · {u.upt_nama ?? u.kode_upt}</span></td>
+                      <td className="py-2.5 pr-3">{u.zona_nama ? <>{u.zona_nama}{u.zona_radius_m ? <span className="text-xs text-muted-foreground"> · radius {u.zona_radius_m} m</span> : null}{u.zona_status ? <span className="block text-xs text-muted-foreground">{u.zona_status}{u.zona_terakhir_at ? ` · ${sejak(u.zona_terakhir_at)}` : ""}</span> : null}</> : <span className="text-muted-foreground">Belum ditetapkan</span>}</td>
+                      <td className="py-2.5 pr-3">{u.baterai_nilai ? <span className="inline-flex items-center gap-1.5">{rendah ? <BatteryLow className="h-4 w-4 text-status-merah" aria-hidden /> : null}<Pill tone={rendah ? "merah" : "hijau"}>{u.baterai_nilai}</Pill></span> : <span className="text-muted-foreground">-</span>}{u.baterai_terakhir_at ? <span className="block text-xs text-muted-foreground">{sejak(u.baterai_terakhir_at)} · ambang {u.ambang_baterai}%</span> : null}</td>
+                      <td className="py-2.5 pr-3">{u.sinyal_status ? <>{u.sinyal_status}{u.sinyal_terakhir_at ? <span className="block text-xs text-muted-foreground">{sejak(u.sinyal_terakhir_at)}</span> : null}</> : <span className="text-muted-foreground">-</span>}</td>
+                      <td className="py-2.5">{(u.alarm_menunggu ?? 0) > 0 ? <Pill tone="merah">{u.alarm_menunggu} menunggu</Pill> : <Pill tone="netral">Tidak ada</Pill>}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+          {bisaAtur && daftarUnit.length > 0 && (
+            <ActionForm action={aturZonaUnit} submit="Simpan zona" fields={{ id: { s: "z-unit" }, zona_nama: { s: "z-nama" }, zona_radius_m: { n: "z-rad" }, ambang_baterai: { n: "z-amb" } }} className="grid gap-3 rounded-xl border border-border/70 p-4 sm:grid-cols-2 lg:grid-cols-[1.4fr_1.4fr_0.8fr_0.8fr_auto] lg:items-end">
+              <Field label="Unit" htmlFor="z-unit"><Select id="z-unit" name="z-unit" required defaultValue=""><option value="" disabled>Pilih unit</option>{daftarUnit.map((u) => <option key={u.id} value={u.id}>{u.kode_unit}{u.nama_unit ? ` · ${u.nama_unit}` : ""}</option>)}</Select></Field>
+              <Field label="Nama zona" htmlFor="z-nama"><Input id="z-nama" name="z-nama" maxLength={150} placeholder="Mis. Lahan sawah blok B" /></Field>
+              <Field label="Radius (m)" htmlFor="z-rad"><Input id="z-rad" name="z-rad" type="number" min={10} max={100000} /></Field>
+              <Field label="Ambang baterai (%)" htmlFor="z-amb"><Input id="z-amb" name="z-amb" type="number" min={1} max={90} required defaultValue={20} /></Field>
+            </ActionForm>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader><CardTitle>Riwayat terakhir</CardTitle><CardDescription>50 alarm terakhir yang sudah dikonfirmasi.</CardDescription></CardHeader>

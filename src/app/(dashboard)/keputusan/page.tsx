@@ -19,7 +19,7 @@ function Baris({ o, now }: { o: Overview; now: Date }) {
       <Link href={`/keputusan/${o.session_id}`} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 hover:bg-secondary/60">
         <span className="min-w-0 flex-1">
           <span className="block font-medium">{o.jenis_kegiatan} · {o.lokasi_nama}</span>
-          <span className="block text-xs text-muted-foreground">{o.kode_kegiatan} · {fmtTanggalPendek(o.tanggal_sesi)} · diperbarui {sejak(o.diperbarui_at, now)}</span>
+          <span className="block text-xs text-muted-foreground">{o.kode_kegiatan}{o.latihan ? " · LATIHAN" : ""} · {fmtTanggalPendek(o.tanggal_sesi)} · diperbarui {sejak(o.diperbarui_at, now)}</span>
           {p.map((x) => (
             <span key={x.teks} className="mt-0.5 flex items-start gap-1 text-xs text-status-merah"><AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />{x.teks}</span>
           ))}

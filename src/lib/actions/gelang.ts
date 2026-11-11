@@ -3,7 +3,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { authorize, fail, success, zodFail, type ActionResult } from "./_shared";
-import { bacaDaftarUnit, hapusUnitSchema, konfirmasiAlarmSchema, unitSchema } from "@/lib/validations/gelang";
+import { bacaDaftarUnit, hapusUnitSchema, konfirmasiAlarmSchema, unitSchema, zonaUnitSchema } from "@/lib/validations/gelang";
 import { mapDbError } from "@/lib/errors";
 
 const DITOLAK = "Tindakan ditolak: di luar wewenang atau di luar UPT Anda.";
@@ -86,6 +86,23 @@ export async function hapusUnitGelang(input: unknown): Promise<ActionResult> {
   const { data, error } = await auth.supabase.from("gelang_unit").delete().eq("id", parsed.data.id).select("id");
   if (error) return fail(mapDbError(error, DITOLAK));
   if (!data || data.length === 0) return fail("Unit tidak ditemukan atau bukan milik UPT Anda.");
+  revalidatePath("/gelang");
+  return success();
+}
+
+/** Menetapkan zona pemantauan dan ambang peringatan baterai untuk satu unit gelang. */
+export async function aturZonaUnit(input: unknown): Promise<ActionResult> {
+  const auth = await authorize(["operator", "administrator"]);
+  if (!auth.ok) return fail(auth.error);
+  const parsed = zonaUnitSchema.safeParse(input);
+  if (!parsed.success) return zodFail(parsed.error);
+  const p = parsed.data;
+  const { error, count } = await auth.supabase
+    .from("gelang_unit")
+    .update({ zona_nama: p.zona_nama ?? null, zona_radius_m: p.zona_radius_m ?? null, ambang_baterai: p.ambang_baterai }, { count: "exact" })
+    .eq("id", p.id);
+  if (error) return fail(mapDbError(error, DITOLAK));
+  if (!count) return fail("Unit tidak ditemukan atau di luar UPT Anda.");
   revalidatePath("/gelang");
   return success();
 }
