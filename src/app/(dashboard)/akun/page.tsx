@@ -29,8 +29,10 @@ export default async function AkunPage({ searchParams }: { searchParams: Promise
   ]);
   const admin = saya.role === "administrator";
   const kanwilSaja = saya.role === "pemantau_kanwil";
-  const semua = akunRes.data ?? [];
-  const daftarUpt = (upt.data ?? []).filter((u) => !kanwilSaja || u.kanwil_id === saya.kanwilId);
+  const operatorSaja = saya.role === "operator";
+  const peranBaruAwal = peranBolehDibuat(saya.role);
+  const semua = (akunRes.data ?? []).filter((a) => !operatorSaja || peranBaruAwal.includes(a.role as Role));
+  const daftarUpt = (upt.data ?? []).filter((u) => operatorSaja ? u.kode === saya.kodeUpt : !kanwilSaja || u.kanwil_id === saya.kanwilId);
   const daftarKanwil = kanwil.data ?? [];
   const namaUpt = (k: string | null) => (upt.data ?? []).find((u) => u.kode === k)?.nama ?? k ?? "-";
   const namaKanwil = (k: string | null) => daftarKanwil.find((w) => w.id === k)?.nama ?? "-";
@@ -48,8 +50,10 @@ export default async function AkunPage({ searchParams }: { searchParams: Promise
   const aktif = semua.filter((a) => a.is_active).length;
   const perPeran = ALL_ROLES.map((r) => ({ r, n: semua.filter((a) => a.role === r).length })).filter((x) => x.n > 0);
 
-  const judul = kanwilSaja ? "Akun UPT di wilayah Anda" : admin ? "Akun pengguna" : "Akun Kanwil dan UPT";
-  const uraian = kanwilSaja
+  const judul = operatorSaja ? "Akun pegawai UPT Anda" : kanwilSaja ? "Akun UPT di wilayah Anda" : admin ? "Akun pengguna" : "Akun Kanwil dan UPT";
+  const uraian = operatorSaja
+    ? "Buat akun untuk Ka.UPT, Kepala Pengamanan, dan Pengawal di UPT Anda sendiri. Satu akun Pengawal boleh dipakai bergantian oleh beberapa petugas; nama petugas dicatat saat bertugas. Akun UPT lain tidak terlihat."
+    : kanwilSaja
     ? `Buat dan kelola akun Ka.UPT, Kepala Pengamanan, Operator, dan Pengawal Kegiatan untuk UPT di ${kanwilSendiri}.`
     : "Buat dan kelola akun Pemantau Kanwil serta akun UPT (Ka.UPT, Kepala Pengamanan, Operator, Pengawal Kegiatan). Setiap perubahan tercatat di jejak audit.";
 
@@ -79,17 +83,17 @@ export default async function AkunPage({ searchParams }: { searchParams: Promise
               <Field label="Kata sandi awal" htmlFor="a-pw" hint="Minimal 8 karakter."><Input id="a-pw" name="password" type="text" minLength={8} required autoComplete="off" /></Field>
               <Field label="NIP (opsional)" htmlFor="a-nip"><Input id="a-nip" name="nip" /></Field>
               <Field label="Peran" htmlFor="a-role">
-                <Select id="a-role" name="role" defaultValue={kanwilSaja ? "pengawal" : "pemantau_kanwil"}>
+                <Select id="a-role" name="role" defaultValue={kanwilSaja || operatorSaja ? "pengawal" : "pemantau_kanwil"}>
                   {peranBaru.map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
                 </Select>
               </Field>
-              <Field label="UPT" htmlFor="a-upt" hint="Untuk Ka.UPT, Kepala Pengamanan, Operator, dan Pengawal.">
-                <Select id="a-upt" name="upt" defaultValue="">
-                  <option value="">— pilih UPT —</option>
+              <Field label="UPT" htmlFor="a-upt" hint={operatorSaja ? "Otomatis UPT Anda." : "Untuk Ka.UPT, Kepala Pengamanan, Operator, dan Pengawal."}>
+                <Select id="a-upt" name="upt" defaultValue={operatorSaja ? saya.kodeUpt ?? "" : ""} disabled={operatorSaja}>
+                  {!operatorSaja && <option value="">— pilih UPT —</option>}
                   {daftarUpt.map((u) => <option key={u.kode} value={u.kode}>{u.nama}</option>)}
                 </Select>
               </Field>
-              {!kanwilSaja && (
+              {!kanwilSaja && !operatorSaja && (
                 <Field label="Kanwil" htmlFor="a-kanwil" hint="Terisi otomatis saat UPT dipilih. Wajib untuk Pemantau Kanwil.">
                   <Select id="a-kanwil" name="kanwil" defaultValue="">
                     <option value="">— pilih Kanwil —</option>
@@ -104,7 +108,7 @@ export default async function AkunPage({ searchParams }: { searchParams: Promise
 
       <form className="grid gap-3 rounded-2xl border border-border/70 bg-card p-4 shadow-soft sm:grid-cols-5" aria-label="Saring akun">
         <Field label="Cari" htmlFor="s-q" className="sm:col-span-2"><Input id="s-q" name="q" defaultValue={q.q ?? ""} placeholder="Nama, email, NIP, atau UPT" /></Field>
-        <Field label="Peran" htmlFor="s-peran"><Select id="s-peran" name="peran" defaultValue={q.peran ?? ""}><option value="">Semua</option>{ALL_ROLES.map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}</Select></Field>
+        <Field label="Peran" htmlFor="s-peran"><Select id="s-peran" name="peran" defaultValue={q.peran ?? ""}><option value="">Semua</option>{(operatorSaja ? peranBaruAwal : ALL_ROLES).map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}</Select></Field>
         <Field label="UPT" htmlFor="s-upt"><Select id="s-upt" name="upt" defaultValue={q.upt ?? ""}><option value="">Semua</option>{daftarUpt.map((u) => <option key={u.kode} value={u.kode}>{u.nama}</option>)}</Select></Field>
         <div className="flex items-end gap-2">
           <Field label="Status" htmlFor="s-status" className="flex-1"><Select id="s-status" name="status" defaultValue={q.status ?? ""}><option value="">Semua</option><option value="aktif">Aktif</option><option value="nonaktif">Nonaktif</option></Select></Field>
@@ -140,7 +144,7 @@ export default async function AkunPage({ searchParams }: { searchParams: Promise
                           </Select>
                         </Field>
                         <Field label="UPT" htmlFor={`u-${a.id}`}><Select id={`u-${a.id}`} name="upt" defaultValue={a.kode_upt ?? ""}><option value="">— tanpa UPT —</option>{daftarUpt.map((u) => <option key={u.kode} value={u.kode}>{u.nama}</option>)}</Select></Field>
-                        {!kanwilSaja && <Field label="Kanwil" htmlFor={`k-${a.id}`}><Select id={`k-${a.id}`} name="kanwil" defaultValue={a.kanwil_id ?? ""}><option value="">— tanpa Kanwil —</option>{daftarKanwil.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}</Select></Field>}
+                        {!kanwilSaja && !operatorSaja && <Field label="Kanwil" htmlFor={`k-${a.id}`}><Select id={`k-${a.id}`} name="kanwil" defaultValue={a.kanwil_id ?? ""}><option value="">— tanpa Kanwil —</option>{daftarKanwil.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}</Select></Field>}
                       </div>
                     </ActionForm>
                     {admin && (
