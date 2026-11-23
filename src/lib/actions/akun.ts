@@ -6,7 +6,7 @@ import { authorize, fail, success, zodFail, type ActionResult } from "./_shared"
 import { mapDbError } from "@/lib/errors";
 import { ROLE_VALUES } from "@/lib/validations/admin";
 
-const PENGELOLA = ["administrator", "pemantau_pusat", "pemantau_kanwil"] as const;
+const PENGELOLA = ["administrator", "pemantau_pusat", "pemantau_kanwil", "operator"] as const;
 
 function pesan(error: { code?: string | null; message?: string | null }): string {
   const m = (error.message ?? "").trim();
@@ -26,7 +26,7 @@ const buatSchema = z.object({
   kanwil_id: z.string().uuid().optional(),
 });
 
-/** Membuat akun sesuai wewenang: Pusat (Kanwil dan UPT), Kanwil (UPT pada wilayahnya), Administrator (semua). */
+/** Membuat akun sesuai wewenang: Pusat (Kanwil dan UPT), Kanwil (UPT pada wilayahnya), Operator UPT (Ka.UPT, Kepala Pengamanan, Pengawal di UPT sendiri), Administrator (semua). */
 export async function buatAkun(input: unknown): Promise<ActionResult<{ id: string }>> {
   const auth = await authorize([...PENGELOLA]);
   if (!auth.ok) return fail(auth.error);
