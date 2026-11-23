@@ -67,3 +67,13 @@ Menu Peta (`/peta`) menampilkan seluruh 611 UPT dari 33 Kanwil (data di `data/up
 - Titik UPT awalnya perkiraan (pusat kabupaten/kota). Administrator memperbaikinya di menu UPT & Kanwil dengan menempel koordinat dari Google Maps.
 - Lokasi kegiatan di luar UPT wajib diberi titik koordinat saat Operator mencatat lokasi.
 - Peta dasar: CARTO Dark Matter (MapLibre GL), dengan ubin raster CARTO sebagai cadangan.
+
+## Pembaruan November 2026 (12-peran-tahap-drive.sql)
+
+- Tampilan bertema ketahanan pangan (biru dongker resmi, emas, hijau sawah) dengan logo Kemenimipas, Pemasyarakatan, dan PAS-SIAGA Pangan. Menu dipindah ke tengah atas; menu tambahan ada di "Menu lain" dan bisa dicari.
+- Tampilan dibedakan per tingkat: Pusat (rekap per Kanwil), Kanwil (rekap per UPT), UPT (kegiatan berjalan dan kemajuan tahap).
+- Peran baru `ka_upt` (Ka.UPT). Pengelolaan akun berjenjang di `/akun`: Pusat membuat akun Kanwil dan UPT, Kanwil membuat akun UPT di wilayahnya.
+- Pengawal mengisi 4 tahap pengawalan (P2U, perjalanan, pelaksanaan, kembali ke UPT) dengan foto dan berkas wajib. Waktu dicatat server. Lampiran disimpan ke Google Drive lewat Apps Script (`/admin/drive`), atau ke Supabase Storage bila Drive belum dihubungkan.
+- Laporan resmi berkop UPT di `/sesi/[id]/laporan`, diunduh sebagai PDF (disusun di browser, PDF lampiran digabung). Pengesahan berkas oleh Kepala Pengamanan atau Ka.UPT. Daftar laporan di `/laporan`, rekap Excel di `/laporan/ekspor`.
+- Semua pilihan (dropdown) panjang dan tabel bisa dicari.
+- Notifikasi Telegram tambahan: keputusan kesiapan, setiap tahap pengawalan, dan pengesahan laporan.
