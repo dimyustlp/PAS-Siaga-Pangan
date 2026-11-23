@@ -24,6 +24,9 @@ export async function catatHasil(input: unknown): Promise<ActionResult> {
     volume: d.volume,
     satuan: d.satuan,
     luas_ha: d.luas_ha ?? null,
+    nilai_rp: d.nilai_rp ?? null,
+    wbp_terlibat: d.wbp_terlibat ?? null,
+    premi_rp: d.premi_rp ?? null,
     catatan: d.catatan ?? null,
   });
   if (error) return fail(mapDbError(error, DITOLAK_HASIL));

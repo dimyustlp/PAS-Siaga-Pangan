@@ -91,6 +91,9 @@ export const hasilPanganSchema = z.object({
   volume: z.number({ invalid_type_error: "Volume wajib diisi." }).min(0, "Volume tidak boleh negatif.").max(1e9),
   satuan: z.enum(SATUAN_PANGAN, { errorMap: () => ({ message: "Pilih satuan." }) }),
   luas_ha: z.number().min(0).max(100000).optional(),
+  nilai_rp: z.number({ invalid_type_error: "Nilai produksi harus berupa angka." }).min(0, "Nilai produksi tidak boleh negatif.").max(1e13).optional(),
+  wbp_terlibat: z.number({ invalid_type_error: "Jumlah WBP harus berupa angka." }).int("Jumlah WBP harus bilangan bulat.").min(0).max(1e6).optional(),
+  premi_rp: z.number({ invalid_type_error: "Premi harus berupa angka." }).min(0, "Premi tidak boleh negatif.").max(1e13).optional(),
   catatan: opt(500),
 });
 export const hapusHasilSchema = z.object({ id: uuid });

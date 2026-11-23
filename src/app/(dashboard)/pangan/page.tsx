@@ -1,5 +1,8 @@
-import { Fish, Leaf, Ruler, Sprout, Wheat } from "lucide-react";
+import Link from "next/link";
+import { ArrowDownRight, ArrowUpRight, Building2, Coins, ExternalLink, Leaf, Minus, Ruler, Users } from "lucide-react";
 import { ActionButton, ActionForm } from "@/components/shared/action-form";
+import { GrafikOmset, GrafikWbp } from "@/components/pangan/grafik-pangan";
+import { PetaKomoditas } from "@/components/pangan/peta-komoditas";
 import { PilihUpt } from "@/components/shared/pilih-upt";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +15,8 @@ import { ambilCakupan } from "@/lib/data/cakupan";
 import { fmtTanggal, hariIniWib } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import { JENIS_KEGIATAN, SATUAN_PANGAN } from "@/lib/validations/induk";
+import { angka, angkaBulat, bacaRekap, kapital as kapitalKom, namaPendek, peringkat, rupiahBagian, tren, type KunciUrut, type RekapPeringkat } from "@/lib/domain/pangan-sdp";
+import { SDP_URL, bacaDataSdp } from "@/lib/domain/sdp";
 import { TabelCari } from "@/components/ui/tabel-cari";
 
 export const metadata = { title: "Hasil ketahanan pangan" };
@@ -19,7 +24,7 @@ export const dynamic = "force-dynamic";
 
 const TGL = /^\d{4}-\d{2}-\d{2}$/;
 const nf = new Intl.NumberFormat("id-ID", { maximumFractionDigits: 2 });
-const kapital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const kapital = kapitalKom;
 
 type Agregat = { komoditas: string; jenis: string; satuan: string; volume: number; luas: number; jumlah: number; upt: Set<string> };
 
@@ -32,8 +37,10 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
   const user = await requireUser();
   const cak = await ambilCakupan(supabase, user, q);
 
-  const [{ data: rekap }, { data: terbaru }] = await Promise.all([
+  const [{ data: rekap }, { data: rekapSdp }, { data: sdpBaris }, { data: terbaru }] = await Promise.all([
     supabase.rpc("rekap_pangan", { p_dari: dari, p_sampai: sampai, p_kanwil: cak.kanwilDipilih || null, p_upt: cak.uptDipilih || null }),
+    supabase.rpc("rekap_pangan_sdp", { p_dari: dari, p_sampai: sampai, p_kanwil: cak.kanwilDipilih || null, p_upt: cak.uptDipilih || null }),
+    supabase.from("sdp_ringkasan").select("tahun,data,tanggal_data").order("tahun", { ascending: false }).limit(1).maybeSingle(),
     (() => {
       let k = supabase.from("v_hasil_pangan").select("*").gte("tanggal", dari).lte("tanggal", sampai).order("tanggal", { ascending: false }).order("created_at", { ascending: false }).limit(50);
       if (cak.uptDipilih) k = k.eq("kode_upt", cak.uptDipilih);
@@ -42,6 +49,14 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
     })(),
   ]);
 
+  const sdp = sdpBaris ? bacaDataSdp(sdpBaris.data) : null;
+  const r = bacaRekap(rekapSdp);
+  const teratas = r.komoditas.slice(0, 8).map((k) => k.kom);
+  const peringkatKanwil = !cak.uptDipilih && r.peringkat.length > 1;
+  const golongan = cak.kanwilDipilih ? "UPT" : "Kanwil";
+  const trenTon = tren(r.kpi.ton, r.sebelumnya.ton);
+  const trenNilai = tren(r.kpi.nilai, r.sebelumnya.nilai);
+  const nilaiBagian = rupiahBagian(r.kpi.nilai);
   const peta = new Map<string, Agregat>();
   const perUpt = new Map<string, { nama: string; kanwil: string; jumlah: number; luas: number; volume: Map<string, number> }>();
   for (const r of rekap ?? []) {
@@ -83,18 +98,68 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
       </form>
 
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-5" aria-label="Ringkasan hasil pangan">
-        <StatCard icon={Wheat} nada="teal" nilai={jenisKomoditas} label="jenis komoditas" />
-        <StatCard icon={Ruler} nada="biru" nilai={nf.format(luasTotal)} label="hektare lahan" />
-        <StatCard icon={Sprout} nada="hijau" nilai={jumlah("Pertanian")} label="catatan pertanian" />
-        <StatCard icon={Leaf} nada="kuning" nilai={jumlah("Peternakan")} label="catatan peternakan" />
-        <StatCard icon={Fish} nada="biru" nilai={jumlah("Perikanan")} label="catatan perikanan" />
+        <StatCard icon={Leaf} nada="hijau" nilai={<Satuan a={angka(r.kpi.ton)} s="ton" />} label="Total produksi" catatan={<Tren t={trenTon} />} />
+        <StatCard icon={Coins} nada="kuning" nilai={<Satuan p="Rp" a={nilaiBagian.angka} s={nilaiBagian.satuan} />} label="Nilai produksi" catatan={<Tren t={trenNilai} />} />
+        <StatCard icon={Users} nada="biru" nilai={<Satuan a={angkaBulat(r.kpi.wbp_rata)} s="orang" />} label="Rata-rata WBP terlibat per bulan" />
+        <StatCard icon={Ruler} nada="teal" nilai={<Satuan a={angka(r.kpi.luas_m2)} s="m²" />} label="Luas lahan digunakan" />
+        <StatCard icon={Building2} nada="biru" nilai={r.kpi.upt} label="UPT melapor" catatan={<span className="text-muted-foreground">{r.kpi.komoditas} jenis komoditas · {r.kpi.catatan} catatan</span>} />
       </section>
+
+      <section className="grid gap-4 lg:grid-cols-2" aria-label="Grafik bulanan">
+        <Card className="min-w-0">
+          <CardHeader><CardTitle>Omset per bulan</CardTitle><CardDescription>Nilai produksi yang dicatat, dalam miliar rupiah.</CardDescription></CardHeader>
+          <CardContent><GrafikOmset data={r.bulanan} /></CardContent>
+        </Card>
+        <Card className="min-w-0">
+          <CardHeader><CardTitle>Tren WBP terlibat dan premi</CardTitle><CardDescription>WBP terlibat dalam orang, premi dalam juta rupiah.</CardDescription></CardHeader>
+          <CardContent><GrafikWbp data={r.bulanan} /></CardContent>
+        </Card>
+      </section>
+
+      <Card>
+        <CardHeader><CardTitle>Peta persebaran produksi komoditas UPT</CardTitle><CardDescription>Satu titik per UPT, diwarnai menurut komoditas dengan nilai produksi tertinggi di UPT itu. Klik titik untuk melihat rinciannya.</CardDescription></CardHeader>
+        <CardContent>
+          {r.upt.length === 0 ? <p className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">Belum ada hasil pangan pada periode ini, jadi belum ada titik yang bisa ditampilkan.</p> : <PetaKomoditas titik={r.upt} teratas={teratas} />}
+        </CardContent>
+      </Card>
+
+      {peringkatKanwil && (
+        <section className="space-y-4" aria-label={`Peringkat ${golongan}`}>
+          <div className="grid gap-4 lg:grid-cols-2">
+            <Peringkat judul={`10 ${golongan} teratas (produksi dan omset)`} data={peringkat(r.peringkat, "ton", "atas")} kolom="produksi" />
+            <Peringkat judul={`10 ${golongan} terbawah (produksi dan omset)`} data={peringkat(r.peringkat, "ton", "bawah")} kolom="produksi" />
+            <Peringkat judul={`10 ${golongan} teratas (warga binaan terlibat)`} data={peringkat(r.peringkat, "wbp", "atas")} kolom="wbp" />
+            <Peringkat judul={`10 ${golongan} terbawah (warga binaan terlibat)`} data={peringkat(r.peringkat, "wbp", "bawah")} kolom="wbp" />
+            <Peringkat judul={`10 ${golongan} teratas (luas lahan)`} data={peringkat(r.peringkat, "luas_m2", "atas")} kolom="luas" />
+            <Peringkat judul={`10 ${golongan} terbawah (luas lahan)`} data={peringkat(r.peringkat, "luas_m2", "bawah")} kolom="luas" />
+          </div>
+          <p className="text-xs text-muted-foreground">Produksi dihitung dari satuan kg, kwintal, dan ton yang diubah ke ton. Satuan liter, ekor, dan butir ada pada tabel per komoditas di bawah. {golongan} tanpa data pada ukuran tertentu tidak ikut diperingkat.</p>
+        </section>
+      )}
+
+      {sdp && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Pembanding data SDP</CardTitle>
+            <CardDescription>Angka resmi pada dasbor Detail Ketahanan Pangan SDP{sdpBaris?.tahun ? ` tahun ${sdpBaris.tahun}` : ""}, sebagai pembanding catatan UPT di atas.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm">
+            <p><span className="text-muted-foreground">Total produksi SDP</span><br /><strong className="text-base tabular-nums">{sdp.kpi.total_produksi}</strong></p>
+            <p><span className="text-muted-foreground">Nilai produksi SDP</span><br /><strong className="text-base tabular-nums">{sdp.kpi.nilai_produksi}</strong></p>
+            <p><span className="text-muted-foreground">Catatan UPT pada periode ini</span><br /><strong className="text-base tabular-nums">{angka(r.kpi.ton)} ton · Rp {nilaiBagian.angka} {nilaiBagian.satuan}</strong></p>
+            <div className="ml-auto flex flex-wrap gap-2">
+              <Button asChild variant="outline" size="sm"><Link href="/sdp">Rincian data SDP</Link></Button>
+              <Button asChild variant="outline" size="sm"><a href={SDP_URL} target="_blank" rel="noopener noreferrer">Buka dasbor SDP <ExternalLink className="h-3.5 w-3.5" aria-hidden /></a></Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {bisaCatat && (
         <Card>
           <CardHeader><CardTitle>Catat hasil</CardTitle><CardDescription>Panen, produksi ternak, atau tangkapan ikan. Satu baris per komoditas dan tanggal.</CardDescription></CardHeader>
           <CardContent>
-            <ActionForm action={catatHasil} submit="Simpan hasil" fields={{ kode_upt: { v: upt }, jenis: { s: "h-jenis" }, komoditas: { s: "h-kom" }, tanggal: { s: "h-tgl" }, volume: { n: "h-vol" }, satuan: { s: "h-sat" }, luas_ha: { n: "h-luas" }, catatan: { s: "h-cat" } }}>
+            <ActionForm action={catatHasil} submit="Simpan hasil" fields={{ kode_upt: { v: upt }, jenis: { s: "h-jenis" }, komoditas: { s: "h-kom" }, tanggal: { s: "h-tgl" }, volume: { n: "h-vol" }, satuan: { s: "h-sat" }, luas_ha: { n: "h-luas" }, nilai_rp: { n: "h-nilai" }, wbp_terlibat: { n: "h-wbp" }, premi_rp: { n: "h-premi" }, catatan: { s: "h-cat" } }}>
               <div className="grid gap-4 sm:grid-cols-3">
                 <Field label="Jenis kegiatan" htmlFor="h-jenis"><Select id="h-jenis" name="h-jenis" defaultValue="Pertanian">{JENIS_KEGIATAN.map((j) => <option key={j}>{j}</option>)}</Select></Field>
                 <Field label="Komoditas" htmlFor="h-kom"><Input id="h-kom" name="h-kom" required maxLength={100} placeholder="Mis. Padi, Lele, Ayam petelur" /></Field>
@@ -102,6 +167,9 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
                 <Field label="Volume" htmlFor="h-vol"><Input id="h-vol" name="h-vol" type="number" step="any" min={0} required /></Field>
                 <Field label="Satuan" htmlFor="h-sat"><Select id="h-sat" name="h-sat" defaultValue="kg">{SATUAN_PANGAN.map((s) => <option key={s}>{s}</option>)}</Select></Field>
                 <Field label="Luas lahan (ha)" htmlFor="h-luas" hint="Kosongkan untuk peternakan atau perikanan tanpa lahan."><Input id="h-luas" name="h-luas" type="number" step="any" min={0} /></Field>
+                <Field label="Nilai produksi (Rp)" htmlFor="h-nilai" hint="Omset dari hasil ini, tanpa titik atau koma."><Input id="h-nilai" name="h-nilai" type="number" step="1" min={0} /></Field>
+                <Field label="WBP terlibat (orang)" htmlFor="h-wbp" hint="Jumlah warga binaan yang mengerjakan kegiatan ini."><Input id="h-wbp" name="h-wbp" type="number" step="1" min={0} /></Field>
+                <Field label="Premi WBP (Rp)" htmlFor="h-premi" hint="Premi yang dibayarkan kepada warga binaan."><Input id="h-premi" name="h-premi" type="number" step="1" min={0} /></Field>
                 <Field label="Catatan" htmlFor="h-cat" className="sm:col-span-3"><Textarea id="h-cat" name="h-cat" rows={2} maxLength={500} /></Field>
               </div>
             </ActionForm>
@@ -158,8 +226,8 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
         <CardHeader><CardTitle>Catatan terbaru</CardTitle><CardDescription>Maksimal 50 catatan terakhir pada periode ini.</CardDescription></CardHeader>
         <CardContent className="overflow-x-auto">
           {(terbaru ?? []).length === 0 ? <p className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">Belum ada catatan.</p> : (
-            <TabelCari className="w-full min-w-[44rem] text-sm">
-              <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="py-2 pr-3">Tanggal</th><th className="py-2 pr-3">UPT</th><th className="py-2 pr-3">Komoditas</th><th className="py-2 pr-3 text-right">Volume</th><th className="py-2 pr-3">Catatan</th><th className="py-2" /></tr></thead>
+            <TabelCari className="w-full min-w-[52rem] text-sm">
+              <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="py-2 pr-3">Tanggal</th><th className="py-2 pr-3">UPT</th><th className="py-2 pr-3">Komoditas</th><th className="py-2 pr-3 text-right">Volume</th><th className="py-2 pr-3 text-right">Nilai (Rp)</th><th className="py-2 pr-3 text-right">WBP</th><th className="py-2 pr-3">Catatan</th><th className="py-2" /></tr></thead>
               <tbody className="divide-y">
                 {(terbaru ?? []).map((h) => (
                   <tr key={h.id} className="align-top">
@@ -167,6 +235,8 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
                     <td className="py-2.5 pr-3">{h.upt_nama ?? h.kode_upt}</td>
                     <td className="py-2.5 pr-3">{kapital(h.komoditas ?? "")} <span className="text-xs text-muted-foreground">({h.jenis})</span></td>
                     <td className="py-2.5 pr-3 text-right tabular-nums">{nf.format(Number(h.volume))} {h.satuan}</td>
+                    <td className="py-2.5 pr-3 text-right tabular-nums">{h.nilai_rp ? nf.format(Number(h.nilai_rp)) : "-"}</td>
+                    <td className="py-2.5 pr-3 text-right tabular-nums">{h.wbp_terlibat ?? "-"}</td>
                     <td className="py-2.5 pr-3 text-muted-foreground">{h.catatan ?? "-"}</td>
                     <td className="py-2.5 text-right">{cak.bisaKelola && h.id ? <ActionButton action={hapusHasil} input={{ id: h.id }} label="Hapus" variant="outline" confirm="Hapus catatan ini? Tindakan ini tidak bisa dibatalkan." /> : null}</td>
                   </tr>
@@ -177,5 +247,58 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function Satuan({ a, s, p }: { a: string; s: string; p?: string }) {
+  return (
+    <span className="inline-flex flex-wrap items-baseline gap-x-1.5 gap-y-0 whitespace-nowrap">
+      {p ? <span className="text-[0.95rem] font-medium text-muted-foreground">{p}</span> : null}
+      <span className="text-[1.7rem]">{a}</span>
+      {s ? <span className="text-[0.95rem] font-medium text-muted-foreground">{s}</span> : null}
+    </span>
+  );
+}
+
+function Tren({ t }: { t: ReturnType<typeof tren> }) {
+  if (!t) return <span className="text-muted-foreground">Belum ada pembanding periode sebelumnya</span>;
+  if (t.arah === "tetap") return <span className="inline-flex items-center gap-1 text-muted-foreground"><Minus className="h-3.5 w-3.5" aria-hidden />Tetap</span>;
+  const naik = t.arah === "naik";
+  const Ikon = naik ? ArrowUpRight : ArrowDownRight;
+  return <span className={`inline-flex items-center gap-1 font-medium ${naik ? "text-status-hijau" : "text-status-merah"}`}><Ikon className="h-3.5 w-3.5" aria-hidden />{naik ? "Naik" : "Turun"} {angka(t.persen)}% dari periode sebelumnya</span>;
+}
+
+const RUPIAH = new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 });
+function Peringkat({ judul, data, kolom }: { judul: string; data: RekapPeringkat[]; kolom: "produksi" | "wbp" | "luas" }) {
+  return (
+    <Card className="min-w-0">
+      <CardHeader><CardTitle className="text-base">{judul}</CardTitle></CardHeader>
+      <CardContent className="overflow-x-auto">
+        {data.length === 0 ? <p className="rounded-xl border border-dashed p-5 text-center text-sm text-muted-foreground">Belum ada data.</p> : (
+          <table className="w-full min-w-[20rem] text-sm">
+            <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground">
+              <tr>
+                <th className="w-10 py-2 pr-2">No</th>
+                <th className="py-2 pr-3">{judul.includes(" UPT ") ? "UPT" : "Kanwil"}</th>
+                {kolom === "produksi" && <><th className="py-2 pr-3 text-right">Total produksi (ton)</th><th className="py-2 text-right">Total omset</th></>}
+                {kolom === "wbp" && <th className="py-2 text-right">WBP terlibat (orang)</th>}
+                {kolom === "luas" && <th className="py-2 text-right">Luas lahan (m²)</th>}
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {data.map((p, i) => (
+                <tr key={`${p.nama}-${i}`}>
+                  <td className="py-2 pr-2 tabular-nums text-muted-foreground">{i + 1}</td>
+                  <td className="py-2 pr-3 font-medium">{namaPendek(p.nama)}</td>
+                  {kolom === "produksi" && <><td className="py-2 pr-3 text-right tabular-nums">{angka(p.ton)}</td><td className="whitespace-nowrap py-2 text-right tabular-nums">{p.nilai > 0 ? `Rp ${RUPIAH.format(p.nilai)}` : "-"}</td></>}
+                  {kolom === "wbp" && <td className="py-2 text-right tabular-nums">{angkaBulat(p.wbp)}</td>}
+                  {kolom === "luas" && <td className="py-2 text-right tabular-nums">{angka(p.luas_m2)}</td>}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </CardContent>
+    </Card>
   );
 }

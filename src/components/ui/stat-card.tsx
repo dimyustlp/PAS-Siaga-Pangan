@@ -19,12 +19,14 @@ export function StatCard({
   nilai,
   label,
   nada = "biru",
+  catatan,
   className,
 }: {
   icon: LucideIcon;
   nilai: React.ReactNode;
   label: string;
   nada?: NadaKartu;
+  catatan?: React.ReactNode;
   className?: string;
 }) {
   const t = TONE[nada];
@@ -40,6 +42,7 @@ export function StatCard({
         </span>
       </div>
       <p className="mt-3 text-[0.82rem] leading-snug text-muted-foreground">{label}</p>
+      {catatan ? <div className="mt-1.5 text-xs">{catatan}</div> : null}
     </div>
   );
 }

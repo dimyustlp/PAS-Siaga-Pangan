@@ -825,9 +825,12 @@ export type Database = {
           kode_upt: string
           komoditas: string
           luas_ha: number | null
+          nilai_rp: number | null
+          premi_rp: number | null
           satuan: string
           tanggal: string
           volume: number
+          wbp_terlibat: number | null
         }
         Insert: {
           activity_id?: string | null
@@ -839,9 +842,12 @@ export type Database = {
           kode_upt?: string
           komoditas: string
           luas_ha?: number | null
+          nilai_rp?: number | null
+          premi_rp?: number | null
           satuan: string
           tanggal?: string
           volume: number
+          wbp_terlibat?: number | null
         }
         Update: {
           activity_id?: string | null
@@ -853,9 +859,12 @@ export type Database = {
           kode_upt?: string
           komoditas?: string
           luas_ha?: number | null
+          nilai_rp?: number | null
+          premi_rp?: number | null
           satuan?: string
           tanggal?: string
           volume?: number
+          wbp_terlibat?: number | null
         }
         Relationships: [
           {
@@ -2106,10 +2115,13 @@ export type Database = {
           kode_upt: string | null
           komoditas: string | null
           luas_ha: number | null
+          nilai_rp: number | null
+          premi_rp: number | null
           satuan: string | null
           tanggal: string | null
           upt_nama: string | null
           volume: number | null
+          wbp_terlibat: number | null
         }
         Relationships: [
           {
@@ -2333,6 +2345,15 @@ export type Database = {
       pemakaian_lampiran: { Args: never; Returns: Json }
       pembanding_sesudah: {
         Args: { p_dari: string; p_sampai: string }
+        Returns: Json
+      }
+      rekap_pangan_sdp: {
+        Args: {
+          p_dari: string
+          p_kanwil?: string | null
+          p_sampai: string
+          p_upt?: string | null
+        }
         Returns: Json
       }
       rekap_pangan: {
