@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, FolderOpen, ListChecks, Newspaper, Radio, Route } from "lucide-react";
+import { BookOpen, CircleHelp, FolderOpen, ListChecks, Newspaper, Radio, Route } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const MENU = [
   { href: "/lapangan", label: "Tugas saya", icon: ListChecks, tepat: true },
   { href: "/lapangan/alur", label: "Alur kerja", icon: Route },
+  { href: "/panduan", label: "Panduan", icon: CircleHelp },
   { href: "/pedoman", label: "Pedoman", icon: BookOpen },
   { href: "/berkas", label: "Berkas", icon: FolderOpen },
   { href: "/gelang", label: "Gelang", icon: Radio },
