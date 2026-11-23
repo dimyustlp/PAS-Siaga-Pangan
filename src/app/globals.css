@@ -112,10 +112,10 @@
     left: -8%;
     bottom: 0;
     width: 116%;
-    height: min(34vh, 340px);
+    height: min(30vh, 300px);
     z-index: -1;
     pointer-events: none;
-    background: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='320' viewBox='0 0 1600 320' preserveAspectRatio='none'%3E %3Cpath d='M0 120C220 70 430 110 650 88S1100 40 1330 72 1520 96 1600 84V320H0Z' fill='%233fa06b' fill-opacity='.20'/%3E %3Cpath d='M0 170C260 130 520 160 780 136S1260 104 1600 132V320H0Z' fill='%232c8a58' fill-opacity='.24'/%3E %3Cpath d='M0 222C300 190 640 216 960 196S1400 180 1600 192V320H0Z' fill='%231f6f48' fill-opacity='.26'/%3E %3Cpath d='M0 272C320 250 680 268 1000 254S1420 246 1600 252V320H0Z' fill='%2317563a' fill-opacity='.28'/%3E %3Cg fill='none' stroke='%23c28f1d' stroke-opacity='.45' stroke-width='1.6'%3E%3Cpath d='M0 146C260 106 520 138 780 112S1260 82 1600 108'/%3E%3Cpath d='M0 198C300 168 640 194 960 174S1400 160 1600 172'/%3E%3Cpath d='M0 250C320 228 680 246 1000 232S1420 226 1600 232'/%3E%3C/g%3E%3C/svg%3E") bottom / 100% 100% no-repeat;
+    background: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='320' viewBox='0 0 1600 320' preserveAspectRatio='none'%3E %3Cpath d='M0 120C220 70 430 110 650 88S1100 40 1330 72 1520 96 1600 84V320H0Z' fill='%233fa06b' fill-opacity='.13'/%3E %3Cpath d='M0 170C260 130 520 160 780 136S1260 104 1600 132V320H0Z' fill='%232c8a58' fill-opacity='.15'/%3E %3Cpath d='M0 222C300 190 640 216 960 196S1400 180 1600 192V320H0Z' fill='%231f6f48' fill-opacity='.16'/%3E %3Cpath d='M0 272C320 250 680 268 1000 254S1420 246 1600 252V320H0Z' fill='%2317563a' fill-opacity='.17'/%3E %3Cg fill='none' stroke='%23c28f1d' stroke-opacity='.45' stroke-width='1.6'%3E%3Cpath d='M0 146C260 106 520 138 780 112S1260 82 1600 108'/%3E%3Cpath d='M0 198C300 168 640 194 960 174S1400 160 1600 172'/%3E%3Cpath d='M0 250C320 228 680 246 1000 232S1420 226 1600 232'/%3E%3C/g%3E%3C/svg%3E") bottom / 100% 100% no-repeat;
     will-change: transform;
     animation: ayun-sawah 34s ease-in-out infinite alternate;
   }
