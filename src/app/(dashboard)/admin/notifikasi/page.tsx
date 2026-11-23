@@ -34,7 +34,7 @@ export default async function NotifikasiPage() {
   const namaUpt = (kode: string | null) => (upt.data ?? []).find((u) => u.kode === kode)?.nama;
 
   return (
-    <div className="mx-auto max-w-[1680px] space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <PageHeader title="Notifikasi dan mode latihan" description="Telegram menyampaikan perubahan status, gangguan, alarm gelang, dan rekap harian ke grup UPT, Kanwil, dan Direktorat." />
 
       {(st.error || set.error) && <Alert tone="bahaya">Pengaturan belum bisa dibaca. Muat ulang halaman.</Alert>}

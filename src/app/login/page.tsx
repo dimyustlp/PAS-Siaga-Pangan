@@ -1,6 +1,6 @@
 import { Activity, ClipboardCheck, WifiOff } from "lucide-react";
 import { Logo, LogoInstansi } from "@/components/layout/logo";
-import { DeretSektor } from "@/components/layout/motif-pangan";
+import { DeretSektor, MotifPangan } from "@/components/layout/motif-pangan";
 import { LoginForm } from "./login-form";
 
 export const metadata = { title: "Masuk" };
@@ -27,10 +27,10 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const { next, error } = await searchParams;
 
   return (
-    <main className="grid min-h-[100dvh] lg:grid-cols-[1.2fr_1fr]">
-      <section className="bg-brand-gradient relative hidden overflow-hidden p-12 lg:flex lg:flex-col lg:justify-between">
+    <main className="grid min-h-[100dvh] lg:grid-cols-[1.15fr_1fr]">
+      <section className="bg-brand-gradient relative hidden overflow-hidden p-12 lg:flex lg:flex-col lg:justify-between [&_.text-muted-foreground]:!text-white/75">
         <div className="pointer-events-none absolute inset-0" aria-hidden>
-          <svg viewBox="0 10 100 66" className="absolute -right-[4%] top-0 w-[62%] opacity-90 [mask-image:linear-gradient(to_left,black_55%,transparent)]">
+          <svg viewBox="0 10 100 66" className="absolute -right-[4%] top-0 w-[60%] opacity-90 [mask-image:linear-gradient(to_left,black_55%,transparent)]">
             {TITIK.map(([x, y, t], i) => (
               <g key={i}>
                 {t && (
@@ -43,78 +43,72 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               </g>
             ))}
           </svg>
-        </div>
+                  </div>
 
-        <div className="relative">
-          <div className="flex items-center gap-3">
-            <LogoInstansi />
-            <span className="h-10 w-px bg-white/25" aria-hidden />
-            <Logo />
+        <MotifPangan />
+        <div className="relative flex items-center gap-3">
+          <LogoInstansi />
+          <span className="h-10 w-px bg-white/30" aria-hidden />
+          <Logo />
+          <div className="leading-tight">
+            <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Kementerian Imigrasi dan Pemasyarakatan RI</p>
+            <p className="text-lg font-bold tracking-tight text-white">PAS-SIAGA <span className="text-[hsl(44_90%_66%)]">PANGAN</span></p>
+            <p className="text-[11px] text-muted-foreground">Direktorat Jenderal Pemasyarakatan</p>
           </div>
-          <p className="mt-4 font-mono text-[0.68rem] font-medium uppercase leading-relaxed tracking-[0.16em] text-[#9db6dc]">
-            Kementerian Imigrasi dan Pemasyarakatan
-            <br />
-            Direktorat Jenderal Pemasyarakatan
-            <br />
-            Direktorat Pengamanan dan Intelijen
-          </p>
         </div>
 
-        <div className="relative max-w-2xl space-y-8">
+        <div className="relative max-w-xl space-y-10">
           <div className="space-y-4">
-            <h1 className="text-5xl font-bold leading-[1.05] tracking-tight xl:text-6xl">
-              PAS-SIAGA <span className="text-[#e6c06a]">Pangan</span>
-            </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-[#c9d9f0]">
-              Pemantauan dan pengamanan kegiatan ketahanan pangan pemasyarakatan: dari rencana kegiatan, kesiapan, pengawalan empat tahap, sampai laporan yang disahkan.
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              <span className="h-1.5 w-1.5 rounded-full bg-status-hijau text-status-hijau titik-hidup" aria-hidden />
+              33 Kanwil · 611 UPT
             </p>
+            <h1 className="text-4xl font-semibold leading-[1.08] tracking-tight xl:text-5xl">
+              Mendukung ketahanan pangan nasional,
+              <span className="text-[hsl(44_90%_70%)]"> pengamanannya tetap terukur.</span>
+            </h1>
             <DeretSektor />
           </div>
-          <ul className="grid gap-3 xl:grid-cols-3">
+          <ul className="grid gap-px overflow-hidden rounded-2xl border border-white/25 bg-white/25">
             {POIN.map(({ ikon: Ikon, judul, teks }) => (
-              <li key={judul} className="rounded-[14px] border border-white/10 bg-white/[0.06] p-4 backdrop-blur-sm">
-                <span className="flex h-9 w-9 items-center justify-center rounded-[9px] bg-white/[0.1] text-[#e6c06a] ring-1 ring-inset ring-white/15">
-                  <Ikon className="h-[1.1rem] w-[1.1rem]" aria-hidden />
+              <li key={judul} className="flex items-start gap-4 bg-white/15 p-4 backdrop-blur-sm">
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/20 text-white ring-1 ring-inset ring-white/40">
+                  <Ikon className="h-4 w-4" aria-hidden />
                 </span>
-                <span className="mt-3 block text-[0.95rem] font-semibold text-white">{judul}</span>
-                <span className="mt-1 block text-[0.85rem] leading-relaxed text-[#b9cce8]">{teks}</span>
+                <span>
+                  <span className="block text-sm font-medium text-white">{judul}</span>
+                  <span className="block text-sm leading-relaxed text-muted-foreground">{teks}</span>
+                </span>
               </li>
             ))}
           </ul>
         </div>
-
-        <dl className="relative flex gap-10">
-          {[["Kantor wilayah", "33"], ["UPT terpantau", "611"], ["Tahap pengawalan", "4"]].map(([k, v]) => (
-            <div key={k}>
-              <dt className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.16em] text-[#9db6dc]">{k}</dt>
-              <dd className="mt-1 text-3xl font-bold tabular-nums">{v}</dd>
-            </div>
-          ))}
-        </dl>
+        <p className="relative text-xs text-muted-foreground">Direktorat Pengamanan dan Intelijen · Direktorat Jenderal Pemasyarakatan</p>
       </section>
 
-      <section className="flex items-center justify-center bg-[#f4f7fb] px-4 py-10">
+      <section className="flex items-center justify-center px-4 py-10">
         <div className="halaman-masuk w-full max-w-[25rem]">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
             <LogoInstansi kecil />
             <Logo />
             <div className="leading-tight">
-              <p className="font-bold">PAS-SIAGA Pangan</p>
+              <p className="font-semibold">PAS-SIAGA Pangan</p>
               <p className="text-xs text-muted-foreground">Pengamanan kegiatan ketahanan pangan</p>
             </div>
           </div>
-          <div className="kaca rounded-[14px] p-6 shadow-soft sm:p-8">
-            <h2 className="text-2xl font-bold tracking-tight">Masuk ke sistem</h2>
-            <p className="mb-6 mt-1 text-sm text-muted-foreground">Gunakan akun yang diberikan Pusat, Kanwil, atau Administrator.</p>
-            {error && PESAN[error] && (
-              <p role="alert" className="mb-4 rounded-[9px] border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-[hsl(0_70%_38%)]">
-                {PESAN[error]}
-              </p>
-            )}
-            <LoginForm next={next} />
+          <div className="bezel">
+            <div className="kaca tepi-hidup p-6 sm:p-8">
+              <h2 className="text-2xl font-semibold tracking-tight">Masuk</h2>
+              <p className="mb-6 mt-1 text-sm text-muted-foreground">Gunakan akun yang diberikan Pusat, Kanwil, atau Administrator.</p>
+              {error && PESAN[error] && (
+                <p role="alert" className="mb-4 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-[hsl(0_70%_38%)]">
+                  {PESAN[error]}
+                </p>
+              )}
+              <LoginForm next={next} />
+            </div>
           </div>
           <p className="mt-5 text-center text-xs text-muted-foreground">Lupa kata sandi? Hubungi pengelola akun di Kanwil atau Pusat.</p>
-          <p className="mt-2 text-center font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">Seluruh aktivitas tercatat dalam jejak audit</p>
         </div>
       </section>
     </main>

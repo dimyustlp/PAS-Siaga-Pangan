@@ -5,10 +5,6 @@ const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ["var(--font-jakarta)", "ui-sans-serif", "system-ui", "sans-serif"],
-        mono: ["var(--font-plex)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

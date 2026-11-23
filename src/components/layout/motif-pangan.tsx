@@ -1,28 +1,31 @@
 import { Beef, Fish, Trees, Wheat } from "lucide-react";
 
-/** Hiasan panel utama: cincin radar kuningan dengan sapuan pelan. Vektor ringan, tanpa gambar. */
+/** Hiasan panel utama: matahari pagi, sawah berundak, dan bulir padi. Gambar vektor sendiri. */
 export function MotifPangan() {
   return (
-    <svg
-      viewBox="0 0 400 400"
-      className="pointer-events-none absolute -right-20 top-1/2 h-[150%] -translate-y-1/2 [mask-image:linear-gradient(to_left,black_25%,transparent_92%)]"
-      aria-hidden
-    >
+    <svg viewBox="0 0 600 220" className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%] w-full opacity-80" preserveAspectRatio="xMidYMax slice" aria-hidden>
       <defs>
-        <linearGradient id="mp-sapu" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#c89a34" stopOpacity="0" />
-          <stop offset="1" stopColor="#e6c06a" stopOpacity="0.32" />
+        <linearGradient id="mp-sawah" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="hsl(140 50% 55%)" stopOpacity="0.35" />
+          <stop offset="1" stopColor="hsl(150 60% 30%)" stopOpacity="0.15" />
         </linearGradient>
       </defs>
-      <g fill="none" stroke="#c89a34" strokeWidth="1">
-        {[56, 100, 144, 188].map((r) => (
-          <circle key={r} cx="200" cy="200" r={r} strokeOpacity={0.26 - r / 1200} />
-        ))}
-        <path d="M200 4V396M4 200H396" strokeOpacity="0.14" />
+      <circle cx="505" cy="70" r="34" fill="hsl(44 95% 62%)" opacity="0.35" />
+      <circle cx="505" cy="70" r="20" fill="hsl(44 95% 66%)" opacity="0.45" />
+      <path d="M0 150 C120 120 220 140 320 125 S520 100 600 118 V220 H0Z" fill="url(#mp-sawah)" />
+      <path d="M0 175 C140 150 260 168 380 152 S540 140 600 150 V220 H0Z" fill="hsl(150 55% 28%)" opacity="0.35" />
+      <g stroke="hsl(44 90% 70%)" strokeOpacity="0.35" strokeWidth="1.2" fill="none">
+        <path d="M0 192 C150 170 300 186 600 166" />
+        <path d="M0 205 C160 186 320 200 600 182" />
       </g>
-      <path d="M200 200 L388 200 A188 188 0 0 0 351 88 Z" fill="url(#mp-sapu)">
-        <animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="14s" repeatCount="indefinite" />
-      </path>
+      <g stroke="hsl(44 90% 70%)" strokeOpacity="0.55" strokeWidth="1.4" fill="none" strokeLinecap="round">
+        {[470, 500, 530, 560].map((x, i) => (
+          <g key={x} transform={`translate(${x} ${168 - (i % 3) * 6})`}>
+            <path d="M0 40 C2 26 2 14 0 0" />
+            <path d="M0 8 c-6 -1 -9 -5 -9 -9 4 0 8 3 9 9z M0 16 c6 -1 9 -5 9 -9 -4 0 -8 3 -9 9z M0 24 c-6 -1 -9 -5 -9 -9 4 0 8 3 9 9z" fill="hsl(44 90% 70%)" fillOpacity="0.4" />
+          </g>
+        ))}
+      </g>
     </svg>
   );
 }
@@ -39,8 +42,8 @@ export function DeretSektor({ hitung }: { hitung?: Partial<Record<string, number
   return (
     <ul className="flex flex-wrap gap-2">
       {SEKTOR.map(({ ikon: Ikon, label }) => (
-        <li key={label} className="flex items-center gap-2 rounded-[9px] border border-white/15 bg-white/[0.07] px-3 py-1.5 font-mono text-[0.72rem] font-medium uppercase tracking-[0.06em]">
-          <Ikon className="h-4 w-4 text-[#e6c06a]" aria-hidden />
+        <li key={label} className="flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-xs font-medium backdrop-blur-sm">
+          <Ikon className="h-4 w-4 text-[hsl(44_90%_66%)]" aria-hidden />
           {label}
           {hitung && <span className="font-mono text-white/80">{hitung[label] ?? 0}</span>}
         </li>

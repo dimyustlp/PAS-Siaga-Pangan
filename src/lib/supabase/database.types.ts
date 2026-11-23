@@ -125,6 +125,12 @@ export type Database = {
         }
         Relationships: []
       }
+      berita_luar: {
+        Row: { diambil_at: string; disembunyikan: boolean; id: number; judul: string; sumber: string | null; terbit_at: string | null; url: string }
+        Insert: { diambil_at?: string; disembunyikan?: boolean; id?: never; judul: string; sumber?: string | null; terbit_at?: string | null; url: string }
+        Update: { diambil_at?: string; disembunyikan?: boolean; id?: never; judul?: string; sumber?: string | null; terbit_at?: string | null; url?: string }
+        Relationships: []
+      }
       berita_pangan: {
         Row: {
           created_at: string
@@ -1944,6 +1950,12 @@ export type Database = {
           },
         ]
       }
+      sdp_ringkasan: {
+        Row: { data: Json; diubah_at: string; diubah_oleh: string | null; tahun: number; tanggal_data: string | null }
+        Insert: { data: Json; diubah_at?: string; diubah_oleh?: string | null; tahun: number; tanggal_data?: string | null }
+        Update: { data?: Json; diubah_at?: string; diubah_oleh?: string | null; tahun?: number; tanggal_data?: string | null }
+        Relationships: []
+      }
     }
     Views: {
       v_berkas: {
@@ -2344,6 +2356,11 @@ export type Database = {
         }[]
       }
       rekonsiliasi_sesi: { Args: { p_session: string }; Returns: Json }
+      simpan_sdp: {
+        Args: { p_data: Json; p_tahun: number; p_tanggal: string | null }
+        Returns: undefined
+      }
+      admin_sembunyikan_berita_luar: { Args: { p_id: number }; Returns: undefined }
       sahkan_laporan: {
         Args: { p_catatan: string; p_session: string }
         Returns: undefined

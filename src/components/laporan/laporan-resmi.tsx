@@ -69,7 +69,7 @@ export function LaporanResmi({ isi }: { isi: IsiLaporan }) {
       <Bab no={6}>PENUTUP</Bab>
       <p className="text-justify">{isi.penutup}</p>
 
-      <div className="ml-auto mt-8 w-72 text-center">
+      <div className="ml-auto mt-8 w-full max-w-[18rem] text-center">
         <p>{isi.kotaTanggal}</p>
         <p>..................................................</p>
         <div className="h-20" />

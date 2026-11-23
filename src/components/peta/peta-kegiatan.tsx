@@ -315,9 +315,9 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
     });
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[22rem_1fr]">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[22rem_1fr]">
       {/* Panel kiri: ringkasan, saringan, daftar */}
-      <aside className="kaca order-2 flex min-h-0 flex-col rounded-[14px] lg:order-1 lg:h-[calc(100dvh-9rem)] lg:min-h-[34rem]">
+      <aside className="kaca order-2 flex min-h-0 min-w-0 flex-col rounded-[1.6rem] lg:order-1 lg:h-[calc(100dvh-12rem)] lg:min-h-[34rem]">
         <div className="grid grid-cols-3 gap-px overflow-hidden rounded-t-[1.6rem] border-b border-border bg-border">
           {[
             { n: ringkas.upt, l: "UPT berkegiatan" },
@@ -326,7 +326,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
           ].map((x) => (
             <div key={x.l} className="bg-white px-3 py-3.5">
               <p className="font-mono text-2xl font-medium leading-none tabular-nums">{x.n}</p>
-              <p className="mt-1.5 flex items-center gap-1.5 text-[0.6875rem] text-muted-foreground">
+              <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
                 {x.b && <Bentuk letak={x.b} kondisi="MENUNGGU" ukuran={11} />}
                 {x.l}
               </p>
@@ -336,7 +336,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
 
         <div className="space-y-3 border-b border-ink/[0.06] p-4">
           <label className="block space-y-1.5">
-            <span className="text-[0.6875rem] font-medium uppercase tracking-[0.16em] text-muted-foreground">Kanwil</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Kanwil</span>
             <Select
               value={kanwilId}
               onChange={(e) => {
@@ -376,7 +376,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
                 aria-pressed={kondisiAktif.has(k)}
                 onClick={() => ubahKondisi(k)}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.6875rem] font-medium transition-[opacity,background-color] duration-300",
+                  "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-[opacity,background-color] duration-300",
                   kondisiAktif.has(k) ? "border-border bg-white shadow-sm" : "border-transparent bg-ink/[0.04] opacity-50"
                 )}
               >
@@ -431,7 +431,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
                   </span>
                 </span>
                 {u.alarm > 0 && (
-                  <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-ink/[0.06] px-2 py-0.5 font-mono text-[0.625rem] text-foreground ring-1 ring-ink/10" title="Alarm gelang menunggu konfirmasi">
+                  <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-ink/[0.06] px-2 py-0.5 font-mono text-[10px] text-foreground ring-1 ring-ink/10" title="Alarm gelang menunggu konfirmasi">
                     <Bell className="h-3 w-3" aria-hidden />
                     {u.alarm}
                   </span>
@@ -443,7 +443,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
       </aside>
 
       {/* Peta */}
-      <section className="relative order-1 h-[62dvh] min-h-[26rem] overflow-hidden rounded-[14px] border border-ink/[0.07] bg-[hsl(44_40%_90%)] shadow-[0_24px_50px_-30px_hsl(222_60%_20%/0.35)] lg:order-2 lg:h-[calc(100dvh-9rem)] lg:min-h-[34rem]">
+      <section className="relative order-1 h-[62dvh] min-h-[26rem] overflow-hidden rounded-[1.6rem] border border-ink/[0.07] bg-[hsl(44_40%_90%)] shadow-[0_24px_50px_-30px_hsl(222_60%_20%/0.35)] lg:order-2 lg:h-[calc(100dvh-12rem)] lg:min-h-[34rem]">
         <div ref={wadah} className="!absolute inset-0" aria-label="Peta sebaran kegiatan pangan UPT" role="region" />
         {!siap && <div className="kilau absolute inset-0" aria-hidden />}
 
@@ -484,7 +484,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
         </div>
 
         {/* Legenda */}
-        <div className="absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] rounded-2xl border border-border bg-white/92 p-3 text-[0.6875rem] shadow-[0_14px_30px_-16px_hsl(224_60%_30%/0.45)] backdrop-blur-md">
+        <div className="absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] rounded-2xl border border-border bg-white/92 p-3 text-[11px] shadow-[0_14px_30px_-16px_hsl(224_60%_30%/0.45)] backdrop-blur-md">
           <button type="button" onClick={() => setLegenda((v) => !v)} aria-expanded={legenda} className="mb-2 flex w-full items-center justify-between gap-4 font-medium uppercase tracking-[0.16em] text-muted-foreground">
             Legenda <span className="font-mono normal-case tracking-normal">{legenda ? "−" : "+"}</span>
           </button>
@@ -517,7 +517,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
             <div className="flex h-full flex-col overflow-hidden rounded-[1.4rem] border border-border bg-white/96 shadow-[0_30px_60px_-30px_hsl(224_60%_30%/0.55)] backdrop-blur-xl">
               <div className="flex items-start gap-3 border-b border-ink/[0.06] p-4">
                 <div className="min-w-0 flex-1">
-                  <p className="text-[0.625rem] font-medium uppercase tracking-[0.18em] text-muted-foreground">{terpilih.kanwilId ? namaKanwil.get(terpilih.kanwilId) : "Tanpa Kanwil"}</p>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">{terpilih.kanwilId ? namaKanwil.get(terpilih.kanwilId) : "Tanpa Kanwil"}</p>
                   <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight">{terpilih.nama}</h2>
                   <p className="mt-0.5 text-xs text-muted-foreground">{[terpilih.jenis, terpilih.kab].filter(Boolean).join(" · ")}</p>
                 </div>

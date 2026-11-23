@@ -11,7 +11,7 @@ export default async function AuditPage() {
   const supabase = await createClient();
   const { data, error } = await supabase.from("audit_events").select("*").order("waktu", { ascending: false }).limit(200);
   return (
-    <div className="mx-auto max-w-[1680px] space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <PageHeader title="Jejak audit" description="200 kejadian terakhir: perubahan akun, keputusan, penutupan sesi, dan tindakan penting lain. Catatan ini tidak dapat diubah." />
       {error && <Alert tone="bahaya">Data belum bisa dibaca. Muat ulang halaman.</Alert>}
       <Card>

@@ -39,7 +39,7 @@ export default async function DetailSesiPage({ params }: { params: Promise<{ ses
   const berjalan = !data.sesi.ditutup_at && (data.ringkas.fase === "Di lokasi" || data.ringkas.fase === "Dalam perjalanan");
 
   return (
-    <div className="mx-auto max-w-[1680px] space-y-6">
+    <div className="mx-auto max-w-6xl space-y-6">
       <PageHeader
         title="Detail sesi"
         description="Kondisi terkini, lini masa, dan catatan keputusan untuk satu sesi kegiatan."

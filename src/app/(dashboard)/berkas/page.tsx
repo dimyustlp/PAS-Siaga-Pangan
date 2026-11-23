@@ -113,7 +113,7 @@ export default async function BerkasPage({ searchParams }: { searchParams: Promi
   const galat = ringkasanRes.galat || daftarRes.error;
 
   return (
-    <div className="mx-auto max-w-[1680px] space-y-6">
+    <div className="mx-auto max-w-6xl space-y-6">
       <PageHeader
         title="Berkas"
         description="Penampungan berkas kegiatan per Kanwil dan UPT. Pilih Kanwil, lalu UPT, agar daftar tidak memanjang."
@@ -171,7 +171,7 @@ export default async function BerkasPage({ searchParams }: { searchParams: Promi
             ) : (
               <div className="max-h-[26rem] overflow-auto rounded-lg border">
                 <TabelCari className="w-full min-w-[40rem] text-sm">
-                  <thead className="sticky top-0 bg-secondary text-left text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <thead className="sticky top-0 bg-secondary text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     <tr>
                       <th className="px-3 py-2">UPT</th>
                       {KATEGORI_POKOK.map((k) => <th key={k} className="px-2 py-2 text-center">{k}</th>)}
@@ -226,7 +226,7 @@ export default async function BerkasPage({ searchParams }: { searchParams: Promi
             ) : (
               <div className="max-h-[28rem] overflow-auto rounded-lg border">
                 <TabelCari className="w-full min-w-[36rem] text-sm">
-                  <thead className="sticky top-0 bg-secondary text-left text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <thead className="sticky top-0 bg-secondary text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     <tr>
                       <th className="px-3 py-2">Kanwil</th>
                       <th className="px-2 py-2 text-right">UPT</th>

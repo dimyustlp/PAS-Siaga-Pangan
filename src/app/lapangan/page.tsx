@@ -53,7 +53,7 @@ export default async function LapanganPage() {
                 {siap && (
                   <div className="flex items-center gap-1 pt-1" aria-label="Kemajuan tahap">
                     {[1, 2, 3, 4].map((i) => <span key={i} className={`h-1.5 w-8 rounded-full ${i <= (nTahap.get(s.session_id!) ?? 0) ? "bg-status-hijau" : "bg-ink/10"}`} />)}
-                    <span className="ml-1 text-[0.6875rem] text-muted-foreground">{nTahap.get(s.session_id!) ?? 0}/4 tahap</span>
+                    <span className="ml-1 text-[11px] text-muted-foreground">{nTahap.get(s.session_id!) ?? 0}/4 tahap</span>
                   </div>
                 )}
                 {!siap && <p className="text-xs text-muted-foreground">Menunggu izin mulai dari Kepala Pengamanan.</p>}

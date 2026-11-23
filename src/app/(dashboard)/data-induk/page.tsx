@@ -52,7 +52,7 @@ export default async function DataIndukPage({ searchParams }: { searchParams: Pr
   };
 
   return (
-    <div className="mx-auto max-w-[1680px] space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <PageHeader
         title="Data induk"
         description="Lokasi, kelompok kerja, petugas, alat dan sarana, warga binaan, serta kondisi awal setiap UPT. Isian ini dipakai oleh kegiatan, peta, dan evaluasi."

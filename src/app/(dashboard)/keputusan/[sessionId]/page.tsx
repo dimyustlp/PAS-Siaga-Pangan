@@ -47,7 +47,7 @@ export default async function KeputusanSesiPage({ params }: { params: Promise<{ 
   const peringatan = perhatianSesi(ringkas, now);
 
   return (
-    <div className="mx-auto max-w-[1680px] space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <PageHeader
         title="Keputusan sesi"
         actions={<><RealtimeRefresh />{data.sesi.pakai_gelang_monitor && <TautanGelang />}<Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}`}>Detail & laporan</Link></Button></>}
@@ -85,7 +85,7 @@ export default async function KeputusanSesiPage({ params }: { params: Promise<{ 
                   {g.tindakan_awal && <p className="text-xs text-muted-foreground">{g.tindakan_awal}</p>}
                   {!g.status_penyelesaian && (
                     <ActionForm action={verifyIncident} submit="Verifikasi pemulihan" fields={{ session_id: { v: sessionId }, incident_id: { v: g.id }, catatan: { s: "catatan" } }} className="flex flex-wrap items-end gap-2 space-y-0">
-                      <Field label="Catatan verifikasi" htmlFor={`g-${g.id}`} className="min-w-64 flex-1"><Input id={`g-${g.id}`} name="catatan" required placeholder="Mis. situasi kondusif, WB lengkap" /></Field>
+                      <Field label="Catatan verifikasi" htmlFor={`g-${g.id}`} className="min-w-0 flex-1 basis-64"><Input id={`g-${g.id}`} name="catatan" required placeholder="Mis. situasi kondusif, WB lengkap" /></Field>
                     </ActionForm>
                   )}
                 </div>

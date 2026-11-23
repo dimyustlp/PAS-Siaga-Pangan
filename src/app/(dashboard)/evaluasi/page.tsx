@@ -56,7 +56,7 @@ export default async function EvaluasiPage({ searchParams }: { searchParams: Pro
   const bisaCatat = ["administrator", "operator", "kepala_pengamanan"].includes(user.role);
 
   return (
-    <div className="mx-auto max-w-[1680px] space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <PageHeader
         title="Evaluasi uji coba"
         description="Capaian indikator keberhasilan dari rencana proyek, dihitung langsung dari catatan sistem pada cakupan Anda."

@@ -5,6 +5,8 @@ import { PilihUpt } from "@/components/shared/pilih-upt";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader, Pill } from "@/components/ui/form";
 import { hapusBerita } from "@/lib/actions/pangan";
+import { sembunyikanBeritaLuar } from "@/lib/actions/sdp";
+import { ExternalLink } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { ambilCakupan } from "@/lib/data/cakupan";
 import { fmtTanggal, hariIniWib } from "@/lib/format";
@@ -32,8 +34,12 @@ export default async function BeritaPage({ searchParams }: { searchParams: Promi
     const kode = cak.upt.filter((u) => u.kanwil_id === cak.kanwilDipilih).map((u) => u.kode);
     kueri = kueri.in("kode_upt", kode.length ? kode : ["-"]);
   }
-  const { data } = await kueri;
+  const [{ data }, { data: luar }] = await Promise.all([
+    kueri,
+    supabase.from("berita_luar").select("id,judul,sumber,url,terbit_at").order("terbit_at", { ascending: false, nullsFirst: false }).limit(40),
+  ]);
   const daftar = data ?? [];
+  const bisaSaring = user.role === "administrator" || user.role === "pemantau_pusat";
 
   const fotoPath = daftar.map((b) => b.foto_path).filter((x): x is string => !!x);
   const url = new Map<string, string>();
@@ -100,6 +106,31 @@ export default async function BeritaPage({ searchParams }: { searchParams: Promi
         </div>
       )}
       {daftar.length >= BATAS && <p className="text-center text-xs text-muted-foreground">Menampilkan {BATAS} berita terbaru. Gunakan kategori atau UPT untuk mempersempit.</p>}
+
+      {(luar ?? []).length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Dari media dan laman resmi</CardTitle>
+            <CardDescription>Berita ketahanan pangan di lingkungan Pemasyarakatan dari portal berita dan laman resmi. Daftar diperbarui otomatis setiap jam dan tampil berjalan di dasbor.</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ul className="divide-y">
+              {(luar ?? []).map((b) => (
+                <li key={b.id} className="flex flex-col gap-2 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+                  <a href={b.url} target="_blank" rel="noopener noreferrer" className="group min-w-0">
+                    <p className="text-sm font-medium leading-snug group-hover:text-primary group-hover:underline">
+                      {b.judul}
+                      <ExternalLink className="ml-1 inline h-3.5 w-3.5 align-[-2px] text-muted-foreground" aria-hidden />
+                    </p>
+                    <p className="text-xs text-muted-foreground">{b.sumber ?? "Sumber tidak disebut"}{b.terbit_at ? ` · ${fmtTanggal(b.terbit_at)}` : ""}</p>
+                  </a>
+                  {bisaSaring && <ActionButton action={sembunyikanBeritaLuar} input={{ id: b.id }} label="Sembunyikan" confirm="Sembunyikan berita ini dari dasbor dan daftar?" />}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

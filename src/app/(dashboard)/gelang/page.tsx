@@ -47,7 +47,7 @@ export default async function GelangPage() {
   const wb = idWb.length ? (await supabase.from("master_inmates").select("id,nama,nomor_registrasi").in("id", idWb)).data ?? [] : [];
 
   return (
-    <div className="mx-auto max-w-[1680px] space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <PageHeader
         title="Gelang"
         description="Alarm dari sistem pemantauan gelang. Setiap alarm dikonfirmasi langsung dengan petugas di lokasi sebelum ditutup."
@@ -101,7 +101,7 @@ export default async function GelangPage() {
             <p className="text-sm text-muted-foreground">Belum ada unit gelang aktif. Daftarkan unit pada bagian Pemetaan unit gelang.</p>
           ) : (
             <TabelCari className="w-full min-w-[48rem] text-sm">
-              <thead className="text-left text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground"><tr><th className="py-2 pr-3">Unit / WB</th><th className="py-2 pr-3">Zona</th><th className="py-2 pr-3">Baterai</th><th className="py-2 pr-3">Sinyal</th><th className="py-2">Alarm</th></tr></thead>
+              <thead className="text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"><tr><th className="py-2 pr-3">Unit / WB</th><th className="py-2 pr-3">Zona</th><th className="py-2 pr-3">Baterai</th><th className="py-2 pr-3">Sinyal</th><th className="py-2">Alarm</th></tr></thead>
               <tbody className="divide-y">
                 {daftarStatus.map((u) => {
                   const b = baterai(u);
@@ -137,7 +137,7 @@ export default async function GelangPage() {
             <p className="text-sm text-muted-foreground">Belum ada riwayat.</p>
           ) : (
             <TabelCari className="w-full min-w-[40rem] text-sm">
-              <thead className="text-left text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground"><tr><th className="py-2 pr-3">Waktu</th><th className="py-2 pr-3">Alarm</th><th className="py-2 pr-3">Unit / WB</th><th className="py-2 pr-3">Hasil</th><th className="py-2">Keterangan</th></tr></thead>
+              <thead className="text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"><tr><th className="py-2 pr-3">Waktu</th><th className="py-2 pr-3">Alarm</th><th className="py-2 pr-3">Unit / WB</th><th className="py-2 pr-3">Hasil</th><th className="py-2">Keterangan</th></tr></thead>
               <tbody className="divide-y">
                 {daftarRiwayat.map((a) => (
                   <tr key={a.id}>
@@ -186,7 +186,7 @@ export default async function GelangPage() {
                 <p className="text-sm text-muted-foreground">Belum ada unit terdaftar.</p>
               ) : (
                 <TabelCari className="w-full min-w-[34rem] text-sm">
-                  <thead className="text-left text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground"><tr><th className="py-2 pr-3">Kode</th><th className="py-2 pr-3">Nama unit</th><th className="py-2 pr-3">WB</th><th className="py-2 pr-3">UPT</th><th className="py-2" /></tr></thead>
+                  <thead className="text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"><tr><th className="py-2 pr-3">Kode</th><th className="py-2 pr-3">Nama unit</th><th className="py-2 pr-3">WB</th><th className="py-2 pr-3">UPT</th><th className="py-2" /></tr></thead>
                   <tbody className="divide-y">
                     {daftarUnit.map((u) => {
                       const w = wb.find((x) => x.id === u.inmate_id);

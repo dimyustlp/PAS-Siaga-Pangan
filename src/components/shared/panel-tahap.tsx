@@ -52,7 +52,7 @@ export async function PanelTahap({ sessionId }: { sessionId: string }) {
             {lamp.filter((a) => a.jenis === "foto").map((a) => (
               <a key={a.id} href={`/lampiran/${a.id}`} target="_blank" rel="noreferrer" className="group relative block overflow-hidden rounded-lg border bg-white" title={`${judulButir(a.butir)} · ${waktuLengkap(a.waktu_sistem)}`}>
                 <img src={`/lampiran/${a.id}`} alt={judulButir(a.butir)} loading="lazy" className="aspect-square w-full object-cover transition-transform group-hover:scale-105" />
-                <span className="absolute inset-x-0 bottom-0 bg-black/55 px-1 text-[0.5625rem] text-white">Tahap {a.tahap}</span>
+                <span className="absolute inset-x-0 bottom-0 bg-black/55 px-1 text-[9px] text-white">Tahap {a.tahap}</span>
               </a>
             ))}
           </div>

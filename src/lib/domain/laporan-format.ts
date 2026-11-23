@@ -111,7 +111,8 @@ export function susunLaporan(d: DataLaporan): IsiLaporan {
 
   return {
     kopBaris: [
-      "KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN REPUBLIK INDONESIA",
+      "KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN",
+      "REPUBLIK INDONESIA",
       "DIREKTORAT JENDERAL PEMASYARAKATAN",
       ...(d.kop.kanwil ? [d.kop.kanwil.toUpperCase()] : []),
       d.kop.upt.toUpperCase(),

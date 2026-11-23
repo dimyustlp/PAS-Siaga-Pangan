@@ -89,6 +89,7 @@ const RULES: Rule[] = [
   { prefix: "/lalu-lintas", roles: NON_PENGAWAL },
   { prefix: "/pangan", roles: NON_PENGAWAL },
   { prefix: "/berita", roles: ALL_ROLES },
+  { prefix: "/sdp", roles: NON_PENGAWAL },
   { prefix: "/gelang", roles: ALL_ROLES },
   { prefix: "/pedoman", roles: ALL_ROLES },
   { prefix: "/laporan", roles: NON_PENGAWAL },

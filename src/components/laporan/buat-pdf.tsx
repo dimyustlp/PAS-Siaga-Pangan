@@ -90,8 +90,8 @@ const s = StyleSheet.create({
   page: { paddingTop: 42, paddingBottom: 54, paddingHorizontal: 60, fontSize: 11, fontFamily: "Helvetica", lineHeight: 1.45, color: "#111" },
   kop: { flexDirection: "row", alignItems: "center", gap: 10 },
   kopTengah: { flex: 1, alignItems: "center" },
-  kopBaris: { fontSize: 11.5, fontFamily: "Helvetica-Bold", textAlign: "center", lineHeight: 1.25 },
-  kopUpt: { fontSize: 13, fontFamily: "Helvetica-Bold", textAlign: "center", lineHeight: 1.25 },
+  kopBaris: { fontSize: 10.2, fontFamily: "Helvetica-Bold", textAlign: "center", lineHeight: 1.25 },
+  kopUpt: { fontSize: 12.5, fontFamily: "Helvetica-Bold", textAlign: "center", lineHeight: 1.25 },
   kopAlamat: { fontSize: 8.5, textAlign: "center", marginTop: 2 },
   garis1: { borderBottomWidth: 2.4, borderBottomColor: "#111", marginTop: 6 },
   garis2: { borderBottomWidth: 0.8, borderBottomColor: "#111", marginTop: 1.5, marginBottom: 14 },
@@ -146,7 +146,7 @@ function Dokumen({ isi, foto, logoKiri, logoKanan }: { isi: IsiLaporan; foto: Ma
         <Text style={s.judul}>{isi.subjudul}</Text>
         <Text style={s.nomor}>Nomor: ....................................................</Text>
 
-        <Text style={s.bab}>{ROMAWI[0]}. DASAR</Text>
+        <Text style={s.bab} minPresenceAhead={70}>{ROMAWI[0]}. DASAR</Text>
         {isi.dasar.map((d, i) => (
           <View key={i} style={s.baris} wrap={false}>
             <Text style={{ width: 16 }}>{i + 1}.</Text>
@@ -154,7 +154,7 @@ function Dokumen({ isi, foto, logoKiri, logoKanan }: { isi: IsiLaporan; foto: Ma
           </View>
         ))}
 
-        <Text style={s.bab}>{ROMAWI[1]}. WAKTU DAN TEMPAT PELAKSANAAN</Text>
+        <Text style={s.bab} minPresenceAhead={70}>{ROMAWI[1]}. WAKTU DAN TEMPAT PELAKSANAAN</Text>
         {isi.waktuTempat.map(([k, v]) => (
           <View key={k} style={s.baris}>
             <Text style={s.label}>{k}</Text>
@@ -163,11 +163,11 @@ function Dokumen({ isi, foto, logoKiri, logoKanan }: { isi: IsiLaporan; foto: Ma
           </View>
         ))}
 
-        <Text style={s.bab}>{ROMAWI[2]}. NAMA DAN JUMLAH WARGA BINAAN</Text>
+        <Text style={s.bab} minPresenceAhead={70}>{ROMAWI[2]}. NAMA DAN JUMLAH WARGA BINAAN</Text>
         <Text style={s.para}>{isi.ringkasWb}</Text>
         {isi.wb.length > 0 && (
           <View style={s.tabel}>
-            <View style={s.th}>
+            <View style={s.th} minPresenceAhead={30} wrap={false}>
               <Text style={[s.td, { width: 30 }]}>No</Text>
               <Text style={[s.td, { flex: 1 }]}>Nama</Text>
               <Text style={[s.td, { width: 140, borderRightWidth: 0 }]}>Nomor registrasi</Text>
@@ -182,9 +182,9 @@ function Dokumen({ isi, foto, logoKiri, logoKanan }: { isi: IsiLaporan; foto: Ma
           </View>
         )}
 
-        <Text style={s.bab}>{ROMAWI[3]}. PETUGAS PENGAWAL</Text>
+        <Text style={s.bab} minPresenceAhead={70}>{ROMAWI[3]}. PETUGAS PENGAWAL</Text>
         <View style={s.tabel}>
-          <View style={s.th}>
+          <View style={s.th} minPresenceAhead={30} wrap={false}>
             <Text style={[s.td, { width: 30 }]}>No</Text>
             <Text style={[s.td, { flex: 1 }]}>Nama</Text>
             <Text style={[s.td, { width: 160, borderRightWidth: 0 }]}>NIP</Text>
@@ -198,12 +198,12 @@ function Dokumen({ isi, foto, logoKiri, logoKanan }: { isi: IsiLaporan; foto: Ma
           ))}
         </View>
 
-        <Text style={s.bab}>{ROMAWI[4]}. RINCIAN PELAKSANAAN</Text>
+        <Text style={s.bab} minPresenceAhead={70}>{ROMAWI[4]}. RINCIAN PELAKSANAAN</Text>
         {isi.rincian.length === 0 ? (
           <Text>Belum ada tahap yang tercatat.</Text>
         ) : (
           <View style={s.tabel}>
-            <View style={s.th}>
+            <View style={s.th} minPresenceAhead={30} wrap={false}>
               <Text style={[s.td, { width: 120 }]}>Tahap</Text>
               <Text style={[s.td, { width: 105 }]}>Waktu (sistem)</Text>
               <Text style={[s.td, { width: 48 }]}>WB</Text>
@@ -220,10 +220,10 @@ function Dokumen({ isi, foto, logoKiri, logoKanan }: { isi: IsiLaporan; foto: Ma
           </View>
         )}
 
-        <Text style={s.bab}>{ROMAWI[5]}. PENGESAHAN BERKAS</Text>
+        <Text style={s.bab} minPresenceAhead={70}>{ROMAWI[5]}. PENGESAHAN BERKAS</Text>
         <Text style={s.para}>{isi.pengesahan}</Text>
 
-        <Text style={s.bab}>{ROMAWI[6]}. PENUTUP</Text>
+        <Text style={s.bab} minPresenceAhead={70}>{ROMAWI[6]}. PENUTUP</Text>
         <Text style={s.para}>{isi.penutup}</Text>
 
         <View style={s.ttd} wrap={false}>

@@ -47,7 +47,7 @@ export default async function LaluLintasPage({ searchParams }: { searchParams: P
   const infoSesi = new Map(daftar.map((s) => [s.session_id, s]));
 
   return (
-    <div className="mx-auto max-w-[1680px] space-y-6">
+    <div className="mx-auto max-w-6xl space-y-6">
       <PageHeader
         title="Lalu lintas WBP"
         description="Pergerakan warga binaan pada kegiatan yang berjalan: keluar dari blok, tiba di lokasi, pemeriksaan hitungan, dan kembali ke blok."

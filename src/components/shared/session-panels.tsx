@@ -35,7 +35,7 @@ export function SesiTabel({ rows, now, tampilkanUpt }: { rows: Overview[]; now: 
   return (
     <div className="overflow-x-auto rounded-xl border border-border/70 bg-card shadow-soft">
       <TabelCari className="w-full min-w-[56rem] text-sm">
-        <thead className="bg-secondary/70 text-left text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">
+        <thead className="bg-secondary/70 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
           <tr>
             <th className="px-3 py-2">Kegiatan</th>
             {tampilkanUpt && <th className="px-3 py-2">UPT</th>}

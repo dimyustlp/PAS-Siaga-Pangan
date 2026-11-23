@@ -21,7 +21,7 @@ export function SalinKode({ kode, label = "Salin kode" }: { kode: string; label?
         {ok ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
         {ok ? "Tersalin" : label}
       </Button>
-      <pre className="max-h-72 overflow-auto rounded-xl border bg-[hsl(222_47%_12%)] p-3 text-[0.6875rem] leading-relaxed text-[hsl(44_60%_88%)]">{kode}</pre>
+      <pre className="max-h-72 overflow-auto rounded-xl border bg-[hsl(222_47%_12%)] p-3 text-[11px] leading-relaxed text-[hsl(44_60%_88%)]">{kode}</pre>
     </div>
   );
 }

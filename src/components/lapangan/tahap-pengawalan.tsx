@@ -128,7 +128,7 @@ function KotakButir({
             foto ? (
               <li key={l.id} className="relative overflow-hidden rounded-lg border bg-white">
                 <img src={`/lampiran/${l.id}`} alt={l.nama_berkas} loading="lazy" className="aspect-square w-full object-cover" />
-                <span className="absolute inset-x-0 bottom-0 bg-black/60 px-1 py-0.5 text-[0.5625rem] leading-tight text-white">{jamDetik(l.waktu_sistem)}</span>
+                <span className="absolute inset-x-0 bottom-0 bg-black/60 px-1 py-0.5 text-[9px] leading-tight text-white">{jamDetik(l.waktu_sistem)}</span>
                 {!terkunci && (
                   <button type="button" onClick={() => buang(l.id)} disabled={hapus === l.id} aria-label="Hapus foto" className="absolute right-1 top-1 rounded-full bg-white/90 p-1 text-status-merah shadow">
                     {hapus === l.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden /> : <Trash2 className="h-3.5 w-3.5" aria-hidden />}
@@ -231,7 +231,7 @@ export function TahapPengawalan(p: Props) {
                 disabled={!s && !kini}
                 aria-current={dilihat === t.no ? "step" : undefined}
                 className={cn(
-                  "flex w-full flex-col items-center gap-1 rounded-xl border px-1 py-2 text-center text-[0.6562rem] font-medium leading-tight transition-colors",
+                  "flex w-full flex-col items-center gap-1 rounded-xl border px-1 py-2 text-center text-[10.5px] font-medium leading-tight transition-colors",
                   s ? "border-status-hijau/40 bg-status-hijau/10 text-[hsl(152_70%_22%)]" : kini ? "border-gold bg-[hsl(44_90%_60%/0.14)] text-foreground" : "border-border bg-white/70 text-muted-foreground",
                   dilihat === t.no && "ring-2 ring-primary/40"
                 )}
@@ -252,7 +252,7 @@ export function TahapPengawalan(p: Props) {
 
       <div className="kaca space-y-4 rounded-2xl p-4">
         <div>
-          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.16em] text-brand">Tahap {def.no} dari 4 · {def.lokasi}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-brand">Tahap {def.no} dari 4 · {def.lokasi}</p>
           <h2 className="text-lg font-semibold leading-tight">{def.judul}</h2>
           <p className="text-sm text-muted-foreground">{def.ringkas}</p>
           {catat && (
@@ -316,7 +316,7 @@ export function TahapPengawalan(p: Props) {
         {!terbuka && !catat && <Alert tone="waspada">Tahap ini terbuka setelah tahap sebelumnya selesai.</Alert>}
         {galat && !terbuka && <Alert tone="bahaya">{galat}</Alert>}
       </div>
-      <p className="text-center text-[0.6875rem] text-muted-foreground">Penyimpanan: {p.modeDrive ? "Google Drive instansi" : "server aplikasi (Google Drive belum dihubungkan)"}</p>
+      <p className="text-center text-[11px] text-muted-foreground">Penyimpanan: {p.modeDrive ? "Google Drive instansi" : "server aplikasi (Google Drive belum dihubungkan)"}</p>
     </section>
   );
 }

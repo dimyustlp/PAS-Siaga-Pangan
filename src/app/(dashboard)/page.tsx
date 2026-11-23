@@ -8,10 +8,13 @@ import { TabelCari } from "@/components/ui/tabel-cari";
 import { AlurKerja } from "@/components/shared/alur-kerja";
 import { RealtimeRefresh } from "@/components/shared/realtime-refresh";
 import { SesiTabel } from "@/components/shared/session-panels";
+import { BeritaBerjalan } from "@/components/shared/berita-berjalan";
 import { DeretSektor, MotifPangan } from "@/components/layout/motif-pangan";
 import { perhatianSesi, skorUrgensi, type Overview } from "@/lib/domain/attention";
 import { listKanwil, listOverview, listUpt } from "@/lib/data/overview";
 import { namaUnit } from "@/lib/data/unit";
+import { ambilBeritaBerjalan } from "@/lib/data/berita-berjalan";
+import { KPI_SDP, bacaDataSdp } from "@/lib/domain/sdp";
 import { requireUser } from "@/lib/auth";
 import { LABEL_TINGKAT, ROLE_LABEL, tingkatPeran } from "@/lib/rbac";
 import { fmtTanggal, fmtTanggalPendek } from "@/lib/format";
@@ -45,7 +48,7 @@ function TabelRekap({ judul, kolom, data }: { judul: string; kolom: string; data
       <h2 className="text-lg font-semibold tracking-tight">{judul}</h2>
       <div className="overflow-x-auto rounded-2xl border border-border/70 bg-card shadow-soft">
         <TabelCari className="w-full min-w-[48rem] text-sm">
-          <thead className="bg-secondary/80 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">
+          <thead className="bg-secondary/80 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             <tr>
               <th className="px-3 py-2 text-left">{kolom}</th>
               <th className="px-3 py-2">Sesi aktif</th>
@@ -85,13 +88,16 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
   const supabase = await createClient();
   const user = await requireUser();
   const tingkat = tingkatPeran(user.role);
-  const [semuaUpt, semuaKanwil, { rows: semuaRows, error }, alarm, unit] = await Promise.all([
+  const [semuaUpt, semuaKanwil, { rows: semuaRows, error }, alarm, unit, berita, sdpQ] = await Promise.all([
     listUpt(),
     tingkat === "pusat" ? listKanwil() : Promise.resolve([]),
     listOverview({ upt: upt || undefined }),
     supabase.from("gelang_alarm").select("id", { count: "exact", head: true }).eq("status", "Menunggu"),
     namaUnit(user),
+    ambilBeritaBerjalan(supabase),
+    supabase.from("sdp_ringkasan").select("tahun,data,tanggal_data").order("tahun", { ascending: false }).limit(1).maybeSingle(),
   ]);
+  const sdp = sdpQ.data ? bacaDataSdp(sdpQ.data.data) : null;
   const alarmMenunggu = alarm.count ?? 0;
   const kanwilUpt = new Map(semuaUpt.map((u) => [u.kode, u.kanwil_id]));
   const rows = kanwilQ && !upt ? semuaRows.filter((r) => kanwilUpt.get(r.kode_upt ?? "") === kanwilQ) : semuaRows;
@@ -165,23 +171,23 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
   const hariIni = aktif.filter((r) => r.status_kesiapan === "Dapat Dimulai" || r.status_kesiapan === "Menunggu");
 
   return (
-    <div className="mx-auto max-w-[1680px] space-y-6">
-      <section className={`${latar} kilap-panel relative overflow-hidden rounded-[14px] p-6 shadow-[0_4px_10px_rgba(15,30,60,0.10),0_20px_48px_rgba(15,30,60,0.16)] md:p-9 [&_.text-muted-foreground]:!text-white/80`}>
+    <div className="mx-auto max-w-7xl space-y-6">
+      <section className={`${latar} relative overflow-hidden rounded-[1.6rem] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_28px_50px_-30px_hsl(222_64%_14%/0.8)] sm:p-6 md:p-8 [&_.text-muted-foreground]:!text-white/80`}>
         <MotifPangan />
         <div className="relative grid gap-6 md:grid-cols-[1.6fr_1fr] md:items-end">
           <div className="min-w-0">
-            <p className="flex items-center gap-2.5 font-mono text-[0.7rem] font-medium uppercase tracking-[0.2em] text-[#e6c06a]"><span className="h-[2px] w-6 rounded-full bg-[#c89a34]" aria-hidden />
+            <p className="inline-flex items-center gap-2 rounded-full border border-[hsl(44_90%_66%/0.5)] bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[hsl(44_90%_76%)]">
               {LABEL_TINGKAT[tingkat]} · {fmtTanggal(now)}
             </p>
-            <h1 className="mt-4 max-w-[22ch] text-[1.75rem] font-bold leading-[1.12] tracking-tight md:text-[2.5rem]">{judul}</h1>
-            <p className="mt-3 max-w-[60ch] text-[0.95rem] text-white/80">
+            <h1 className="mt-4 text-2xl font-semibold tracking-tight md:text-[2.2rem] md:leading-[1.1]">{judul}</h1>
+            <p className="mt-2 text-sm text-white/85">
               {sapaan(jam)}, {user.fullName.split(" ")[0]} ({ROLE_LABEL[user.role]}).{" "}
               {perlu.length > 0 ? `${perlu.length} kegiatan perlu perhatian sekarang.` : "Tidak ada kegiatan yang perlu perhatian khusus saat ini."}
             </p>
-            <div className="mt-4"><DeretSektor hitung={tingkat === "upt" ? undefined : perJenis} /></div>
+            <div className="mt-4 hidden sm:block"><DeretSektor hitung={tingkat === "upt" ? undefined : perJenis} /></div>
           </div>
           <div className="flex flex-wrap items-center gap-2 md:justify-end">
-            <span className="rounded-full border border-white/30 bg-white/15 px-3 py-1.5"><RealtimeRefresh /></span>
+            <span className="hidden rounded-full border border-white/30 bg-white/15 px-3 py-1.5 sm:inline-flex"><RealtimeRefresh /></span>
             {tingkat !== "upt" && <Button asChild size="sm" variant="outline"><Link href="/peta">Buka peta</Link></Button>}
             {tingkat !== "upt" && <Button asChild size="sm" variant="outline"><Link href="/akun"><Users className="h-4 w-4" aria-hidden />{tingkat === "kanwil" ? "Akun UPT" : "Kelola akun"}</Link></Button>}
             {user.role === "operator" && <Button asChild size="sm" variant="outline"><Link href="/kegiatan">Siapkan kegiatan</Link></Button>}
@@ -191,13 +197,15 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
         </div>
       </section>
 
+      <BeritaBerjalan butir={berita} />
+
       {error && <Alert tone="bahaya">Data belum bisa dibaca dari database. Muat ulang halaman, atau hubungi Administrator bila berulang.</Alert>}
 
       {luas && daftarUpt.length > 1 && (
         <form className="flex flex-wrap items-center gap-2" aria-label="Pilih UPT">
           {kanwilQ && <input type="hidden" name="kanwil" value={kanwilQ} />}
           <label htmlFor="upt" className="text-sm font-medium">UPT</label>
-          <Select id="upt" name="upt" defaultValue={upt ?? ""} className="w-80">
+          <Select id="upt" name="upt" defaultValue={upt ?? ""} className="w-full sm:w-80">
             <option value="">Semua UPT pada cakupan</option>
             {daftarUpt.map((u) => <option key={u.id} value={u.kode}>{u.nama}</option>)}
           </Select>
@@ -225,11 +233,11 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
           {hariIni.length === 0 ? (
             <p className="rounded-2xl border border-dashed p-6 text-center text-sm text-muted-foreground">Belum ada kegiatan aktif di UPT ini.</p>
           ) : (
-            <ul className="grid gap-3 md:grid-cols-2">
+            <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {hariIni.map((r) => {
                 const n = nTahap.get(r.session_id!) ?? 0;
                 return (
-                  <li key={r.session_id}>
+                  <li key={r.session_id} className="min-w-0">
                     <Link href={`/sesi/${r.session_id}`} className="kaca lift block rounded-2xl p-4">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
@@ -242,7 +250,7 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
                         {["P2U", "Perjalanan", "Pelaksanaan", "Kembali"].map((t, i) => (
                           <div key={t} className="text-center">
                             <div className={cn("h-1.5 rounded-full", i < n ? "bg-status-hijau" : "bg-ink/10")} />
-                            <p className={cn("mt-1 text-[0.625rem]", i < n ? "font-semibold text-[hsl(152_70%_24%)]" : "text-muted-foreground")}>{t}</p>
+                            <p className={cn("mt-1 text-[10px]", i < n ? "font-semibold text-[hsl(152_70%_24%)]" : "text-muted-foreground")}>{t}</p>
                           </div>
                         ))}
                       </div>
@@ -261,6 +269,23 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
       )}
 
       <AlurKerja role={user.role} />
+
+      {sdp && (
+        <section aria-label="Ringkasan data SDP ketahanan pangan" className="kaca rounded-2xl p-4 md:p-5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-base font-semibold tracking-tight">Ketahanan pangan nasional · SDP {sdpQ.data!.tahun}</h2>
+            <Link href="/sdp" className="inline-flex items-center text-xs font-semibold text-primary hover:underline">Lihat rincian per Kanwil<ChevronRight className="h-3.5 w-3.5" aria-hidden /></Link>
+          </div>
+          <dl className="mt-3 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-5">
+            {KPI_SDP.map((k) => (
+              <div key={k.kunci} className="min-w-0 rounded-xl border border-border/60 bg-white/60 px-3 py-2">
+                <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">{k.label}</dt>
+                <dd className="mt-0.5 break-words font-mono text-base font-medium tabular-nums">{sdp.kpi[k.kunci] || "-"}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
 
       <section aria-label="Daftar sesi" className="space-y-3">
         <h2 className="text-lg font-semibold tracking-tight">Sesi kegiatan</h2>

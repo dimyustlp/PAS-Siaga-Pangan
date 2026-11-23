@@ -56,11 +56,11 @@ export function AlurKerja({ role }: { role: Role }) {
                   <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <h3 className="font-semibold leading-tight">{t.judul}</h3>
-                      {saya && <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[0.6875rem] font-semibold text-[hsl(222_64%_30%)] ring-1 ring-primary/30">Bagian Anda</span>}
+                      {saya && <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-[hsl(222_64%_30%)] ring-1 ring-primary/30">Bagian Anda</span>}
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       {t.pelaku.map((p) => (
-                        <span key={p} className={cn("rounded-full px-2 py-0.5 text-[0.6875rem] font-medium", WARNA[p])}>{p}</span>
+                        <span key={p} className={cn("rounded-full px-2 py-0.5 text-[11px] font-medium", WARNA[p])}>{p}</span>
                       ))}
                     </div>
                     <ul className="list-disc space-y-1 pl-4 text-sm text-muted-foreground">

@@ -13,7 +13,7 @@ export function UserBar({ name, role, ringkas = false, gelap = false }: { name: 
   return (
     <div className="flex min-w-0 items-center gap-2.5">
       <span
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[hsl(44_90%_60%)] to-[hsl(36_80%_44%)] font-mono text-[0.6875rem] font-semibold text-[hsl(222_64%_14%)] ring-2 ring-white/80"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[hsl(44_90%_60%)] to-[hsl(36_80%_44%)] font-mono text-[11px] font-semibold text-[hsl(222_64%_14%)] ring-2 ring-white/80"
         aria-hidden
       >
         {inisial(name)}
@@ -21,7 +21,7 @@ export function UserBar({ name, role, ringkas = false, gelap = false }: { name: 
       {!ringkas && (
         <div className="hidden min-w-0 max-w-[12rem] leading-tight sm:block">
           <p className={cn("truncate text-sm font-medium", gelap && "text-white")}>{name}</p>
-          <p className={cn("truncate text-[0.6875rem]", gelap ? "text-white/70" : "text-muted-foreground")}>{ROLE_LABEL[role]}</p>
+          <p className={cn("truncate text-[11px]", gelap ? "text-white/70" : "text-muted-foreground")}>{ROLE_LABEL[role]}</p>
         </div>
       )}
       <form action={signOut}>
