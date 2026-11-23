@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ClipboardCheck, FilePlus2, FileCheck2, Gavel, ListChecks, UserCog } from "lucide-react";
+import { ArrowRight, CircleHelp, ClipboardCheck, FilePlus2, FileCheck2, Gavel, ListChecks, UserCog, Users } from "lucide-react";
 import type { ReactNode } from "react";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { perhatianSesi, type Overview } from "@/lib/domain/attention";
@@ -103,11 +103,13 @@ export function PanelPeran({ role, aktif, menungguSah, tanpaPengawal, tlTerlamba
 
   return (
     <div className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <Pintas href="/kegiatan" ikon={FilePlus2} judul="Rencana baru" uraian="Susun rencana kegiatan pangan" />
         <Pintas href="/rencana" ikon={ClipboardCheck} judul="Rincian rencana" uraian="Lengkapi data, tambah sesi, tugaskan pengawal" />
         <Pintas href="/tindak-lanjut" ikon={ListChecks} judul="Tindak lanjut" uraian="Pantau pelaksanaan" />
         <Pintas href="/kop-surat" ikon={FileCheck2} judul="Kop surat" uraian="Atur kop untuk dokumen UPT" />
+        <Pintas href="/akun" ikon={Users} judul="Akun UPT" uraian="Buat akun Ka.UPT, Kepala Pengamanan, Pengawal" />
+        <Pintas href="/panduan" ikon={CircleHelp} judul="Panduan peran" uraian="Tugas dan cara pakai tiap peran" />
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         <Kotak judul="Belum ada pengawal" uraian="Sesi aktif yang belum ditugaskan ke Pengawal. Tanpa penugasan, tugas belum muncul di dasbor Pengawal." nada="kuning" aksi={<UserCog className="h-4 w-4 text-muted-foreground" aria-hidden />}>
