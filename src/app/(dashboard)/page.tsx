@@ -36,6 +36,12 @@ function sapaan(jam: number) {
   return jam < 11 ? "Selamat pagi" : jam < 15 ? "Selamat siang" : jam < 18 ? "Selamat sore" : "Selamat malam";
 }
 
+const TEMA_PERAN = {
+  ka_upt: { latar: "linear-gradient(135deg,#0d2147 0%,#17366b 55%,#2a4f8f 100%)", sebut: "Ringkasan Pimpinan UPT" },
+  kepala_pengamanan: { latar: "linear-gradient(135deg,#2a0f18 0%,#5a1a2b 55%,#7d2a3c 100%)", sebut: "Pusat Komando Pengamanan" },
+  operator: { latar: "linear-gradient(135deg,#0b3b36 0%,#14665c 55%,#1f8a7c 100%)", sebut: "Meja Kerja Operator" },
+} as const;
+
 type Rekap = { kunci: string; nama: string; href: string; aktif: number; hijau: number; kuning: number; merah: number; kritis: number; menunggu: number; perhatian: number };
 
 function rekapKosong(kunci: string, nama: string, href: string): Rekap {
@@ -162,7 +168,16 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
     rekap = [...m.values()].sort((a, b) => b.kritis - a.kritis || b.merah - a.merah || b.aktif - a.aktif);
   }
 
-  const latar = tingkat === "pusat" ? "bg-brand-gradient" : tingkat === "kanwil" ? "bg-kanwil-gradient" : "bg-upt-gradient";
+  const tema = peranUpt ? TEMA_PERAN[peranUpt] : null;
+  const latar = tema ? "text-white" : tingkat === "pusat" ? "bg-brand-gradient" : tingkat === "kanwil" ? "bg-kanwil-gradient" : "bg-upt-gradient";
+  const angkaHero: { nilai: number; label: string; href: string }[] =
+    user.role === "ka_upt"
+      ? [{ nilai: menungguSah.length, label: "laporan menunggu pengesahan", href: "/laporan?status=menunggu" }, { nilai: perlu.length, label: "kegiatan perlu perhatian", href: "#perhatian" }, { nilai: berjalan.length, label: "kegiatan berjalan", href: "/peta" }]
+      : user.role === "kepala_pengamanan"
+        ? [{ nilai: menunggu, label: "menunggu keputusan Anda", href: "/keputusan" }, { nilai: alarmMenunggu, label: "alarm gelang", href: "/gelang" }, { nilai: tlTerlambat, label: "tindak lanjut terlambat", href: "/tindak-lanjut" }]
+        : user.role === "operator"
+          ? [{ nilai: tanpaPengawal.length, label: "sesi belum ada pengawal", href: "/rencana" }, { nilai: menunggu, label: "menunggu keputusan", href: "/rencana" }, { nilai: aktif.length, label: "sesi aktif", href: "/rencana" }]
+          : [];
   const judul =
     tingkat === "pusat"
       ? kanwilQ
@@ -176,14 +191,14 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="mx-auto max-w-[1680px] space-y-6">
-      <section className={`${latar} kilap-panel relative overflow-hidden rounded-[14px] p-5 shadow-[0_4px_10px_rgba(15,30,60,0.10),0_20px_48px_rgba(15,30,60,0.16)] sm:p-6 md:p-9 [&_.text-muted-foreground]:!text-white/80`}>
+      <section style={tema ? { background: tema.latar } : undefined} className={`${latar} kilap-panel relative overflow-hidden rounded-[14px] p-5 shadow-[0_4px_10px_rgba(15,30,60,0.10),0_20px_48px_rgba(15,30,60,0.16)] sm:p-6 md:p-9 [&_.text-muted-foreground]:!text-white/80`}>
         <MotifPangan />
         <div className="relative grid gap-6 md:grid-cols-[1.6fr_1fr] md:items-end">
           <div className="min-w-0">
             <p className="flex items-center gap-2.5 font-mono text-[0.7rem] font-medium uppercase tracking-[0.2em] text-[#e6c06a]"><span className="h-[2px] w-6 rounded-full bg-[#c89a34]" aria-hidden />
-              {LABEL_TINGKAT[tingkat]} · {fmtTanggal(now)}
+              {tema ? tema.sebut : LABEL_TINGKAT[tingkat]} · {fmtTanggal(now)}
             </p>
-            <h1 className="mt-4 max-w-[22ch] text-[1.75rem] font-bold leading-[1.12] tracking-tight md:text-[2.5rem]">{judul}</h1>
+            <h1 className="mt-4 max-w-[22ch] text-white text-[1.75rem] font-bold leading-[1.12] tracking-tight md:text-[2.5rem]">{judul}</h1>
             <p className="mt-3 max-w-[60ch] text-[0.95rem] text-white/80">
               {sapaan(jam)}, {user.fullName.split(" ")[0]} ({ROLE_LABEL[user.role]}).{" "}
               {user.role === "operator"
@@ -194,15 +209,26 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
                     ? `${menungguSah.length} laporan menunggu pengesahan, ${perlu.length} kegiatan perlu perhatian.`
                     : perlu.length > 0 ? `${perlu.length} kegiatan perlu perhatian sekarang.` : "Tidak ada kegiatan yang perlu perhatian khusus saat ini."}
             </p>
-            <div className="mt-4 hidden sm:block"><DeretSektor hitung={tingkat === "upt" ? undefined : perJenis} /></div>
+            {!tema && <div className="mt-4 hidden sm:block"><DeretSektor hitung={tingkat === "upt" ? undefined : perJenis} /></div>}
           </div>
           <div className="flex flex-wrap items-center gap-2 md:justify-end">
+            {angkaHero.length > 0 && (
+              <div className="mb-1 grid w-full grid-cols-3 gap-2 md:mb-3">
+                {angkaHero.map((a) => (
+                  <Link key={a.label} href={a.href} className="rounded-xl border border-white/25 bg-white/10 px-3 py-2.5 text-left backdrop-blur hover:bg-white/20">
+                    <span className="block font-mono text-2xl font-bold tabular-nums leading-none text-white">{a.nilai}</span>
+                    <span className="mt-1 block text-[0.6875rem] leading-tight text-white/80">{a.label}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
             <span className="hidden rounded-full border border-white/30 bg-white/15 px-3 py-1.5 sm:inline-flex"><RealtimeRefresh /></span>
             {tingkat !== "upt" && <Button asChild size="sm" variant="outline"><Link href="/peta">Buka peta</Link></Button>}
             {tingkat !== "upt" && <Button asChild size="sm" variant="outline"><Link href="/akun"><Users className="h-4 w-4" aria-hidden />{tingkat === "kanwil" ? "Akun UPT" : "Kelola akun"}</Link></Button>}
             {user.role === "operator" && <Button asChild size="sm" variant="outline"><Link href="/kegiatan">Siapkan kegiatan</Link></Button>}
             {user.role === "operator" && <Button asChild size="sm" variant="outline"><Link href="/rencana">Rincian rencana</Link></Button>}
             {user.role === "kepala_pengamanan" && <Button asChild size="sm" variant="outline"><Link href="/keputusan">Antrean keputusan</Link></Button>}
+            {peranUpt && <Button asChild size="sm" variant="outline"><Link href="/panduan">Panduan peran</Link></Button>}
             {user.role !== "operator" && <Button asChild size="sm" variant="outline"><Link href="/laporan"><FileCheck2 className="h-4 w-4" aria-hidden />{user.role === "ka_upt" ? "Pengesahan laporan" : "Laporan"}</Link></Button>}
           </div>
         </div>
@@ -245,7 +271,7 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
       )}
 
       {tingkat === "upt" && user.role !== "operator" && (
-        <section className="space-y-3" aria-label="Kegiatan hari ini">
+        <section id="perhatian" className="space-y-3" aria-label="Kegiatan hari ini">
           <h2 className="text-lg font-semibold tracking-tight">Kegiatan berjalan dan tahap pengawalan</h2>
           {hariIni.length === 0 ? (
             <p className="rounded-2xl border border-dashed p-6 text-center text-sm text-muted-foreground">Belum ada kegiatan aktif di UPT ini.</p>
