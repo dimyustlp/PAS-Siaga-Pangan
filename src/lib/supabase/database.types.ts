@@ -1878,6 +1878,44 @@ export type Database = {
           },
         ]
       }
+      petugas_sesi: {
+        Row: {
+          created_at: string
+          dicatat_oleh: string | null
+          id: string
+          nama: string
+          nip: string | null
+          seksi: string | null
+          session_id: string
+        }
+        Insert: {
+          created_at?: string
+          dicatat_oleh?: string | null
+          id?: string
+          nama: string
+          nip?: string | null
+          seksi?: string | null
+          session_id: string
+        }
+        Update: {
+          created_at?: string
+          dicatat_oleh?: string | null
+          id?: string
+          nama?: string
+          nip?: string | null
+          seksi?: string | null
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "petugas_sesi_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "daily_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tahap_pengawalan: {
         Row: {
           id: string
@@ -2386,6 +2424,18 @@ export type Database = {
       pembanding_sesudah: {
         Args: { p_dari: string; p_sampai: string }
         Returns: Json
+      }
+      catat_petugas_sesi: {
+        Args: { p_nama: string; p_nip?: string | null; p_seksi?: string | null; p_session: string }
+        Returns: string
+      }
+      hapus_petugas_sesi: {
+        Args: { p_id: string }
+        Returns: undefined
+      }
+      ubah_penugasan_sesi: {
+        Args: { p_petugas: string[]; p_session: string }
+        Returns: undefined
       }
       rekap_pangan_sdp: {
         Args: {
