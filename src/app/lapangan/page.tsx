@@ -58,7 +58,7 @@ export default async function LapanganPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{sapa}, {user.fullName.split(" ")[0]}</h1>
-        <p className="text-sm text-muted-foreground">Tugas pengawalan yang diberikan kepada akun ini. Sebelum mengisi berkas, catat dulu nama petugas yang bertugas.</p>
+        <p className="text-sm text-muted-foreground">Tugas pengawalan yang diberikan kepada akun ini. Sebelum mengisi berkas, catat dulu nama petugas yang bertugas. <Link href="/panduan" className="font-semibold text-primary hover:underline">Lihat panduan</Link>.</p>
       </div>
 
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Ringkasan tugas">
