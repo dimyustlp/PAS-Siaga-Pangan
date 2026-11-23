@@ -17,7 +17,7 @@ export const ALL_ROLES: Role[] = [
   "pengawal",
 ];
 const NON_PENGAWAL: Role[] = ["administrator", "operator", "kepala_pengamanan", "pemantau_kanwil", "pemantau_pusat", "ka_upt"];
-const PENGELOLA_AKUN: Role[] = ["administrator", "pemantau_pusat", "pemantau_kanwil"];
+const PENGELOLA_AKUN: Role[] = ["administrator", "pemantau_pusat", "pemantau_kanwil", "operator"];
 const UPT_SAJA: Role[] = ["ka_upt", "kepala_pengamanan", "operator"];
 
 /** Peran tingkat UPT (dipakai untuk pilihan saat membuat akun dari Kanwil). */
@@ -44,6 +44,7 @@ export function peranBolehDibuat(role: Role): Role[] {
   if (role === "administrator") return ALL_ROLES;
   if (role === "pemantau_pusat") return ALL_ROLES.filter((r) => r !== "administrator");
   if (role === "pemantau_kanwil") return ROLE_UPT;
+  if (role === "operator") return ["ka_upt", "kepala_pengamanan", "pengawal"];
   return [];
 }
 
@@ -94,6 +95,7 @@ const RULES: Rule[] = [
   { prefix: "/sdp", roles: NON_PENGAWAL },
   { prefix: "/gelang", roles: ALL_ROLES },
   { prefix: "/pedoman", roles: ALL_ROLES },
+  { prefix: "/panduan", roles: ALL_ROLES },
   { prefix: "/laporan", roles: NON_PENGAWAL },
   { prefix: "/akun", roles: PENGELOLA_AKUN },
   { prefix: "/kop-surat", roles: [...UPT_SAJA, "administrator"] },
