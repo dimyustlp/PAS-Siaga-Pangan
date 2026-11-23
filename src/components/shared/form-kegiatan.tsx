@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { ActionForm } from "@/components/shared/action-form";
 import { Button } from "@/components/ui/button";
 import { Field, Select, Textarea } from "@/components/ui/form";
@@ -54,6 +55,7 @@ function Lipat({ judul, hint, children }: { judul: string; hint: string; childre
 
 /** Langkah 1. Isian wajib hanya lima; sisanya boleh dilengkapi nanti. */
 export function FormKegiatanMudah({ lokasi, hariIni }: { lokasi: Lokasi[]; hariIni: string }) {
+  const router = useRouter();
   const [jenis, setJenis] = React.useState("");
   const [lok, setLok] = React.useState("");
   const [mulai, setMulai] = React.useState(hariIni);
@@ -79,8 +81,8 @@ export function FormKegiatanMudah({ lokasi, hariIni }: { lokasi: Lokasi[]; hariI
     <ActionForm
       action={createActivity}
       submit="Simpan rencana kegiatan"
-      success="Rencana kegiatan tersimpan. Lanjut ke langkah 2 untuk membuat sesi harian; rencana ini sudah terpilih di sana."
-      onSuccess={() => { setJenis(""); setLok(""); setBerakhir(""); setLuas(""); setLuasManual(false); setLain({ persetujuan: "", sp: "", komunikasi: "", batas: "", rute: "", akses: "" }); }}
+      success="Rencana kegiatan tersimpan. Membuka halaman rincian untuk menambah sesi dan menugaskan pengawal…"
+      onSuccess={(d) => { router.push(`/rencana/${d.id}`); setJenis(""); setLok(""); setBerakhir(""); setLuas(""); setLuasManual(false); setLain({ persetujuan: "", sp: "", komunikasi: "", batas: "", rute: "", akses: "" }); }}
       resetOnSuccess={false}
       build={() => ({
         jenis_kegiatan: jenis || undefined,
