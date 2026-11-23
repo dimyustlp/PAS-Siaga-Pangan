@@ -1359,6 +1359,10 @@ export type Database = {
       }
       master_upt: {
         Row: {
+          kop_baris: string[] | null
+          website: string | null
+          faksimile: string | null
+          kode_pos: string | null
           alamat: string | null
           email_kantor: string | null
           id: string
@@ -1376,6 +1380,10 @@ export type Database = {
           titik_perkiraan: boolean
         }
         Insert: {
+          kop_baris?: string[] | null
+          website?: string | null
+          faksimile?: string | null
+          kode_pos?: string | null
           alamat?: string | null
           email_kantor?: string | null
           id?: string
@@ -1393,6 +1401,10 @@ export type Database = {
           titik_perkiraan?: boolean
         }
         Update: {
+          kop_baris?: string[] | null
+          website?: string | null
+          faksimile?: string | null
+          kode_pos?: string | null
           alamat?: string | null
           email_kantor?: string | null
           id?: string
@@ -2140,6 +2152,34 @@ export type Database = {
           },
         ]
       }
+      v_rencana_kegiatan: {
+        Row: {
+          activity_id: string | null
+          created_at: string | null
+          jenis_kegiatan: Database["public"]["Enums"]["activity_type"] | null
+          jumlah_rencana: number | null
+          jumlah_sesi: number | null
+          jumlah_surat: number | null
+          kanwil_id: string | null
+          kanwil_nama: string | null
+          kode_kegiatan: string | null
+          kode_upt: string | null
+          latihan: boolean | null
+          lokasi_id: string | null
+          lokasi_nama: string | null
+          luas_lahan_ha: number | null
+          nomor_persetujuan: string | null
+          nomor_surat_perintah: string | null
+          rencana_berakhir: string | null
+          rencana_sesi_id: string | null
+          sesi_terakhir_id: string | null
+          surat_sesi_id: string | null
+          tanggal_mulai: string | null
+          tanggal_terakhir: string | null
+          upt_nama: string | null
+        }
+        Relationships: []
+      }
       v_session_overview: {
         Row: {
           activity_id: string | null
@@ -2417,6 +2457,20 @@ export type Database = {
       tren_mingguan: {
         Args: { p_dari: string; p_sampai: string }
         Returns: Json
+      }
+      ubah_kop_upt_lengkap: {
+        Args: {
+          p_alamat: string | null
+          p_baris: string[] | null
+          p_email: string | null
+          p_faks: string | null
+          p_kode: string
+          p_kodepos: string | null
+          p_kota: string | null
+          p_telepon: string | null
+          p_website: string | null
+        }
+        Returns: undefined
       }
       ubah_kop_upt: {
         Args: {

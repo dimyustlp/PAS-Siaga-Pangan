@@ -80,6 +80,8 @@ const RULES: Rule[] = [
   { prefix: "/sesi", roles: NON_PENGAWAL },
   { prefix: "/peta", roles: NON_PENGAWAL },
   { prefix: "/kegiatan", roles: ["operator"] },
+  { prefix: "/rencana", roles: NON_PENGAWAL },
+  { prefix: "/dokumen", roles: NON_PENGAWAL },
   { prefix: "/keputusan", roles: ["kepala_pengamanan"] },
   { prefix: "/tindak-lanjut", roles: ["operator", "kepala_pengamanan"] },
   { prefix: "/evaluasi", roles: NON_PENGAWAL },

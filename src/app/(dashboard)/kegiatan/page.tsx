@@ -2,10 +2,11 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, PageHeader } from "@/components/ui/form";
 import { FasePill } from "@/components/shared/session-panels";
-import { FormImporWb, FormKegiatan, FormLokasi, FormSesiBaru } from "@/components/shared/forms-operator";
+import { FormKegiatanMudah, FormSesiMudah } from "@/components/shared/form-kegiatan";
+import { FormImporWb, FormLokasi } from "@/components/shared/forms-operator";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { createClient } from "@/lib/supabase/server";
-import { fmtTanggal, fmtTanggalPendek } from "@/lib/format";
+import { fmtTanggalPendek, hariIniWib } from "@/lib/format";
 
 export const metadata = { title: "Kegiatan" };
 export const dynamic = "force-dynamic";
@@ -13,26 +14,41 @@ export const dynamic = "force-dynamic";
 export default async function KegiatanPage() {
   const supabase = await createClient();
   const [kegiatan, sesi, lokasi, pengawal, wb] = await Promise.all([
-    supabase.from("activities").select("*").order("tanggal_mulai", { ascending: false }).limit(100),
+    supabase.from("activities").select("*").order("created_at", { ascending: false }).limit(100),
     supabase.from("v_session_overview").select("*").order("tanggal_sesi", { ascending: false }).limit(100),
     supabase.from("master_locations").select("*").eq("aktif", true).order("nama"),
     supabase.from("profiles").select("id,full_name,nip").eq("role", "pengawal").eq("is_active", true).order("full_name"),
     supabase.from("master_inmates").select("id", { count: "exact", head: true }).eq("aktif", true),
   ]);
 
+  const hariIni = hariIniWib();
   const daftarKegiatan = kegiatan.data ?? [];
   const daftarLokasi = lokasi.data ?? [];
-  const opsiKegiatan = daftarKegiatan.map((k) => {
-    const l = daftarLokasi.find((x) => x.id === k.lokasi_id);
-    return { id: k.id, label: `${k.kode_kegiatan} · ${k.jenis_kegiatan} · ${l?.nama ?? "-"}` };
-  });
+  // Hanya rencana yang belum berakhir yang ditawarkan untuk sesi baru; yang terbaru dibuat di urutan pertama.
+  const opsiKegiatan = daftarKegiatan
+    .filter((k) => !k.rencana_berakhir || k.rencana_berakhir >= hariIni)
+    .map((k) => {
+      const l = daftarLokasi.find((x) => x.id === k.lokasi_id);
+      return { id: k.id, label: `${k.kode_kegiatan} · ${k.jenis_kegiatan} · ${l?.nama ?? "-"}`, mulai: k.tanggal_mulai, berakhir: k.rencana_berakhir };
+    });
 
   return (
     <div className="mx-auto max-w-[1680px] space-y-8">
       <PageHeader
         title="Kegiatan"
-        description="Siapkan rencana kegiatan dan sesi harian. Kepala Pengamanan memutuskan kesiapan setelah dokumen, daftar nominatif, dan enam indikator kesiapan lengkap."
+        description="Dua langkah: buat rencana kegiatan, lalu sesi hariannya. Kepala Pengamanan memutuskan kesiapan setelah dokumen, daftar nominatif, dan enam indikator kesiapan lengkap."
       />
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader><CardTitle>Langkah 1 · Rencana kegiatan</CardTitle><CardDescription>Lima isian saja. Dokumen dan pengamanan boleh dilengkapi nanti.</CardDescription></CardHeader>
+          <CardContent><FormKegiatanMudah lokasi={daftarLokasi.map((l) => ({ id: l.id, nama: l.nama, posisi: l.posisi, luas_ha: l.luas_ha }))} hariIni={hariIni} /></CardContent>
+        </Card>
+        <Card>
+          <CardHeader><CardTitle>Langkah 2 · Sesi harian</CardTitle><CardDescription>Rencana terbaru sudah terpilih; cukup pilih pengawal.</CardDescription></CardHeader>
+          <CardContent><FormSesiMudah kegiatan={opsiKegiatan} pengawal={pengawal.data ?? []} hariIni={hariIni} /></CardContent>
+        </Card>
+      </div>
 
       <section className="space-y-3" aria-labelledby="h-sesi">
         <h2 id="h-sesi" className="text-lg font-semibold">Sesi harian</h2>
@@ -56,29 +72,10 @@ export default async function KegiatanPage() {
         )}
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader><CardTitle>Rencana kegiatan baru</CardTitle><CardDescription>Berlaku untuk jangka waktu tertentu; sesi harian dibuat di bawahnya.</CardDescription></CardHeader>
-          <CardContent><FormKegiatan lokasi={daftarLokasi} /></CardContent>
-        </Card>
-        <Card>
-          <CardHeader><CardTitle>Sesi harian baru</CardTitle><CardDescription>Satu sesi per kegiatan per tanggal.</CardDescription></CardHeader>
-          <CardContent><FormSesiBaru kegiatan={opsiKegiatan} pengawal={pengawal.data ?? []} /></CardContent>
-        </Card>
-      </div>
-
       {daftarKegiatan.length > 0 && (
-        <section className="space-y-2" aria-labelledby="h-keg">
-          <h2 id="h-keg" className="text-lg font-semibold">Rencana kegiatan</h2>
-          <ul className="divide-y rounded-lg border bg-card text-sm">
-            {daftarKegiatan.map((k) => (
-              <li key={k.id} className="px-4 py-2.5">
-                <span className="font-medium">{k.kode_kegiatan}</span> · {k.jenis_kegiatan} · {daftarLokasi.find((l) => l.id === k.lokasi_id)?.nama ?? "-"}
-                <span className="block text-xs text-muted-foreground">{fmtTanggal(k.tanggal_mulai)}{k.rencana_berakhir ? ` s.d. ${fmtTanggal(k.rencana_berakhir)}` : ""}{k.luas_lahan_ha ? ` · ${k.luas_lahan_ha} ha` : ""}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <p className="text-sm text-muted-foreground">
+          Ada {daftarKegiatan.length} rencana kegiatan. Untuk mencari rencana lama dan lampirannya, buka <Link href="/rencana" className="font-medium text-primary hover:underline">daftar Rencana kegiatan</Link>.
+        </p>
       )}
 
       <section className="space-y-4" aria-labelledby="h-induk">

@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { ROLE_LABEL, type Role } from "@/lib/rbac";
+import type { KopUpt } from "@/lib/domain/kop";
 
 export type LampiranLaporan = {
   id: string;
@@ -17,14 +18,7 @@ export type LampiranLaporan = {
 
 export type DataLaporan = {
   sessionId: string;
-  kop: {
-    kanwil: string | null;
-    upt: string;
-    alamat: string | null;
-    telepon: string | null;
-    email: string | null;
-    kota: string | null;
-  };
+  kop: KopUpt;
   kegiatan: {
     kode: string;
     jenis: string;
@@ -56,7 +50,7 @@ export async function ambilDataLaporan(sessionId: string): Promise<DataLaporan |
 
   const [lok, upt, tahap, lamp, kep, nom] = await Promise.all([
     supabase.from("master_locations").select("*").eq("id", keg.lokasi_id).maybeSingle(),
-    supabase.from("master_upt").select("nama,kanwil_id,alamat,telepon,email_kantor,kota_ttd,kab_kota").eq("kode", keg.kode_upt ?? "").maybeSingle(),
+    supabase.from("master_upt").select("nama,kanwil_id,alamat,telepon,email_kantor,kota_ttd,kab_kota,kop_baris,website,faksimile,kode_pos").eq("kode", keg.kode_upt ?? "").maybeSingle(),
     supabase.from("tahap_pengawalan").select("tahap,jumlah_wb,jumlah_alat,isian,waktu_sistem,pengawal_id").eq("session_id", sessionId).order("tahap"),
     supabase.from("lampiran_tahap").select("id,tahap,butir,jenis,nama_berkas,mime,ukuran_byte,waktu_sistem,sumber").eq("session_id", sessionId).order("tahap").order("waktu_sistem"),
     supabase.from("decisions").select("*").eq("session_id", sessionId).order("created_at", { ascending: false }),
@@ -81,11 +75,15 @@ export async function ambilDataLaporan(sessionId: string): Promise<DataLaporan |
   return {
     sessionId,
     kop: {
+      baris: upt.data?.kop_baris ?? null,
       kanwil,
       upt: upt.data?.nama ?? keg.kode_upt ?? "UPT",
       alamat: upt.data?.alamat ?? null,
+      kodePos: upt.data?.kode_pos ?? null,
       telepon: upt.data?.telepon ?? null,
+      faks: upt.data?.faksimile ?? null,
       email: upt.data?.email_kantor ?? null,
+      website: upt.data?.website ?? null,
       kota: upt.data?.kota_ttd ?? upt.data?.kab_kota ?? null,
     },
     kegiatan: {

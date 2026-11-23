@@ -85,6 +85,41 @@ export async function ubahKopSurat(input: unknown): Promise<ActionResult> {
   return success();
 }
 
+const kopLengkapSchema = z.object({
+  kode: z.string().trim().min(1).max(30),
+  baris: z.array(z.string().trim().max(150, "Satu baris kop paling panjang 150 huruf.")).max(8, "Kop paling banyak 8 baris judul."),
+  alamat: z.string().trim().max(300).optional(),
+  kode_pos: z.string().trim().max(10).optional(),
+  telepon: z.string().trim().max(80).optional(),
+  faks: z.string().trim().max(80).optional(),
+  email: z.string().trim().max(120).optional(),
+  website: z.string().trim().max(120).optional(),
+  kota: z.string().trim().max(80).optional(),
+});
+
+/** Menyimpan seluruh isi kop surat UPT. Dipakai pada setiap surat dan laporan berikutnya. */
+export async function ubahKopLengkap(input: unknown): Promise<ActionResult> {
+  const auth = await authorize(["administrator", "ka_upt", "kepala_pengamanan", "operator"]);
+  if (!auth.ok) return fail(auth.error);
+  const p = kopLengkapSchema.safeParse(input);
+  if (!p.success) return fail(p.error.issues[0]?.message ?? "Isian tidak valid.");
+  const { error } = await auth.supabase.rpc("ubah_kop_upt_lengkap", {
+    p_kode: p.data.kode,
+    p_baris: p.data.baris,
+    p_alamat: p.data.alamat ?? null,
+    p_telepon: p.data.telepon ?? null,
+    p_faks: p.data.faks ?? null,
+    p_email: p.data.email ?? null,
+    p_website: p.data.website ?? null,
+    p_kodepos: p.data.kode_pos ?? null,
+    p_kota: p.data.kota ?? null,
+  });
+  if (error) return fail(pesanDb(error, "Kop surat belum bisa disimpan."));
+  revalidatePath("/kop-surat");
+  revalidatePath("/laporan");
+  return success();
+}
+
 const driveSchema = z.object({
   url: z.string().trim().max(300).optional(),
   aktif: z.boolean(),

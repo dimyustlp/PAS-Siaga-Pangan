@@ -1,5 +1,6 @@
 // Isi laporan resmi disusun di satu tempat supaya pratinjau layar dan berkas PDF selalu sama.
 
+import { alamatKop, barisKop } from "@/lib/domain/kop";
 import type { DataLaporan } from "@/lib/data/laporan";
 import { NAMA_TAHAP, judulButir } from "@/lib/domain/tahap";
 
@@ -107,16 +108,11 @@ export function susunLaporan(d: DataLaporan): IsiLaporan {
     };
   });
 
-  const alamat = [d.kop.alamat, d.kop.telepon ? `Telepon ${d.kop.telepon}` : null, d.kop.email ? `Pos-el ${d.kop.email}` : null].filter(Boolean).join(" · ");
+  const kopBaris = barisKop(d.kop);
+  const alamat = alamatKop(d.kop);
 
   return {
-    kopBaris: [
-      "KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN",
-      "REPUBLIK INDONESIA",
-      "DIREKTORAT JENDERAL PEMASYARAKATAN",
-      ...(d.kop.kanwil ? [d.kop.kanwil.toUpperCase()] : []),
-      d.kop.upt.toUpperCase(),
-    ],
+    kopBaris,
     kopAlamat: alamat,
     judul: "LAPORAN PELAKSANAAN KEGIATAN KETAHANAN PANGAN",
     subjudul: `DI ${lokasi.toUpperCase()}`,
