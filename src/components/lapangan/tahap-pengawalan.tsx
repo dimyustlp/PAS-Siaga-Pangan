@@ -35,6 +35,8 @@ type Props = {
   batasBerkasMb: number;
   modeDrive: boolean;
   tutup: boolean;
+  /** Nama petugas yang sudah dicatat pada sesi ini. */
+  petugas: string[];
 };
 
 const jamDetik = (v: string) =>
@@ -187,6 +189,7 @@ export function TahapPengawalan(p: Props) {
   const berikut = TAHAP.find((t) => !sudah.has(t.no))?.no ?? 0;
   const [dilihat, setDilihat] = React.useState<number>(berikut || 4);
   const [nilai, setNilai] = React.useState<Record<string, string>>({});
+  const [pilihPetugas, setPilihPetugas] = React.useState<string>(p.petugas[0] ?? "");
   const [galat, setGalat] = React.useState<string | null>(null);
   const [info, setInfo] = React.useState<string | null>(null);
   const [pending, start] = React.useTransition();
@@ -195,6 +198,10 @@ export function TahapPengawalan(p: Props) {
     setDilihat(berikut || 4);
     setNilai({});
   }, [berikut]);
+  // Bila daftar petugas berubah, pastikan pilihan masih valid.
+  React.useEffect(() => {
+    setPilihPetugas((x) => (p.petugas.includes(x) ? x : p.petugas[0] ?? ""));
+  }, [p.petugas]);
 
   const def = TAHAP.find((t) => t.no === dilihat) ?? TAHAP[0];
   const catat = sudah.get(def.no);
@@ -207,8 +214,9 @@ export function TahapPengawalan(p: Props) {
     e.preventDefault();
     setGalat(null);
     setInfo(null);
+    if (!pilihPetugas) return setGalat("Pilih petugas yang mengisi tahap ini. Catat nama petugas dulu bila belum ada.");
     if (kurang.length > 0) return setGalat(`Lampiran wajib belum lengkap: ${kurang.map((k) => k.judul).join("; ")}.`);
-    const isian = bangunIsian(def.no, nilai) as Record<string, string | number | boolean>;
+    const isian = { ...bangunIsian(def.no, nilai), petugas: pilihPetugas } as Record<string, string | number | boolean>;
     start(async () => {
       const r = await selesaikanTahap({ session_id: p.sessionId, tahap: def.no, isian });
       if (!r.ok) return setGalat(r.error);
@@ -279,6 +287,11 @@ export function TahapPengawalan(p: Props) {
 
         {terbuka && (
           <form onSubmit={kirim} className="space-y-3 border-t pt-4">
+            <Field label="Petugas yang mengisi tahap ini *" htmlFor={`t${def.no}-petugas`} hint="Dipilih dari nama yang sudah dicatat di atas.">
+              <select id={`t${def.no}-petugas`} value={pilihPetugas} onChange={(e) => setPilihPetugas(e.target.value)} required className="flex h-11 w-full rounded-xl border border-input bg-white px-3 text-base">
+                {p.petugas.map((n) => <option key={n} value={n}>{n}</option>)}
+              </select>
+            </Field>
             {def.isian.map((f) => {
               const id = `t${def.no}-${f.name}`;
               const v = nilai[f.name] ?? "";
