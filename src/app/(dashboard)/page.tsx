@@ -166,14 +166,14 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="mx-auto max-w-[1680px] space-y-6">
-      <section className={`${latar} kilap-panel relative overflow-hidden rounded-2xl p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_30px_60px_-34px_hsl(222_64%_14%/0.85)] md:p-9 [&_.text-muted-foreground]:!text-white/80`}>
+      <section className={`${latar} kilap-panel relative overflow-hidden rounded-[14px] p-6 shadow-[0_4px_10px_rgba(15,30,60,0.10),0_20px_48px_rgba(15,30,60,0.16)] md:p-9 [&_.text-muted-foreground]:!text-white/80`}>
         <MotifPangan />
         <div className="relative grid gap-6 md:grid-cols-[1.6fr_1fr] md:items-end">
           <div className="min-w-0">
-            <p className="flex items-center gap-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-[hsl(40_70%_72%)]"><span className="h-px w-8 bg-[hsl(40_70%_72%)]" aria-hidden />
+            <p className="flex items-center gap-2.5 font-mono text-[0.7rem] font-medium uppercase tracking-[0.2em] text-[#e6c06a]"><span className="h-[2px] w-6 rounded-full bg-[#c89a34]" aria-hidden />
               {LABEL_TINGKAT[tingkat]} · {fmtTanggal(now)}
             </p>
-            <h1 className="mt-4 max-w-[22ch] text-[1.75rem] font-semibold leading-[1.12] tracking-tight md:text-[2.5rem]">{judul}</h1>
+            <h1 className="mt-4 max-w-[22ch] text-[1.75rem] font-bold leading-[1.12] tracking-tight md:text-[2.5rem]">{judul}</h1>
             <p className="mt-3 max-w-[60ch] text-[0.95rem] text-white/80">
               {sapaan(jam)}, {user.fullName.split(" ")[0]} ({ROLE_LABEL[user.role]}).{" "}
               {perlu.length > 0 ? `${perlu.length} kegiatan perlu perhatian sekarang.` : "Tidak ada kegiatan yang perlu perhatian khusus saat ini."}

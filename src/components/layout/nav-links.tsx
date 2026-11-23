@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -8,7 +7,6 @@ import {
   Bell,
   BookOpen,
   ChartColumn,
-  ChevronDown,
   ClipboardList,
   Database,
   FileCheck2,
@@ -22,7 +20,6 @@ import {
   Newspaper,
   Radio,
   ScrollText,
-  Search,
   ShieldAlert,
   Sprout,
   Stamp,
@@ -115,107 +112,47 @@ function aktif(pathname: string, href: string) {
   return href === "/" ? pathname === "/" || pathname.startsWith("/sesi") : pathname === href || pathname.startsWith(href + "/");
 }
 
+function Butir({ item, pathname }: { item: Item; pathname: string }) {
+  const Icon = ICONS[item.icon];
+  const on = aktif(pathname, item.href);
+  return (
+    <li>
+      <Link
+        href={item.href}
+        aria-current={on ? "page" : undefined}
+        className={cn(
+          "group relative flex items-center gap-3 rounded-[9px] px-3 py-2.5 text-[0.95rem] font-medium transition-[background-color,color] duration-200",
+          on ? "bg-white/[0.11] text-white" : "text-[#b9cce8] hover:bg-white/[0.06] hover:text-white"
+        )}
+      >
+        <span
+          className={cn("absolute bottom-2 left-0 top-2 w-[3px] rounded-full bg-[#c89a34] transition-opacity duration-300", on ? "opacity-100" : "opacity-0")}
+          aria-hidden
+        />
+        <Icon className={cn("h-[1.15rem] w-[1.15rem] shrink-0 transition-colors", on ? "text-[#e6c06a]" : "text-[#7fa5dc] group-hover:text-[#b9cce8]")} aria-hidden />
+        <span className="min-w-0 truncate">{item.label}</span>
+      </Link>
+    </li>
+  );
+}
+
+/** Menu samping bergaya Trans-Siber: kelompok "Menu utama" dan "Lainnya". */
 export function NavLinks({ role }: { role: Role }) {
   const pathname = usePathname();
   const { utama, lain } = MENU[role];
-  const [buka, setBuka] = React.useState(false);
-  const [cari, setCari] = React.useState("");
-  const kotak = React.useRef<HTMLDivElement>(null);
-  const lainAktif = lain.find((i) => aktif(pathname, i.href));
-
-  React.useEffect(() => {
-    setBuka(false);
-    setCari("");
-  }, [pathname]);
-  React.useEffect(() => {
-    if (!buka) return;
-    const tutup = (e: MouseEvent) => {
-      if (kotak.current && !kotak.current.contains(e.target as Node)) setBuka(false);
-    };
-    const esc = (e: KeyboardEvent) => e.key === "Escape" && setBuka(false);
-    document.addEventListener("mousedown", tutup);
-    document.addEventListener("keydown", esc);
-    return () => {
-      document.removeEventListener("mousedown", tutup);
-      document.removeEventListener("keydown", esc);
-    };
-  }, [buka]);
-
-  const semua = [...utama, ...lain];
-  const kata = cari.trim().toLowerCase();
-  const hasil = kata ? semua.filter((i) => i.label.toLowerCase().includes(kata)) : lain;
-
   return (
-    <nav className="flex items-center justify-start gap-1.5 overflow-x-auto px-3 py-2.5 md:justify-center lg:gap-2 md:overflow-visible" aria-label="Menu utama">
-      {utama.map(({ href, label, icon }) => {
-        const Icon = ICONS[icon];
-        const on = aktif(pathname, href);
-        return (
-          <Link
-            key={href}
-            href={href}
-            aria-current={on ? "page" : undefined}
-            className={cn(
-              "group relative flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-[0.95rem] font-medium transition-[background-color,color,box-shadow] duration-300",
-              on ? "bg-navy text-white shadow-[0_10px_22px_-12px_hsl(222_64%_20%/0.9)]" : "text-secondary-foreground hover:bg-secondary hover:text-ink"
-            )}
-          >
-            <Icon className={cn("h-5 w-5 shrink-0", on ? "text-[hsl(40_70%_68%)]" : "text-primary/70 group-hover:text-primary")} aria-hidden />
-            {label}
-          </Link>
-        );
-      })}
-
+    <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-4 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin]" aria-label="Menu utama">
+      <p className="px-3 pb-2 font-mono text-[0.65rem] font-medium uppercase tracking-[0.2em] text-[#8fa6cc]">Menu utama</p>
+      <ul className="space-y-0.5">
+        {utama.map((item) => <Butir key={item.href} item={item} pathname={pathname} />)}
+      </ul>
       {lain.length > 0 && (
-        <div ref={kotak} className="relative shrink-0">
-          <button
-            type="button"
-            aria-expanded={buka}
-            aria-haspopup="menu"
-            onClick={() => setBuka((b) => !b)}
-            className={cn(
-              "flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-[0.95rem] font-medium transition-colors",
-              lainAktif ? "bg-navy text-white" : "text-secondary-foreground hover:bg-secondary"
-            )}
-          >
-            {lainAktif ? lainAktif.label : "Menu lain"}
-            <ChevronDown className={cn("h-5 w-5 transition-transform", buka && "rotate-180")} aria-hidden />
-          </button>
-          {buka && (
-            <div role="menu" className="kaca fixed left-1/2 top-[8.5rem] z-50 w-[min(22rem,92vw)] -translate-x-1/2 rounded-2xl p-2 md:absolute md:left-auto md:right-0 md:top-full md:mt-2 md:translate-x-0">
-              <label className="mb-1 flex items-center gap-2 rounded-xl border border-input bg-white px-3 py-2">
-                <Search className="h-4 w-4 text-muted-foreground" aria-hidden />
-                <input
-                  autoFocus
-                  value={cari}
-                  onChange={(e) => setCari(e.target.value)}
-                  placeholder="Cari menu…"
-                  className="w-full bg-transparent text-sm outline-none"
-                  aria-label="Cari menu"
-                />
-              </label>
-              <ul className="max-h-[60vh] overflow-y-auto">
-                {hasil.map(({ href, label, icon }) => {
-                  const Icon = ICONS[icon];
-                  const on = aktif(pathname, href);
-                  return (
-                    <li key={href}>
-                      <Link
-                        role="menuitem"
-                        href={href}
-                        className={cn("flex items-center gap-3 rounded-xl px-3 py-2 text-sm", on ? "bg-primary/10 font-semibold text-primary" : "hover:bg-secondary")}
-                      >
-                        <Icon className="h-4 w-4 text-brand" aria-hidden />
-                        {label}
-                      </Link>
-                    </li>
-                  );
-                })}
-                {hasil.length === 0 && <li className="px-3 py-3 text-sm text-muted-foreground">Menu tidak ditemukan.</li>}
-              </ul>
-            </div>
-          )}
-        </div>
+        <>
+          <p className="mt-5 px-3 pb-2 font-mono text-[0.65rem] font-medium uppercase tracking-[0.2em] text-[#8fa6cc]">Lainnya</p>
+          <ul className="space-y-0.5">
+            {lain.map((item) => <Butir key={item.href} item={item} pathname={pathname} />)}
+          </ul>
+        </>
       )}
     </nav>
   );

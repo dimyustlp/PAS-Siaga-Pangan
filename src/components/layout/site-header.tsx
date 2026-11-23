@@ -1,60 +1,80 @@
 import Link from "next/link";
+import { LogOut } from "lucide-react";
 import { Logo, LogoInstansi } from "@/components/layout/logo";
+import { KerangkaSamping } from "@/components/layout/kerangka-samping";
 import { NavLinks } from "@/components/layout/nav-links";
-import { UserBar } from "@/components/layout/user-bar";
-import { LABEL_TINGKAT, tingkatPeran, type Role } from "@/lib/rbac";
+import { signOut } from "@/lib/actions/auth";
+import { LABEL_TINGKAT, ROLE_LABEL, tingkatPeran, type Role } from "@/lib/rbac";
+
+function inisial(nama: string) {
+  const b = nama.trim().split(/\s+/).filter(Boolean);
+  return ((b[0]?.[0] ?? "") + (b.length > 1 ? b[b.length - 1][0] : "")).toUpperCase() || "?";
+}
 
 /**
- * Kepala situs resmi: pita biru dongker berlogo instansi, garis emas, lalu menu utama di tengah atas.
- * Warna pita menandai tingkat pengguna (Pusat dongker, Kanwil biru laut, UPT hijau sawah).
+ * Panel samping resmi bergaya Trans-Siber: lambang instansi, nama aplikasi, menu, lalu identitas pengguna.
+ * Warna panel menandai tingkat pengguna (Pusat dongker, Kanwil biru baja, UPT hijau tua).
  */
 export function SiteHeader({ name, role, unit }: { name: string; role: Role; unit: string | null }) {
   const tingkat = tingkatPeran(role);
-  const pita = tingkat === "pusat" ? "bg-navy" : tingkat === "kanwil" ? "bg-kanwil-gradient" : "bg-upt-gradient";
+  const kelas = tingkat === "pusat" ? "bg-samping-pusat" : tingkat === "kanwil" ? "bg-samping-kanwil" : "bg-samping-upt";
   return (
-    <header className="no-print">
-      <div className={`${pita} text-white`}>
-        <div className="mx-auto flex max-w-[1680px] items-center gap-3 px-4 py-2.5 md:px-8">
-          <span className="hidden sm:flex"><LogoInstansi /></span>
-          <span className="hidden h-9 w-px bg-white/25 sm:block" aria-hidden />
-          <Link href="/" className="flex min-w-0 items-center gap-2.5">
-            <Logo />
-            <span className="min-w-0 leading-tight">
-              <span className="block truncate text-[0.625rem] font-medium uppercase tracking-[0.2em] text-white/70">
-                Kementerian Imigrasi dan Pemasyarakatan RI
-              </span>
-              <span className="block text-[1.0625rem] font-bold tracking-tight">
-                PAS-SIAGA <span className="text-[hsl(44_90%_66%)]">PANGAN</span>
-              </span>
-              <span className="hidden truncate text-[0.6875rem] text-white/75 md:block">
-                Pengamanan Kegiatan Ketahanan Pangan Pemasyarakatan
-              </span>
-            </span>
-          </Link>
-          <div className="ml-auto flex items-center gap-3">
-            <span className="hidden text-right leading-tight lg:block">
-              <span className="block text-[0.625rem] font-semibold uppercase tracking-[0.18em] text-[hsl(44_90%_66%)]">{LABEL_TINGKAT[tingkat]}</span>
-              {unit && <span className="block max-w-[18rem] truncate text-xs text-white/80">{unit}</span>}
-            </span>
-            <UserBar name={name} role={role} gelap />
+    <KerangkaSamping kelas={kelas}>
+      <div className="px-5 pt-5">
+        <LogoInstansi kecil />
+        <p className="mt-3 font-mono text-[0.6rem] font-medium uppercase leading-relaxed tracking-[0.16em] text-[#9db6dc]">
+          Kementerian Imigrasi dan Pemasyarakatan
+          <br />
+          Direktorat Jenderal Pemasyarakatan
+        </p>
+      </div>
+      <Link href="/" className="mx-5 mt-4 flex items-center gap-3 border-t border-white/10 pt-4">
+        <Logo kecil />
+        <span className="min-w-0 leading-tight">
+          <span className="block text-[1.1rem] font-bold tracking-tight">
+            PAS-SIAGA <span className="text-[#e6c06a]">PANGAN</span>
+          </span>
+          <span className="block text-[0.72rem] text-[#9db6dc]">Pengamanan ketahanan pangan</span>
+        </span>
+      </Link>
+
+      <NavLinks role={role} />
+
+      <div className="border-t border-white/10 p-4">
+        <p className="font-mono text-[0.6rem] font-medium uppercase tracking-[0.18em] text-[#e6c06a]">{LABEL_TINGKAT[tingkat]}</p>
+        {unit && <p className="mt-0.5 truncate text-[0.78rem] text-[#b9cce8]" title={unit}>{unit}</p>}
+        <div className="mt-3 flex items-center gap-3">
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[9px] bg-gradient-to-br from-[#e6c06a] to-[#a9791c] font-mono text-[0.75rem] font-semibold text-[#0c2245]"
+            aria-hidden
+          >
+            {inisial(name)}
+          </span>
+          <div className="min-w-0 flex-1 leading-tight">
+            <p className="truncate text-[0.9rem] font-semibold">{name}</p>
+            <p className="truncate font-mono text-[0.65rem] uppercase tracking-[0.08em] text-[#9db6dc]">{ROLE_LABEL[role]}</p>
           </div>
+          <form action={signOut}>
+            <button
+              type="submit"
+              aria-label="Keluar"
+              title="Keluar"
+              className="flex h-10 w-10 items-center justify-center rounded-[9px] border border-white/15 bg-white/[0.06] text-white/85 transition-[background-color,transform] duration-200 hover:bg-white/[0.15] active:scale-95"
+            >
+              <LogOut className="h-[1.1rem] w-[1.1rem]" aria-hidden />
+            </button>
+          </form>
         </div>
-        <div className="garis-emas h-[3px]" aria-hidden />
       </div>
-      <div className="bg-sidebar sticky top-0 z-40 border-b border-border/70 backdrop-blur-xl">
-        <div className="mx-auto max-w-[1680px]">
-          <NavLinks role={role} />
-        </div>
-      </div>
-    </header>
+    </KerangkaSamping>
   );
 }
 
 export function SiteFooter() {
   return (
-    <footer className="no-print mt-10 border-t border-border/70 bg-white/60">
-      <div className="mx-auto flex max-w-[1680px] flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground md:px-8">
-        <span>Direktorat Pengamanan dan Intelijen · Direktorat Jenderal Pemasyarakatan</span>
+    <footer className="no-print mt-10 border-t border-border">
+      <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-2 px-4 py-4 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground md:px-8">
+        <span>Direktorat Pengamanan dan Intelijen · Ditjen Pemasyarakatan</span>
         <span>Pertanian · Perkebunan · Perikanan · Peternakan</span>
       </div>
     </footer>

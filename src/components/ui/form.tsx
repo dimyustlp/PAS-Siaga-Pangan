@@ -7,7 +7,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTML
     <textarea
       ref={ref}
       className={cn(
-        "flex min-h-20 w-full rounded-xl border border-input bg-white px-3.5 py-2 transition-[border-color,box-shadow] duration-300 text-base placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-4 focus-visible:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "flex min-h-20 w-full rounded-[9px] border border-input bg-white px-3.5 py-2 transition-[border-color,box-shadow] duration-300 text-base placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
         className
       )}
       {...props}
@@ -74,11 +74,11 @@ export function PageHeader({ title, description, actions }: { title: string; des
   return (
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div className="min-w-0">
-        <p className="mb-2.5 flex items-center gap-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-gold">
-          <span className="h-px w-8 bg-gold/70" aria-hidden />
+        <p className="mb-2.5 flex items-center gap-2.5 font-mono text-[0.68rem] font-medium uppercase tracking-[0.2em] text-gold">
+          <span className="h-[2px] w-6 rounded-full bg-gold" aria-hidden />
           PAS-SIAGA Pangan
         </p>
-        <h1 className="text-[1.6rem] font-semibold leading-tight tracking-tight text-ink md:text-[2rem]">{title}</h1>
+        <h1 className="text-[1.6rem] font-bold leading-tight tracking-tight text-ink md:text-[2rem]">{title}</h1>
         {description && <p className="mt-2 max-w-[68ch] text-[0.95rem] leading-relaxed text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}

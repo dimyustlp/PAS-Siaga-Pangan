@@ -39,7 +39,7 @@ const setelNilai = (el: HTMLSelectElement, v: string) => {
 const AMBANG = 6;
 
 const GAYA =
-  "flex h-10 w-full items-center rounded-xl border border-input bg-white px-3.5 py-2 text-base transition-[border-color,box-shadow] duration-300 focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-4 focus-visible:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm";
+  "flex h-10 w-full items-center rounded-[9px] border border-input bg-white px-3.5 py-2 text-base transition-[border-color,box-shadow] duration-300 focus-visible:outline-none focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm";
 
 /**
  * Pengganti <select> yang bisa dicari. Elemen <select> asli tetap ada (tersembunyi) sehingga

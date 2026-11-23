@@ -317,7 +317,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
   return (
     <div className="grid gap-4 lg:grid-cols-[22rem_1fr]">
       {/* Panel kiri: ringkasan, saringan, daftar */}
-      <aside className="kaca order-2 flex min-h-0 flex-col rounded-[1.6rem] lg:order-1 lg:h-[calc(100dvh-12rem)] lg:min-h-[34rem]">
+      <aside className="kaca order-2 flex min-h-0 flex-col rounded-[14px] lg:order-1 lg:h-[calc(100dvh-9rem)] lg:min-h-[34rem]">
         <div className="grid grid-cols-3 gap-px overflow-hidden rounded-t-[1.6rem] border-b border-border bg-border">
           {[
             { n: ringkas.upt, l: "UPT berkegiatan" },
@@ -443,7 +443,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
       </aside>
 
       {/* Peta */}
-      <section className="relative order-1 h-[62dvh] min-h-[26rem] overflow-hidden rounded-[1.6rem] border border-ink/[0.07] bg-[hsl(44_40%_90%)] shadow-[0_24px_50px_-30px_hsl(222_60%_20%/0.35)] lg:order-2 lg:h-[calc(100dvh-12rem)] lg:min-h-[34rem]">
+      <section className="relative order-1 h-[62dvh] min-h-[26rem] overflow-hidden rounded-[14px] border border-ink/[0.07] bg-[hsl(44_40%_90%)] shadow-[0_24px_50px_-30px_hsl(222_60%_20%/0.35)] lg:order-2 lg:h-[calc(100dvh-9rem)] lg:min-h-[34rem]">
         <div ref={wadah} className="!absolute inset-0" aria-label="Peta sebaran kegiatan pangan UPT" role="region" />
         {!siap && <div className="kilau absolute inset-0" aria-hidden />}
 

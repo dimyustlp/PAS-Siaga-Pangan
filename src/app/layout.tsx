@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
+import { IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta", display: "swap" });
+const plex = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-plex", display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "PAS-SIAGA Pangan", template: "%s | PAS-SIAGA Pangan" },
@@ -15,12 +17,12 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#13254d",
+  themeColor: "#0c2245",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="id" className={`${jakarta.variable} ${plex.variable}`}>
       <body className="min-h-screen">{children}</body>
     </html>
   );
