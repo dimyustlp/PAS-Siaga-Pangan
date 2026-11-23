@@ -6,6 +6,7 @@ import { StatusBadge, type SecurityStatus } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { TabelCari } from "@/components/ui/tabel-cari";
 import { AlurKerja } from "@/components/shared/alur-kerja";
+import { PanelPeran } from "@/components/dasbor/panel-peran";
 import { RealtimeRefresh } from "@/components/shared/realtime-refresh";
 import { SesiTabel } from "@/components/shared/session-panels";
 import { BeritaBerjalan } from "@/components/shared/berita-berjalan";
@@ -119,13 +120,16 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
   const [tahap, sah] = ids.length
     ? await Promise.all([
         supabase.from("tahap_pengawalan").select("session_id").in("session_id", ids),
-        supabase.from("daily_sessions").select("id,disahkan_at").in("id", ids),
+        supabase.from("daily_sessions").select("id,disahkan_at,petugas_ids").in("id", ids),
       ])
     : [{ data: [] }, { data: [] }];
   const nTahap = new Map<string, number>();
   (tahap.data ?? []).forEach((t) => nTahap.set(t.session_id, (nTahap.get(t.session_id) ?? 0) + 1));
   const disahkan = new Set((sah.data ?? []).filter((s) => s.disahkan_at).map((s) => s.id));
   const menungguSah = rows.filter((r) => nTahap.get(r.session_id!) === 4 && !disahkan.has(r.session_id!));
+  const tanpaPetugas = new Set((sah.data ?? []).filter((s) => (s.petugas_ids ?? []).length === 0).map((s) => s.id));
+  const tanpaPengawal = aktif.filter((r) => tanpaPetugas.has(r.session_id!));
+  const peranUpt = user.role === "ka_upt" || user.role === "kepala_pengamanan" || user.role === "operator" ? user.role : null;
 
   function tambah(map: Map<string, Rekap>, r: Overview, kunci: string, nama: string, href: string) {
     const x = map.get(kunci) ?? rekapKosong(kunci, nama, href);
@@ -182,7 +186,13 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
             <h1 className="mt-4 max-w-[22ch] text-[1.75rem] font-bold leading-[1.12] tracking-tight md:text-[2.5rem]">{judul}</h1>
             <p className="mt-3 max-w-[60ch] text-[0.95rem] text-white/80">
               {sapaan(jam)}, {user.fullName.split(" ")[0]} ({ROLE_LABEL[user.role]}).{" "}
-              {perlu.length > 0 ? `${perlu.length} kegiatan perlu perhatian sekarang.` : "Tidak ada kegiatan yang perlu perhatian khusus saat ini."}
+              {user.role === "operator"
+                ? `${tanpaPengawal.length} sesi belum punya pengawal, ${menunggu} menunggu keputusan kesiapan.`
+                : user.role === "kepala_pengamanan"
+                  ? `${menunggu} sesi menunggu keputusan kesiapan Anda, ${perlu.length} kegiatan perlu perhatian.`
+                  : user.role === "ka_upt"
+                    ? `${menungguSah.length} laporan menunggu pengesahan, ${perlu.length} kegiatan perlu perhatian.`
+                    : perlu.length > 0 ? `${perlu.length} kegiatan perlu perhatian sekarang.` : "Tidak ada kegiatan yang perlu perhatian khusus saat ini."}
             </p>
             <div className="mt-4 hidden sm:block"><DeretSektor hitung={tingkat === "upt" ? undefined : perJenis} /></div>
           </div>
@@ -191,8 +201,9 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
             {tingkat !== "upt" && <Button asChild size="sm" variant="outline"><Link href="/peta">Buka peta</Link></Button>}
             {tingkat !== "upt" && <Button asChild size="sm" variant="outline"><Link href="/akun"><Users className="h-4 w-4" aria-hidden />{tingkat === "kanwil" ? "Akun UPT" : "Kelola akun"}</Link></Button>}
             {user.role === "operator" && <Button asChild size="sm" variant="outline"><Link href="/kegiatan">Siapkan kegiatan</Link></Button>}
+            {user.role === "operator" && <Button asChild size="sm" variant="outline"><Link href="/rencana">Rincian rencana</Link></Button>}
             {user.role === "kepala_pengamanan" && <Button asChild size="sm" variant="outline"><Link href="/keputusan">Antrean keputusan</Link></Button>}
-            <Button asChild size="sm" variant="outline"><Link href="/laporan"><FileCheck2 className="h-4 w-4" aria-hidden />Laporan</Link></Button>
+            {user.role !== "operator" && <Button asChild size="sm" variant="outline"><Link href="/laporan"><FileCheck2 className="h-4 w-4" aria-hidden />{user.role === "ka_upt" ? "Pengesahan laporan" : "Laporan"}</Link></Button>}
           </div>
         </div>
       </section>
@@ -214,20 +225,26 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
         </form>
       )}
 
+      {peranUpt && <PanelPeran role={peranUpt} aktif={aktif} menungguSah={menungguSah} tanpaPengawal={tanpaPengawal} tlTerlambat={tlTerlambat} alarmMenunggu={alarmMenunggu} now={now} />}
+
+      {user.role !== "operator" && (
       <section aria-label="Status keamanan kegiatan berjalan" className="muncul grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
         {URUTAN.map(({ st, label, ikon, nada }) => (
           <StatCard key={st} icon={ikon} nada={nada} nilai={hitung(st)} label={`${label} · kegiatan berjalan`} />
         ))}
       </section>
+      )}
 
+      {user.role !== "operator" && user.role !== "kepala_pengamanan" && (
       <section aria-label="Ringkasan perhatian" className="muncul grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4">
         <StatCard icon={ClipboardCheck} nada="biru" nilai={menunggu} label="menunggu keputusan kesiapan" />
         <StatCard icon={OctagonAlert} nada="kuning" nilai={perlu.length} label="kegiatan perlu perhatian" />
         <Link href="/laporan?status=menunggu" className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><StatCard icon={FileCheck2} nada="teal" nilai={menungguSah.length} label="laporan menunggu pengesahan" /></Link>
         <Link href="/gelang" className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><StatCard icon={tlTerlambat > 0 ? Clock : BellRing} nada={alarmMenunggu > 0 ? "kritis" : "hijau"} nilai={alarmMenunggu} label={`alarm gelang menunggu konfirmasi${tlTerlambat ? ` · ${tlTerlambat} tindak lanjut lewat tenggat` : ""}`} /></Link>
       </section>
+      )}
 
-      {tingkat === "upt" && (
+      {tingkat === "upt" && user.role !== "operator" && (
         <section className="space-y-3" aria-label="Kegiatan hari ini">
           <h2 className="text-lg font-semibold tracking-tight">Kegiatan berjalan dan tahap pengawalan</h2>
           {hariIni.length === 0 ? (
@@ -268,7 +285,7 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
         <TabelRekap judul={tingkat === "pusat" ? "Rekap per Kantor Wilayah" : "Rekap per UPT"} kolom={tingkat === "pusat" ? "Kanwil" : "UPT"} data={rekap} />
       )}
 
-      <AlurKerja role={user.role} />
+      {user.role !== "ka_upt" && <AlurKerja role={user.role} />}
 
       {sdp && (
         <section aria-label="Ringkasan data SDP ketahanan pangan" className="kaca rounded-2xl p-4 md:p-5">
