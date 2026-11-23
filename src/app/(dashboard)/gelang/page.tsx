@@ -47,7 +47,7 @@ export default async function GelangPage() {
   const wb = idWb.length ? (await supabase.from("master_inmates").select("id,nama,nomor_registrasi").in("id", idWb)).data ?? [] : [];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="mx-auto max-w-[1680px] space-y-6">
       <PageHeader
         title="Gelang"
         description="Alarm dari sistem pemantauan gelang. Setiap alarm dikonfirmasi langsung dengan petugas di lokasi sebelum ditutup."

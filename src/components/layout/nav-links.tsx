@@ -146,7 +146,7 @@ export function NavLinks({ role }: { role: Role }) {
   const hasil = kata ? semua.filter((i) => i.label.toLowerCase().includes(kata)) : lain;
 
   return (
-    <nav className="flex items-center justify-start gap-1 overflow-x-auto px-3 py-2 md:justify-center md:overflow-visible" aria-label="Menu utama">
+    <nav className="flex items-center justify-start gap-1.5 overflow-x-auto px-3 py-2.5 md:justify-center lg:gap-2 md:overflow-visible" aria-label="Menu utama">
       {utama.map(({ href, label, icon }) => {
         const Icon = ICONS[icon];
         const on = aktif(pathname, href);
@@ -156,11 +156,11 @@ export function NavLinks({ role }: { role: Role }) {
             href={href}
             aria-current={on ? "page" : undefined}
             className={cn(
-              "group relative flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-3.5 py-2 text-[13.5px] font-medium transition-[background-color,color] duration-300",
+              "group relative flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 py-2.5 text-[15px] font-semibold transition-[background-color,color] duration-300",
               on ? "bg-primary text-primary-foreground shadow-[0_8px_18px_-10px_hsl(222_64%_20%/0.8)]" : "text-secondary-foreground hover:bg-secondary hover:text-foreground"
             )}
           >
-            <Icon className={cn("h-[17px] w-[17px] shrink-0", on ? "text-[hsl(44_90%_66%)]" : "text-brand")} aria-hidden />
+            <Icon className={cn("h-5 w-5 shrink-0", on ? "text-[hsl(44_90%_66%)]" : "text-brand")} aria-hidden />
             {label}
           </Link>
         );
@@ -174,15 +174,15 @@ export function NavLinks({ role }: { role: Role }) {
             aria-haspopup="menu"
             onClick={() => setBuka((b) => !b)}
             className={cn(
-              "flex items-center gap-2 whitespace-nowrap rounded-full px-3.5 py-2 text-[13.5px] font-medium transition-colors",
+              "flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2.5 text-[15px] font-semibold transition-colors",
               lainAktif ? "bg-primary text-primary-foreground" : "text-secondary-foreground hover:bg-secondary"
             )}
           >
             {lainAktif ? lainAktif.label : "Menu lain"}
-            <ChevronDown className={cn("h-4 w-4 transition-transform", buka && "rotate-180")} aria-hidden />
+            <ChevronDown className={cn("h-5 w-5 transition-transform", buka && "rotate-180")} aria-hidden />
           </button>
           {buka && (
-            <div role="menu" className="kaca fixed left-1/2 top-[7.5rem] z-50 w-[min(22rem,92vw)] -translate-x-1/2 rounded-2xl p-2 md:absolute md:left-auto md:right-0 md:top-full md:mt-2 md:translate-x-0">
+            <div role="menu" className="kaca fixed left-1/2 top-[8.5rem] z-50 w-[min(22rem,92vw)] -translate-x-1/2 rounded-2xl p-2 md:absolute md:left-auto md:right-0 md:top-full md:mt-2 md:translate-x-0">
               <label className="mb-1 flex items-center gap-2 rounded-xl border border-input bg-white px-3 py-2">
                 <Search className="h-4 w-4 text-muted-foreground" aria-hidden />
                 <input

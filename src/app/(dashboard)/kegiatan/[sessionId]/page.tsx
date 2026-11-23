@@ -44,7 +44,7 @@ export default async function PersiapanSesiPage({ params }: { params: Promise<{ 
   });
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="mx-auto max-w-[1680px] space-y-6">
       <PageHeader
         title="Persiapan sesi"
         description="Lengkapi semuanya sebelum Kepala Pengamanan memutuskan kesiapan."

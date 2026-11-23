@@ -165,7 +165,7 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
   const hariIni = aktif.filter((r) => r.status_kesiapan === "Dapat Dimulai" || r.status_kesiapan === "Menunggu");
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6">
+    <div className="mx-auto max-w-[1680px] space-y-6">
       <section className={`${latar} relative overflow-hidden rounded-[1.6rem] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_28px_50px_-30px_hsl(222_64%_14%/0.8)] md:p-8 [&_.text-muted-foreground]:!text-white/80`}>
         <MotifPangan />
         <div className="relative grid gap-6 md:grid-cols-[1.6fr_1fr] md:items-end">

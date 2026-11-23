@@ -14,7 +14,7 @@ export function SiteHeader({ name, role, unit }: { name: string; role: Role; uni
   return (
     <header className="no-print">
       <div className={`${pita} text-white`}>
-        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5 md:px-8">
+        <div className="mx-auto flex max-w-[1680px] items-center gap-3 px-4 py-2.5 md:px-8">
           <span className="hidden sm:flex"><LogoInstansi /></span>
           <span className="hidden h-9 w-px bg-white/25 sm:block" aria-hidden />
           <Link href="/" className="flex min-w-0 items-center gap-2.5">
@@ -42,7 +42,7 @@ export function SiteHeader({ name, role, unit }: { name: string; role: Role; uni
         <div className="garis-emas h-[3px]" aria-hidden />
       </div>
       <div className="bg-sidebar sticky top-0 z-40 border-b border-border/70 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1680px]">
           <NavLinks role={role} />
         </div>
       </div>
@@ -53,7 +53,7 @@ export function SiteHeader({ name, role, unit }: { name: string; role: Role; uni
 export function SiteFooter() {
   return (
     <footer className="no-print mt-10 border-t border-border/70 bg-white/60">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground md:px-8">
+      <div className="mx-auto flex max-w-[1680px] flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground md:px-8">
         <span>Direktorat Pengamanan dan Intelijen · Direktorat Jenderal Pemasyarakatan</span>
         <span>Pertanian · Perkebunan · Perikanan · Peternakan</span>
       </div>

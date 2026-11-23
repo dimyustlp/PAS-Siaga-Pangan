@@ -19,7 +19,7 @@ export default async function WilayahPage() {
   const daftarUpt = upt.data ?? [];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="mx-auto max-w-[1680px] space-y-6">
       <PageHeader title="UPT & Kanwil" description="Master unit kerja. Cakupan data pemantau Kanwil mengikuti Kanwil yang terdaftar di akunnya." />
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>

@@ -28,7 +28,7 @@ export default async function KegiatanPage() {
   });
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
+    <div className="mx-auto max-w-[1680px] space-y-8">
       <PageHeader
         title="Kegiatan"
         description="Siapkan rencana kegiatan dan sesi harian. Kepala Pengamanan memutuskan kesiapan setelah dokumen, daftar nominatif, dan enam indikator kesiapan lengkap."

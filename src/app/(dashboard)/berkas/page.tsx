@@ -113,7 +113,7 @@ export default async function BerkasPage({ searchParams }: { searchParams: Promi
   const galat = ringkasanRes.galat || daftarRes.error;
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <div className="mx-auto max-w-[1680px] space-y-6">
       <PageHeader
         title="Berkas"
         description="Penampungan berkas kegiatan per Kanwil dan UPT. Pilih Kanwil, lalu UPT, agar daftar tidak memanjang."

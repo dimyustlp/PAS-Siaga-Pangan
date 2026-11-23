@@ -66,7 +66,7 @@ export default async function DaftarLaporanPage({ searchParams }: { searchParams
   const sp = new URLSearchParams({ ...(cak.kanwilDipilih ? { kanwil: cak.kanwilDipilih } : {}), ...(cak.uptDipilih ? { upt: cak.uptDipilih } : {}) });
 
   return (
-    <div className="mx-auto max-w-7xl space-y-5">
+    <div className="mx-auto max-w-[1680px] space-y-5">
       <PageHeader
         title="Laporan pelaksanaan kegiatan"
         description="Setiap sesi menghasilkan satu laporan resmi berkop UPT: dasar, waktu dan tempat, WB, pengawal, pengesah berkas, dan lampiran dokumentasi. Unduh sebagai PDF dari halaman laporan."

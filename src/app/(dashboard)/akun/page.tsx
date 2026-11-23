@@ -53,7 +53,7 @@ export default async function AkunPage({ searchParams }: { searchParams: Promise
     : "Buat dan kelola akun Pemantau Kanwil serta akun UPT (Ka.UPT, Kepala Pengamanan, Operator, Pengawal Kegiatan). Setiap perubahan tercatat di jejak audit.";
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <div className="mx-auto max-w-[1680px] space-y-6">
       <PageHeader title={judul} description={uraian} />
       {akunRes.error && <Alert tone="bahaya">Daftar akun belum bisa dibaca. Muat ulang halaman.</Alert>}
 
