@@ -47,7 +47,7 @@ export default async function KeputusanSesiPage({ params }: { params: Promise<{ 
   const peringatan = perhatianSesi(ringkas, now);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="mx-auto max-w-[1680px] space-y-6">
       <PageHeader
         title="Keputusan sesi"
         actions={<><RealtimeRefresh />{data.sesi.pakai_gelang_monitor && <TautanGelang />}<Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}`}>Detail & laporan</Link></Button></>}

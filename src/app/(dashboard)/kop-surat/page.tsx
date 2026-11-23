@@ -34,15 +34,15 @@ export default async function KopSuratPage({ searchParams }: { searchParams: Pro
           <Card>
             <CardHeader><CardTitle>Pratinjau</CardTitle><CardDescription>Logo kementerian di kiri dan logo Pemasyarakatan di kanan, garis ganda di bawahnya.</CardDescription></CardHeader>
             <CardContent>
-              <div className="overflow-hidden rounded-xl border bg-white p-3 font-serif text-black sm:p-5">
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <img src="/logo-kemenimipas.png" alt="" className="h-10 w-10 shrink-0 sm:h-16 sm:w-16" />
-                  <div className="min-w-0 flex-1 break-words text-center leading-tight">
-                    <p className="text-[10px] font-bold sm:text-[13px]">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</p><p className="text-[10px] font-bold sm:text-[13px]">REPUBLIK INDONESIA</p>
-                    <p className="text-[10px] font-bold sm:text-[13px]">DIREKTORAT JENDERAL PEMASYARAKATAN</p>
-                    {kanwil && <p className="text-[10px] font-bold sm:text-[13px]">{kanwil.toUpperCase()}</p>}
-                    <p className="text-[12px] font-bold sm:text-[15px]">{upt.nama.toUpperCase()}</p>
-                    <p className="mt-1 text-[10px]">{[upt.alamat, upt.telepon ? `Telepon ${upt.telepon}` : null, upt.email_kantor ? `Pos-el ${upt.email_kantor}` : null].filter(Boolean).join(" · ") || "Alamat belum diisi"}</p>
+              <div className="rounded-xl border bg-white p-5 font-serif text-black">
+                <div className="flex items-center gap-4">
+                  <img src="/logo-kemenimipas.png" alt="" className="h-16 w-16" />
+                  <div className="flex-1 text-center leading-tight">
+                    <p className="text-[0.8125rem] font-bold">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</p><p className="text-[0.8125rem] font-bold">REPUBLIK INDONESIA</p>
+                    <p className="text-[0.8125rem] font-bold">DIREKTORAT JENDERAL PEMASYARAKATAN</p>
+                    {kanwil && <p className="text-[0.8125rem] font-bold">{kanwil.toUpperCase()}</p>}
+                    <p className="text-[0.9375rem] font-bold">{upt.nama.toUpperCase()}</p>
+                    <p className="mt-1 text-[0.625rem]">{[upt.alamat, upt.telepon ? `Telepon ${upt.telepon}` : null, upt.email_kantor ? `Pos-el ${upt.email_kantor}` : null].filter(Boolean).join(" · ") || "Alamat belum diisi"}</p>
                   </div>
                   <img src="/logo-pemasyarakatan.png" alt="" className="h-10 w-auto shrink-0 sm:h-16" />
                 </div>

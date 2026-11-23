@@ -3,36 +3,36 @@
 @tailwind utilities;
 
 /*
- * Tema "Lumbung Nusantara": dasar krem gabah, biru dongker resmi (Kemenimipas) untuk tombol dan tautan,
- * emas untuk garis aksen, dan hijau daun untuk sentuhan pangan (pertanian, perkebunan, perikanan, peternakan).
- * Hijau terang, kuning, merah, dan magenta-tua tetap DIPESAN untuk status keamanan.
+ * Tema "Trans-Siber" untuk PAS-SIAGA Pangan. Diamati dari situs Trans-Siber PAS (trans-siberpas.vercel.app), lalu
+ * dimodifikasi: dasar biru-abu dingin, panel samping biru dongker bergradasi, kuningan (brass) untuk aksen,
+ * huruf Plus Jakarta Sans dan IBM Plex Mono. Hijau, kuning, merah, dan magenta-tua tetap DIPESAN untuk status keamanan.
  */
 @layer base {
   :root {
-    --background: 46 38% 96%;
-    --foreground: 222 47% 14%;
+    --background: 217 37% 93%;
+    --foreground: 216 48% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 14%;
-    --primary: 222 64% 30%;
+    --card-foreground: 216 48% 11%;
+    --primary: 215 70% 20%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 44 36% 91%;
-    --secondary-foreground: 222 36% 22%;
-    --muted: 44 32% 92%;
-    --muted-foreground: 222 14% 38%;
-    --accent: 140 36% 92%;
-    --accent-foreground: 156 58% 22%;
-    --brand: 156 56% 27%;
-    --brand-soft: 138 38% 91%;
-    --gold: 41 80% 48%;
-    --navy: 222 64% 17%;
-    --daun: 156 56% 27%;
-    --destructive: 0 76% 50%;
+    --secondary: 215 43% 95%;
+    --secondary-foreground: 219 29% 27%;
+    --muted: 215 43% 95%;
+    --muted-foreground: 218 19% 42%;
+    --accent: 216 60% 91%;
+    --accent-foreground: 215 70% 20%;
+    --brand: 214 66% 34%;
+    --brand-soft: 216 60% 91%;
+    --gold: 40 72% 39%;
+    --navy: 217 70% 16%;
+    --daun: 162 77% 24%;
+    --destructive: 4 78% 40%;
     --destructive-foreground: 0 0% 100%;
-    --border: 40 24% 84%;
-    --input: 40 20% 78%;
-    --ring: 222 64% 40%;
-    --radius: 0.85rem;
-    --ink: 222 50% 16%;
+    --border: 216 40% 90%;
+    --input: 215 37% 82%;
+    --ring: 214 54% 50%;
+    --radius: 0.5625rem;
+    --ink: 216 48% 11%;
 
     --status-hijau: 145 70% 34%;
     --status-kuning: 40 96% 48%;
@@ -50,48 +50,53 @@
     @apply border-border;
   }
   html {
-    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     scroll-behavior: smooth;
+    font-size: 16.5px;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     overflow-x: clip;
+  }
+  @media (min-width: 1024px) {
+    html { font-size: 17px; }
+  }
+  @media (min-width: 1600px) {
+    html { font-size: 17.5px; }
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+  p {
+    text-wrap: pretty;
   }
   body {
     @apply bg-background text-foreground antialiased;
     overflow-x: clip;
     overflow-wrap: break-word;
-    font-feature-settings: "ss01", "cv11";
+    font-feature-settings: "ss01";
   }
-  /* Latar: cahaya pagi emas di kiri atas, hijau sawah di kanan bawah, dan motif bulir padi sangat halus. */
+  /* Latar: biru-abu dingin dengan cahaya dongker tipis di kiri atas dan kisi teknis yang memudar ke bawah.
+     Statis (tanpa animasi), jadi tidak membebani perangkat. */
   body::before {
     content: "";
     position: fixed;
-    inset: -10%;
+    inset: 0;
     z-index: -1;
     pointer-events: none;
     background:
-      radial-gradient(40rem 26rem at 8% 0%, hsl(42 90% 70% / 0.28), transparent 65%),
-      radial-gradient(44rem 30rem at 100% 100%, hsl(140 50% 62% / 0.22), transparent 62%),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'><g fill='none' stroke='%23a08a3c' stroke-opacity='0.055' stroke-width='1.2' stroke-linecap='round'><path d='M10 54c4-10 4-20 0-30'/><path d='M10 30c-4-1-6-4-6-7 3 0 6 2 6 7zM10 38c4-1 6-4 6-7-3 0-6 2-6 7zM10 46c-4-1-6-4-6-7 3 0 6 2 6 7z'/><path d='M42 22c6 0 12 3 14 6-2 3-8 6-14 6s-10-3-12-6c2-3 6-6 12-6z'/><path d='M30 28l-5-4v8z'/></g></svg>");
-  }
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    pointer-events: none;
-    opacity: 0.025;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      radial-gradient(64rem 28rem at 0% -8rem, hsl(215 70% 20% / 0.09), transparent 70%),
+      radial-gradient(40rem 22rem at 100% 0%, hsl(40 72% 45% / 0.07), transparent 70%),
+      linear-gradient(hsl(215 45% 40% / 0.05) 1px, transparent 1px) 0 0 / 56px 56px,
+      linear-gradient(90deg, hsl(215 45% 40% / 0.05) 1px, transparent 1px) 0 0 / 56px 56px;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 30%, transparent 80%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 30%, transparent 80%);
   }
   ::selection {
-    background: hsl(var(--gold) / 0.35);
-  }
-  .font-mono,
-  .tabular-nums {
-    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    background: hsl(214 54% 50% / 0.22);
   }
   svg.lucide {
-    stroke-width: 1.6;
+    stroke-width: 1.7;
   }
   input[type="date"],
   input[type="datetime-local"],
@@ -101,52 +106,70 @@
 }
 
 @layer components {
-  /* Panel kaca dengan tepi bias cahaya 1px (bukan bayangan gelap tebal). */
+  /* Panel putih bertepi tipis dengan bayangan lembut (bayang-1 Trans-Siber). */
   .kaca {
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.96), hsl(46 50% 98% / 0.92));
-    box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.9), 0 22px 44px -30px hsl(222 60% 20% / 0.32);
-    border: 1px solid hsl(40 26% 85%);
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(15, 30, 60, 0.07), 0 1px 1px rgba(15, 30, 60, 0.05);
+    border: 1px solid hsl(216 40% 90%);
   }
   .bezel {
     padding: 0.375rem;
-    border-radius: 1.5rem;
-    background: hsl(0 0% 100% / 0.6);
-    border: 1px solid hsl(40 26% 85% / 0.9);
+    border-radius: 1.25rem;
+    background: hsl(0 0% 100% / 0.5);
+    border: 1px solid hsl(216 40% 90%);
   }
   .bezel > * {
-    border-radius: calc(1.5rem - 0.375rem);
+    border-radius: calc(1.25rem - 0.375rem);
   }
-  /* Panel utama: biru dongker ke hijau sawah, dengan cahaya emas. */
+  /* Panel utama bergradasi dongker dengan garis pindai tipis dan tepi kuningan di kiri. */
   .bg-brand-gradient {
     color: white;
+    border-left: 3px solid #c89a34;
     background:
-      radial-gradient(24rem 16rem at 100% 0%, hsl(42 90% 56% / 0.38), transparent 62%),
-      radial-gradient(26rem 18rem at 0% 110%, hsl(150 60% 40% / 0.55), transparent 65%),
-      linear-gradient(125deg, hsl(222 64% 17%), hsl(205 58% 22%) 48%, hsl(160 56% 22%));
+      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.03) 0 1px, transparent 1px 4px),
+      radial-gradient(30rem 16rem at 100% 0%, hsl(40 72% 50% / 0.16), transparent 65%),
+      radial-gradient(26rem 18rem at 0% 120%, hsl(214 66% 42% / 0.32), transparent 65%),
+      linear-gradient(135deg, #12325f 0%, #0c2245 60%, #0a1b38 100%);
   }
   .bg-kanwil-gradient {
     color: white;
+    border-left: 3px solid #c89a34;
     background:
-      radial-gradient(24rem 16rem at 100% 0%, hsl(42 90% 56% / 0.35), transparent 62%),
-      linear-gradient(125deg, hsl(196 62% 20%), hsl(176 52% 24%) 55%, hsl(150 50% 26%));
+      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.03) 0 1px, transparent 1px 4px),
+      radial-gradient(30rem 16rem at 100% 0%, hsl(40 72% 50% / 0.14), transparent 65%),
+      linear-gradient(135deg, #0f4660 0%, #0a3248 60%, #082637 100%);
   }
   .bg-upt-gradient {
     color: white;
+    border-left: 3px solid #c89a34;
     background:
-      radial-gradient(24rem 16rem at 100% 0%, hsl(42 90% 56% / 0.4), transparent 62%),
-      linear-gradient(125deg, hsl(156 58% 18%), hsl(140 46% 26%) 55%, hsl(92 40% 30%));
+      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.03) 0 1px, transparent 1px 4px),
+      radial-gradient(30rem 16rem at 100% 0%, hsl(40 72% 50% / 0.14), transparent 65%),
+      linear-gradient(135deg, #0f4a44 0%, #0a332f 60%, #082523 100%);
   }
-  .bg-sidebar {
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.94), hsl(46 50% 98% / 0.9));
+  /* Panel samping (tinggi penuh): gradasi tegak, warnanya membedakan tingkat pengguna. */
+  .bg-samping-pusat {
+    background:
+      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 4px),
+      linear-gradient(180deg, #12325f 0%, #0c2245 62%, #0a1b38 100%);
+  }
+  .bg-samping-kanwil {
+    background:
+      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 4px),
+      linear-gradient(180deg, #0f4660 0%, #0a3248 62%, #082637 100%);
+  }
+  .bg-samping-upt {
+    background:
+      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 4px),
+      linear-gradient(180deg, #0f4a44 0%, #0a332f 62%, #082523 100%);
   }
   .bg-navy {
-    background:
-      linear-gradient(90deg, hsl(222 64% 14%), hsl(222 58% 20%) 60%, hsl(210 56% 20%));
+    background: linear-gradient(90deg, #0c2245, #12325f);
   }
   .garis-emas {
-    background: linear-gradient(90deg, transparent, hsl(var(--gold)) 20%, hsl(44 90% 66%) 50%, hsl(var(--gold)) 80%, transparent);
+    background: linear-gradient(90deg, transparent, #a9791c 20%, #c89a34 50%, #a9791c 80%, transparent);
   }
-  /* Garis tepi berputar pelan (dipakai hemat: kartu utama, tombol penting). */
+  /* Garis tepi berputar pelan (dipakai hemat). */
   .tepi-hidup {
     position: relative;
     isolation: isolate;
@@ -158,29 +181,49 @@
     z-index: -1;
     border-radius: inherit;
     padding: 1px;
-    background: conic-gradient(from var(--sudut, 0deg), transparent 0deg, hsl(41 80% 48% / 0.9) 60deg, transparent 140deg, transparent 360deg);
+    background: conic-gradient(from var(--sudut, 0deg), transparent 0deg, hsl(40 60% 50% / 0.9) 60deg, transparent 140deg, transparent 360deg);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     animation: putar 6s linear infinite;
   }
   .shadow-soft {
-    box-shadow: 0 1px 0 hsl(0 0% 100% / 0.9) inset, 0 14px 32px -22px hsl(222 60% 20% / 0.3);
+    box-shadow: 0 2px 4px rgba(15, 30, 60, 0.06), 0 8px 20px rgba(15, 30, 60, 0.09);
   }
   .lift {
-    transition: transform 0.5s var(--ease-lembut), border-color 0.5s var(--ease-lembut), background-color 0.5s var(--ease-lembut);
+    transition: transform 0.4s var(--ease-lembut), border-color 0.4s var(--ease-lembut), box-shadow 0.4s var(--ease-lembut);
   }
   .lift:hover {
-    transform: translateY(-3px);
-    border-color: hsl(41 80% 48% / 0.5);
+    transform: translateY(-2px);
+    border-color: hsl(215 50% 80%);
+    box-shadow: 0 2px 4px rgba(15, 30, 60, 0.06), 0 12px 26px rgba(15, 30, 60, 0.12);
+  }
+  .lift:active {
+    transform: translateY(0) scale(0.995);
+  }
+  /* Kilap cahaya yang melintas pelan di panel utama. */
+  .kilap-panel {
+    isolation: isolate;
+  }
+  .kilap-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 38%, hsl(0 0% 100% / 0.06) 48%, hsl(40 80% 70% / 0.07) 52%, transparent 62%);
+    transform: translateX(-100%);
+    animation: lintas 9s var(--ease-lembut) 1.2s infinite;
+  }
+  .angka-hitung {
+    font-variant-numeric: tabular-nums;
   }
   .halaman-masuk {
     animation: masuk 0.7s var(--ease-lembut) both;
   }
   /* Urutan muncul bertahap: beri style={{ "--i": n }} pada anak. */
   .muncul > * {
-    animation: masuk 0.8s var(--ease-lembut) both;
-    animation-delay: calc(var(--i, 0) * 70ms);
+    animation: masuk 0.7s var(--ease-lembut) both;
+    animation-delay: calc(var(--i, 0) * 60ms);
   }
   .muncul > *:nth-child(1) { --i: 0; }
   .muncul > *:nth-child(2) { --i: 1; }
@@ -205,7 +248,7 @@
     animation: denyut 2.2s var(--ease-lembut) infinite;
   }
   .kilau {
-    background: linear-gradient(100deg, hsl(44 30% 90%) 30%, hsl(44 50% 97%) 50%, hsl(44 30% 90%) 70%);
+    background: linear-gradient(100deg, hsl(215 43% 90%) 30%, hsl(215 43% 97%) 50%, hsl(215 43% 90%) 70%);
     background-size: 220% 100%;
     animation: kilau 1.6s linear infinite;
   }
@@ -240,13 +283,11 @@
 @keyframes masuk {
   from {
     opacity: 0;
-    transform: translateY(14px);
-    filter: blur(6px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
     transform: none;
-    filter: blur(0);
   }
 }
 @keyframes denyut {
@@ -260,13 +301,9 @@
     opacity: 0;
   }
 }
-@keyframes hanyut {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  to {
-    transform: translate3d(-4%, 3%, 0) scale(1.08);
-  }
+@keyframes lintas {
+  0% { transform: translateX(-100%); }
+  35%, 100% { transform: translateX(100%); }
 }
 @keyframes geser-berita {
   to {
@@ -280,13 +317,15 @@
 }
 
 @media print {
+  html {
+    font-size: 16px;
+  }
   :root {
     --background: 0 0% 100%;
     --card: 0 0% 100%;
     color-scheme: light;
   }
-  body::before,
-  body::after {
+  body::before {
     display: none;
   }
   .no-print {
@@ -383,7 +422,7 @@
   border-radius: 9999px;
   background: hsl(226 50% 20%);
   color: #fff;
-  font: 600 10px/16px var(--font-geist-mono), monospace;
+  font: 600 10px/16px var(--font-plex), monospace;
   text-align: center;
 }
 @keyframes gelombang {

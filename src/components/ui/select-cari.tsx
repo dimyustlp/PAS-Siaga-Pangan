@@ -39,7 +39,7 @@ const setelNilai = (el: HTMLSelectElement, v: string) => {
 const AMBANG = 6;
 
 const GAYA =
-  "flex h-10 w-full items-center rounded-xl border border-input bg-white px-3.5 py-2 text-base transition-[border-color,box-shadow] duration-300 focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-4 focus-visible:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm";
+  "flex h-10 w-full items-center rounded-[9px] border border-input bg-white px-3.5 py-2 text-base transition-[border-color,box-shadow] duration-300 focus-visible:outline-none focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm";
 
 /**
  * Pengganti <select> yang bisa dicari. Elemen <select> asli tetap ada (tersembunyi) sehingga
@@ -198,12 +198,12 @@ export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttrib
                 >
                   <Check className={cn("h-3.5 w-3.5 shrink-0", o.value === nilai ? "opacity-100" : "opacity-0")} aria-hidden />
                   <span className="min-w-0 flex-1 truncate">{o.label || "—"}</span>
-                  {o.grup && <span className="shrink-0 text-[11px] text-muted-foreground">{o.grup}</span>}
+                  {o.grup && <span className="shrink-0 text-[0.6875rem] text-muted-foreground">{o.grup}</span>}
                 </li>
               ))}
               {tersaring.length === 0 && <li className="px-2.5 py-3 text-muted-foreground">Tidak ditemukan.</li>}
             </ul>
-            <p className="px-2.5 pt-1 text-[11px] text-muted-foreground">{tersaring.length} dari {opsi.length} pilihan</p>
+            <p className="px-2.5 pt-1 text-[0.6875rem] text-muted-foreground">{tersaring.length} dari {opsi.length} pilihan</p>
           </div>
         )}
       </div>

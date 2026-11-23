@@ -29,7 +29,7 @@ export default async function DrivePage() {
   const kode = typeof kunci.data === "string" ? kodeAppsScript(kunci.data) : null;
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="mx-auto max-w-[1680px] space-y-6">
       <PageHeader title="Google Drive & batas unggah" description="Foto dan berkas tahap pengawalan disimpan di Google Drive instansi dan dicatat di Google Sheet (bisa diunduh sebagai Excel). Sebelum Drive terhubung, berkas disimpan sementara di server aplikasi." />
 
       <section className="grid gap-4 sm:grid-cols-3">

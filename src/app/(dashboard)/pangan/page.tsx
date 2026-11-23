@@ -69,7 +69,7 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
   const bisaCatat = cak.bisaKelola && Boolean(upt);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <div className="mx-auto max-w-[1680px] space-y-6">
       <PageHeader title="Hasil ketahanan pangan" description="Rekap komoditas, volume, dan luas lahan dari kegiatan pertanian, peternakan, dan perikanan di UPT." />
 
       {!cak.terkunci && <PilihUpt kanwil={cak.kanwil} upt={cak.upt} kanwilDipilih={cak.kanwilDipilih} uptDipilih={upt} jaga={{ dari, sampai }} />}

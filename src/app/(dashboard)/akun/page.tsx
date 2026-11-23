@@ -1,3 +1,4 @@
+import { SinkronKanwil } from "@/components/shared/sinkron-kanwil";
 import { UserCheck, UserX, Users } from "lucide-react";
 import { ActionButton, ActionForm } from "@/components/shared/action-form";
 import { Button } from "@/components/ui/button";
@@ -53,7 +54,7 @@ export default async function AkunPage({ searchParams }: { searchParams: Promise
     : "Buat dan kelola akun Pemantau Kanwil serta akun UPT (Ka.UPT, Kepala Pengamanan, Operator, Pengawal Kegiatan). Setiap perubahan tercatat di jejak audit.";
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <div className="mx-auto max-w-[1680px] space-y-6">
       <PageHeader title={judul} description={uraian} />
       {akunRes.error && <Alert tone="bahaya">Daftar akun belum bisa dibaca. Muat ulang halaman.</Alert>}
 
@@ -66,6 +67,7 @@ export default async function AkunPage({ searchParams }: { searchParams: Promise
         <div className="flex flex-wrap gap-2 text-sm">{perPeran.map(({ r, n }) => <Pill key={r} tone="biru">{ROLE_LABEL[r]}: {n}</Pill>)}</div>
       )}
 
+      <SinkronKanwil peta={Object.fromEntries(daftarUpt.map((u) => [u.kode, u.kanwil_id]))} />
       <details className="group rounded-2xl border border-border/70 bg-card shadow-soft" open={semua.length === 0}>
         <summary className="cursor-pointer list-none p-4 font-semibold text-primary [&::-webkit-details-marker]:hidden">+ Buat akun baru</summary>
         <div className="border-t p-4">
@@ -88,7 +90,7 @@ export default async function AkunPage({ searchParams }: { searchParams: Promise
                 </Select>
               </Field>
               {!kanwilSaja && (
-                <Field label="Kanwil" htmlFor="a-kanwil" hint="Untuk Pemantau Kanwil.">
+                <Field label="Kanwil" htmlFor="a-kanwil" hint="Terisi otomatis saat UPT dipilih. Wajib untuk Pemantau Kanwil.">
                   <Select id="a-kanwil" name="kanwil" defaultValue="">
                     <option value="">— pilih Kanwil —</option>
                     {daftarKanwil.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
@@ -120,7 +122,7 @@ export default async function AkunPage({ searchParams }: { searchParams: Promise
                 <CardContent className="space-y-3 p-4">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <p className="font-semibold">{a.full_name}{diri && <span className="ml-2 rounded-full bg-brand px-2 py-0.5 text-[11px] font-semibold text-white">Akun Anda</span>}</p>
+                      <p className="font-semibold">{a.full_name}{diri && <span className="ml-2 rounded-full bg-brand px-2 py-0.5 text-[0.6875rem] font-semibold text-white">Akun Anda</span>}</p>
                       <p className="text-sm text-muted-foreground">{a.email}{a.nip ? ` · NIP ${a.nip}` : ""}</p>
                       <p className="mt-0.5 text-xs text-muted-foreground">{a.kode_upt ? `${namaUpt(a.kode_upt)} · ` : ""}Kanwil: {namaKanwil(a.kanwil_id)} · Masuk terakhir: {a.last_sign_in_at ? fmtWaktu(a.last_sign_in_at) : "belum pernah"}</p>
                     </div>
