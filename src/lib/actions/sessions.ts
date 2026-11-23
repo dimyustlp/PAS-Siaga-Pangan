@@ -13,6 +13,7 @@ import {
 import { isSafeStoragePath } from "@/lib/validations/storage";
 import { isUniqueViolation, mapDbError } from "@/lib/errors";
 import { z } from "zod";
+import type { TablesUpdate } from "@/lib/supabase/database.types";
 
 const DITOLAK = "Hanya Operator UPT yang dapat menyiapkan kegiatan, dan sesi yang sudah disetujui tidak bisa diubah lagi.";
 
@@ -169,4 +170,69 @@ export async function setNominatif(input: unknown): Promise<ActionResult<{ jumla
   }
   refresh();
   return success({ jumlah: baru.length });
+}
+
+/** Mengganti pengawal yang ditugaskan pada sesi. Boleh sesudah izin mulai, selama sesi belum ditutup. */
+export async function ubahPenugasan(input: unknown): Promise<ActionResult> {
+  const auth = await authorize(["operator"]);
+  if (!auth.ok) return fail(auth.error);
+  const p = z
+    .object({
+      session_id: z.string().uuid(),
+      petugas_ids: z.array(z.string().uuid()).min(1, "Pilih minimal satu pengawal.").max(20, "Maksimal 20 pengawal."),
+    })
+    .safeParse(input);
+  if (!p.success) return fail(p.error.issues[0]?.message ?? "Isian tidak valid.");
+  const { error } = await auth.supabase.rpc("ubah_penugasan_sesi", { p_session: p.data.session_id, p_petugas: p.data.petugas_ids });
+  if (error) {
+    const m = (error.message ?? "").trim();
+    return fail(m && /^[A-Z]/.test(m) && !/violates|row-level security|permission denied/i.test(m) ? m : mapDbError(error, DITOLAK));
+  }
+  refresh();
+  revalidatePath("/rencana");
+  revalidatePath("/lapangan");
+  return success();
+}
+
+const bagianSchema = z
+  .object({
+    id: z.string().uuid(),
+    bagian: z.enum(["periode", "dokumen", "pengamanan"]),
+    tanggal_mulai: z.string().optional(),
+    rencana_berakhir: z.string().optional(),
+    luas_lahan_ha: z.number().min(0, "Tidak boleh negatif.").max(100000).optional(),
+    nomor_surat_perintah: z.string().trim().max(120).optional(),
+    nomor_persetujuan: z.string().trim().max(120).optional(),
+    titik_komunikasi: z.string().trim().max(500).optional(),
+    batas_area: z.string().trim().max(500).optional(),
+    rute: z.string().trim().max(500).optional(),
+    akses_warga: z.string().trim().max(500).optional(),
+  });
+
+/** Operator melengkapi rincian rencana kegiatan satu bagian demi satu bagian. Kolom yang dikosongkan dikosongkan di database. */
+export async function ubahRencanaBagian(input: unknown): Promise<ActionResult> {
+  const auth = await authorize(["operator"]);
+  if (!auth.ok) return fail(auth.error);
+  const p = bagianSchema.safeParse(input);
+  if (!p.success) return fail(p.error.issues[0]?.message ?? "Isian tidak valid.");
+  const v = p.data;
+  const kosong = (x: string | undefined) => (x && x.length > 0 ? x : null);
+  let perubahan: TablesUpdate<"activities">;
+  if (v.bagian === "periode") {
+    const tgl = /^\d{4}-\d{2}-\d{2}$/;
+    if (!v.tanggal_mulai || !tgl.test(v.tanggal_mulai)) return fail("Tanggal mulai wajib diisi.");
+    if (v.rencana_berakhir && (!tgl.test(v.rencana_berakhir) || v.rencana_berakhir < v.tanggal_mulai)) return fail("Rencana berakhir tidak boleh sebelum tanggal mulai.");
+    perubahan = { tanggal_mulai: v.tanggal_mulai, rencana_berakhir: kosong(v.rencana_berakhir), luas_lahan_ha: v.luas_lahan_ha ?? null };
+  } else if (v.bagian === "dokumen") {
+    perubahan = { nomor_surat_perintah: kosong(v.nomor_surat_perintah), nomor_persetujuan: kosong(v.nomor_persetujuan) };
+  } else {
+    perubahan = { titik_komunikasi: kosong(v.titik_komunikasi), batas_area: kosong(v.batas_area), rute: kosong(v.rute), akses_warga: kosong(v.akses_warga) };
+  }
+  const { data, error } = await auth.supabase.from("activities").update(perubahan).eq("id", v.id).select("id");
+  if (error) return fail(mapDbError(error, "Rencana ini tidak bisa diubah oleh akun Anda."));
+  if (!data || data.length === 0) return fail("Rencana tidak ditemukan atau bukan milik UPT Anda.");
+  refresh();
+  revalidatePath("/rencana");
+  revalidatePath(`/rencana/${v.id}`);
+  return success();
 }
