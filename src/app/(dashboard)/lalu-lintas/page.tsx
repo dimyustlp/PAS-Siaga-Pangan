@@ -14,6 +14,7 @@ import { describeLog } from "@/lib/domain/describe";
 import { ringkasLalin, selisihKembali } from "@/lib/domain/lalu-lintas";
 import { fmtJam, hariIniWib } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
+import { TabelCari } from "@/components/ui/tabel-cari";
 
 export const metadata = { title: "Lalu lintas WBP" };
 export const dynamic = "force-dynamic";
@@ -77,7 +78,7 @@ export default async function LaluLintasPage({ searchParams }: { searchParams: P
         <CardHeader><CardTitle>Per sesi</CardTitle><CardDescription>Selisih dihitung dari jumlah keluar dikurangi jumlah kembali. Selisih selain nol dinaikkan ke status MERAH otomatis.</CardDescription></CardHeader>
         <CardContent className="overflow-x-auto">
           {daftar.length === 0 ? <p className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">Tidak ada sesi berjalan pada tanggal ini.</p> : (
-            <table className="w-full min-w-[56rem] text-sm">
+            <TabelCari className="w-full min-w-[56rem] text-sm">
               <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr><th className="py-2 pr-3">Kegiatan</th><th className="py-2 pr-3">Fase</th><th className="py-2 pr-3">Keluar</th><th className="py-2 pr-3">Tiba</th><th className="py-2 pr-3">Hitung terakhir</th><th className="py-2 pr-3">Kembali</th><th className="py-2 pr-3">Selisih</th><th className="py-2">Status</th></tr>
               </thead>
@@ -101,7 +102,7 @@ export default async function LaluLintasPage({ searchParams }: { searchParams: P
                   );
                 })}
               </tbody>
-            </table>
+            </TabelCari>
           )}
         </CardContent>
       </Card>

@@ -16,21 +16,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTML
 );
 Textarea.displayName = "Textarea";
 
-export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement>>(
-  ({ className, children, ...props }, ref) => (
-    <select
-      ref={ref}
-      className={cn(
-        "flex h-10 w-full rounded-xl border border-input bg-white px-3.5 py-2 transition-[border-color,box-shadow] duration-300 text-base placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-4 focus-visible:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </select>
-  )
-);
-Select.displayName = "Select";
+// Pilihan yang bisa dicari (lihat select-cari.tsx). Diekspor ulang agar semua halaman otomatis memakainya.
+export { Select } from "@/components/ui/select-cari";
 
 export function Field({
   label,
@@ -71,7 +58,7 @@ export function Alert({ tone = "info", children, className }: { tone?: keyof typ
 
 const PILL = {
   netral: "bg-ink/[0.06] text-secondary-foreground ring-1 ring-inset ring-ink/10",
-  biru: "bg-primary/12 text-[hsl(224_76%_40%)] ring-1 ring-inset ring-primary/25",
+  biru: "bg-primary/12 text-[hsl(222_64%_30%)] ring-1 ring-inset ring-primary/25",
   hijau: "bg-status-hijau/12 text-status-hijau ring-1 ring-inset ring-status-hijau/25",
   kuning: "bg-status-kuning/12 text-[hsl(34_92%_30%)] ring-1 ring-inset ring-status-kuning/25",
   merah: "bg-status-merah/12 text-status-merah ring-1 ring-inset ring-status-merah/25",
@@ -88,7 +75,7 @@ export function PageHeader({ title, description, actions }: { title: string; des
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div className="min-w-0">
         <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
+          <span className="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden />
           PAS-SIAGA Pangan
         </p>
         <h1 className="text-2xl font-semibold tracking-tight md:text-[1.75rem]">{title}</h1>

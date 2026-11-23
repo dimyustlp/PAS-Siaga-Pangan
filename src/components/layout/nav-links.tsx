@@ -1,25 +1,31 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  ArrowLeftRight,
+  Bell,
   BookOpen,
   ChartColumn,
+  ChevronDown,
   ClipboardList,
   Database,
+  FileCheck2,
   FolderOpen,
   Gavel,
-  Radio,
+  HardDrive,
   LayoutDashboard,
   ListChecks,
   Map as IkonPeta,
   MapPinned,
-  Bell,
   Newspaper,
-  Sprout,
-  ArrowLeftRight,
+  Radio,
   ScrollText,
+  Search,
   ShieldAlert,
+  Sprout,
+  Stamp,
   Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -44,85 +50,173 @@ const ICONS = {
   berita: Newspaper,
   pangan: Sprout,
   lalulintas: ArrowLeftRight,
+  laporan: FileCheck2,
+  drive: HardDrive,
+  kop: Stamp,
 };
 
 type Item = { href: string; label: string; icon: keyof typeof ICONS };
 
 const DASBOR: Item = { href: "/", label: "Dasbor", icon: "dasbor" };
 const PETA: Item = { href: "/peta", label: "Peta kegiatan", icon: "peta" };
-const BERSAMA: Item[] = [
-  { href: "/lalu-lintas", label: "Lalu lintas WBP", icon: "lalulintas" },
-  { href: "/pangan", label: "Hasil pangan", icon: "pangan" },
-  { href: "/data-induk", label: "Data induk", icon: "induk" },
-  { href: "/berkas", label: "Berkas", icon: "berkas" },
-  { href: "/gelang", label: "Gelang", icon: "gelang" },
-  { href: "/evaluasi", label: "Evaluasi", icon: "evaluasi" },
-  { href: "/risiko", label: "Risiko & mitigasi", icon: "risiko" },
-  { href: "/berita", label: "Berita", icon: "berita" },
-  { href: "/pedoman", label: "Pedoman & SOP", icon: "pedoman" },
-];
+const LAPORAN: Item = { href: "/laporan", label: "Laporan kegiatan", icon: "laporan" };
+const EVALUASI: Item = { href: "/evaluasi", label: "Evaluasi", icon: "evaluasi" };
+const PANGAN: Item = { href: "/pangan", label: "Hasil pangan", icon: "pangan" };
+const LALU: Item = { href: "/lalu-lintas", label: "Lalu lintas WBP", icon: "lalulintas" };
+const INDUK: Item = { href: "/data-induk", label: "Data induk", icon: "induk" };
+const BERKAS: Item = { href: "/berkas", label: "Berkas", icon: "berkas" };
+const GELANG: Item = { href: "/gelang", label: "Gelang", icon: "gelang" };
+const RISIKO: Item = { href: "/risiko", label: "Risiko & mitigasi", icon: "risiko" };
+const BERITA: Item = { href: "/berita", label: "Berita", icon: "berita" };
+const PEDOMAN: Item = { href: "/pedoman", label: "Pedoman & SOP", icon: "pedoman" };
+const KOP: Item = { href: "/kop-surat", label: "Kop surat UPT", icon: "kop" };
+const TINDAK: Item = { href: "/tindak-lanjut", label: "Tindak lanjut", icon: "tindak" };
 
-const ITEMS: Record<Role, Item[]> = {
-  administrator: [
-    DASBOR,
-    PETA,
-    ...BERSAMA,
-    { href: "/admin/akun", label: "Akun", icon: "akun" },
-    { href: "/admin/wilayah", label: "UPT & Kanwil", icon: "wilayah" },
-    { href: "/admin/gelang", label: "Penerima gelang", icon: "gelang" },
-    { href: "/admin/notifikasi", label: "Notifikasi & latihan", icon: "notifikasi" },
-    { href: "/admin/audit", label: "Jejak audit", icon: "audit" },
-  ],
-  operator: [
-    DASBOR,
-    PETA,
-    { href: "/kegiatan", label: "Kegiatan", icon: "kegiatan" },
-    { href: "/tindak-lanjut", label: "Tindak lanjut", icon: "tindak" },
-    ...BERSAMA,
-  ],
-  kepala_pengamanan: [
-    DASBOR,
-    PETA,
-    { href: "/keputusan", label: "Keputusan", icon: "keputusan" },
-    { href: "/tindak-lanjut", label: "Tindak lanjut", icon: "tindak" },
-    ...BERSAMA,
-  ],
-  pemantau_kanwil: [DASBOR, PETA, ...BERSAMA],
-  pemantau_pusat: [DASBOR, PETA, ...BERSAMA],
-  pengawal: [
-    { href: "/lapangan", label: "Tugas lapangan", icon: "kegiatan" },
-    { href: "/berkas", label: "Berkas", icon: "berkas" },
-    { href: "/gelang", label: "Gelang", icon: "gelang" },
-    { href: "/berita", label: "Berita", icon: "berita" },
-    { href: "/pedoman", label: "Pedoman & SOP", icon: "pedoman" },
-  ],
+/** Menu utama tampil langsung di tengah atas; sisanya di "Menu lain" (bisa dicari). */
+const MENU: Record<Role, { utama: Item[]; lain: Item[] }> = {
+  administrator: {
+    utama: [DASBOR, PETA, LAPORAN, EVALUASI, PANGAN, { href: "/akun", label: "Akun", icon: "akun" }],
+    lain: [
+      LALU, INDUK, BERKAS, GELANG, RISIKO, BERITA, PEDOMAN,
+      { href: "/admin/wilayah", label: "UPT & Kanwil", icon: "wilayah" },
+      { href: "/admin/drive", label: "Google Drive & batas unggah", icon: "drive" },
+      { href: "/admin/gelang", label: "Penerima gelang", icon: "gelang" },
+      { href: "/admin/notifikasi", label: "Notifikasi Telegram & latihan", icon: "notifikasi" },
+      { href: "/admin/audit", label: "Jejak audit", icon: "audit" },
+    ],
+  },
+  pemantau_pusat: {
+    utama: [DASBOR, PETA, LAPORAN, EVALUASI, PANGAN, { href: "/akun", label: "Akun Kanwil & UPT", icon: "akun" }],
+    lain: [LALU, INDUK, BERKAS, GELANG, RISIKO, BERITA, PEDOMAN],
+  },
+  pemantau_kanwil: {
+    utama: [DASBOR, PETA, LAPORAN, EVALUASI, PANGAN, { href: "/akun", label: "Akun UPT", icon: "akun" }],
+    lain: [LALU, INDUK, BERKAS, GELANG, RISIKO, BERITA, PEDOMAN],
+  },
+  ka_upt: {
+    utama: [DASBOR, LAPORAN, EVALUASI, PANGAN, INDUK, KOP],
+    lain: [PETA, LALU, BERKAS, GELANG, RISIKO, BERITA, PEDOMAN],
+  },
+  operator: {
+    utama: [DASBOR, { href: "/kegiatan", label: "Kegiatan", icon: "kegiatan" }, LAPORAN, TINDAK, INDUK, BERKAS],
+    lain: [PETA, LALU, PANGAN, GELANG, EVALUASI, RISIKO, BERITA, PEDOMAN, KOP],
+  },
+  kepala_pengamanan: {
+    utama: [DASBOR, { href: "/keputusan", label: "Keputusan", icon: "keputusan" }, LAPORAN, TINDAK, EVALUASI, GELANG],
+    lain: [PETA, LALU, PANGAN, INDUK, BERKAS, RISIKO, BERITA, PEDOMAN, KOP],
+  },
+  pengawal: {
+    utama: [{ href: "/lapangan", label: "Tugas lapangan", icon: "kegiatan" }, BERKAS, GELANG, BERITA, PEDOMAN],
+    lain: [],
+  },
 };
+
+function aktif(pathname: string, href: string) {
+  return href === "/" ? pathname === "/" || pathname.startsWith("/sesi") : pathname === href || pathname.startsWith(href + "/");
+}
 
 export function NavLinks({ role }: { role: Role }) {
   const pathname = usePathname();
+  const { utama, lain } = MENU[role];
+  const [buka, setBuka] = React.useState(false);
+  const [cari, setCari] = React.useState("");
+  const kotak = React.useRef<HTMLDivElement>(null);
+  const lainAktif = lain.find((i) => aktif(pathname, i.href));
+
+  React.useEffect(() => {
+    setBuka(false);
+    setCari("");
+  }, [pathname]);
+  React.useEffect(() => {
+    if (!buka) return;
+    const tutup = (e: MouseEvent) => {
+      if (kotak.current && !kotak.current.contains(e.target as Node)) setBuka(false);
+    };
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setBuka(false);
+    document.addEventListener("mousedown", tutup);
+    document.addEventListener("keydown", esc);
+    return () => {
+      document.removeEventListener("mousedown", tutup);
+      document.removeEventListener("keydown", esc);
+    };
+  }, [buka]);
+
+  const semua = [...utama, ...lain];
+  const kata = cari.trim().toLowerCase();
+  const hasil = kata ? semua.filter((i) => i.label.toLowerCase().includes(kata)) : lain;
+
   return (
-    <nav className="flex gap-1 overflow-x-auto pb-1 md:flex-col md:overflow-visible md:pb-0" aria-label="Menu utama">
-      {ITEMS[role].map(({ href, label, icon }) => {
+    <nav className="flex items-center justify-start gap-1 overflow-x-auto px-3 py-2 md:justify-center md:overflow-visible" aria-label="Menu utama">
+      {utama.map(({ href, label, icon }) => {
         const Icon = ICONS[icon];
-        const active = href === "/" ? pathname === "/" || pathname.startsWith("/sesi") : pathname.startsWith(href);
+        const on = aktif(pathname, href);
         return (
           <Link
             key={href}
             href={href}
-            aria-current={active ? "page" : undefined}
+            aria-current={on ? "page" : undefined}
             className={cn(
-              "group relative flex shrink-0 items-center gap-3 whitespace-nowrap rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition-[background-color,color,transform] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]",
-              active
-                ? "bg-gradient-to-r from-primary/15 to-primary/5 font-medium text-primary shadow-[inset_0_0_0_1px_hsl(224_86%_55%/0.2)]"
-                : "text-muted-foreground hover:bg-primary/[0.06] hover:text-foreground"
+              "group relative flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-3.5 py-2 text-[13.5px] font-medium transition-[background-color,color] duration-300",
+              on ? "bg-primary text-primary-foreground shadow-[0_8px_18px_-10px_hsl(222_64%_20%/0.8)]" : "text-secondary-foreground hover:bg-secondary hover:text-foreground"
             )}
           >
-            {active && <span className="absolute inset-y-2.5 left-0 hidden w-[3px] rounded-full bg-primary md:block" aria-hidden />}
-            <Icon className={cn("h-[18px] w-[18px] shrink-0 transition-transform duration-500 group-hover:translate-x-0.5", active && "text-primary")} aria-hidden />
+            <Icon className={cn("h-[17px] w-[17px] shrink-0", on ? "text-[hsl(44_90%_66%)]" : "text-brand")} aria-hidden />
             {label}
           </Link>
         );
       })}
+
+      {lain.length > 0 && (
+        <div ref={kotak} className="relative shrink-0">
+          <button
+            type="button"
+            aria-expanded={buka}
+            aria-haspopup="menu"
+            onClick={() => setBuka((b) => !b)}
+            className={cn(
+              "flex items-center gap-2 whitespace-nowrap rounded-full px-3.5 py-2 text-[13.5px] font-medium transition-colors",
+              lainAktif ? "bg-primary text-primary-foreground" : "text-secondary-foreground hover:bg-secondary"
+            )}
+          >
+            {lainAktif ? lainAktif.label : "Menu lain"}
+            <ChevronDown className={cn("h-4 w-4 transition-transform", buka && "rotate-180")} aria-hidden />
+          </button>
+          {buka && (
+            <div role="menu" className="kaca fixed left-1/2 top-[7.5rem] z-50 w-[min(22rem,92vw)] -translate-x-1/2 rounded-2xl p-2 md:absolute md:left-auto md:right-0 md:top-full md:mt-2 md:translate-x-0">
+              <label className="mb-1 flex items-center gap-2 rounded-xl border border-input bg-white px-3 py-2">
+                <Search className="h-4 w-4 text-muted-foreground" aria-hidden />
+                <input
+                  autoFocus
+                  value={cari}
+                  onChange={(e) => setCari(e.target.value)}
+                  placeholder="Cari menu…"
+                  className="w-full bg-transparent text-sm outline-none"
+                  aria-label="Cari menu"
+                />
+              </label>
+              <ul className="max-h-[60vh] overflow-y-auto">
+                {hasil.map(({ href, label, icon }) => {
+                  const Icon = ICONS[icon];
+                  const on = aktif(pathname, href);
+                  return (
+                    <li key={href}>
+                      <Link
+                        role="menuitem"
+                        href={href}
+                        className={cn("flex items-center gap-3 rounded-xl px-3 py-2 text-sm", on ? "bg-primary/10 font-semibold text-primary" : "hover:bg-secondary")}
+                      >
+                        <Icon className="h-4 w-4 text-brand" aria-hidden />
+                        {label}
+                      </Link>
+                    </li>
+                  );
+                })}
+                {hasil.length === 0 && <li className="px-3 py-3 text-sm text-muted-foreground">Menu tidak ditemukan.</li>}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 }

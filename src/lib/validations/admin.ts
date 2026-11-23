@@ -3,7 +3,7 @@ import { z } from "zod";
 const opt = (max: number) =>
   z.string().trim().max(max, `Maksimal ${max} karakter.`).optional().transform((v) => (v ? v : undefined));
 
-export const ROLE_VALUES = ["administrator", "operator", "pengawal", "kepala_pengamanan", "pemantau_kanwil", "pemantau_pusat"] as const;
+export const ROLE_VALUES = ["administrator", "operator", "pengawal", "kepala_pengamanan", "pemantau_kanwil", "pemantau_pusat", "ka_upt"] as const;
 
 export const accountCreateSchema = z.object({
   email: z.string().trim().toLowerCase().email("Alamat email tidak valid."),

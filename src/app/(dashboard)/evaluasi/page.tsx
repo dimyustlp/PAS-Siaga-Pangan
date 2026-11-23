@@ -14,6 +14,7 @@ import { hitungEvaluasi, parseIndikator } from "@/lib/domain/evaluasi";
 import { bandingkan, jumlahBulan, rataKondisiAwal } from "@/lib/domain/pembanding";
 import { awalMinggu, fmtTanggal, fmtTanggalPendek, hariIniWib, tambahHari } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
+import { TabelCari } from "@/components/ui/tabel-cari";
 
 export const metadata = { title: "Evaluasi" };
 export const dynamic = "force-dynamic";
@@ -82,7 +83,7 @@ export default async function EvaluasiPage({ searchParams }: { searchParams: Pro
           <Card>
             <CardHeader><CardTitle>Capaian indikator</CardTitle><CardDescription>“Belum dinilai” berarti belum ada data untuk diukur, bukan berarti lulus.</CardDescription></CardHeader>
             <CardContent className="overflow-x-auto">
-              <table className="w-full min-w-[40rem] text-sm">
+              <TabelCari className="w-full min-w-[40rem] text-sm">
                 <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground">
                   <tr><th className="py-2 pr-3">Indikator</th><th className="py-2 pr-3">Capaian</th><th className="py-2 pr-3">Target</th><th className="py-2">Hasil</th></tr>
                 </thead>
@@ -96,7 +97,7 @@ export default async function EvaluasiPage({ searchParams }: { searchParams: Pro
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </TabelCari>
             </CardContent>
           </Card>
 
@@ -110,7 +111,7 @@ export default async function EvaluasiPage({ searchParams }: { searchParams: Pro
               </CardDescription>
             </CardHeader>
             <CardContent className="overflow-x-auto">
-              <table className="w-full min-w-[40rem] text-sm">
+              <TabelCari className="w-full min-w-[40rem] text-sm">
                 <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground">
                   <tr><th className="py-2 pr-3">Indikator</th><th className="py-2 pr-3 text-right">Sebelum</th><th className="py-2 pr-3 text-right">Sesudah</th><th className="py-2 pr-3 text-right">Selisih</th><th className="py-2">Arah</th></tr>
                 </thead>
@@ -125,7 +126,7 @@ export default async function EvaluasiPage({ searchParams }: { searchParams: Pro
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </TabelCari>
             </CardContent>
           </Card>
 
@@ -146,8 +147,8 @@ export default async function EvaluasiPage({ searchParams }: { searchParams: Pro
           {titik.length === 0 ? <p className="text-sm text-muted-foreground">Belum ada data pada periode ini.</p> : (
             <>
               <TrenChartLazy data={titik} />
-              <table className="sr-only"><caption>Data tren mingguan</caption><thead><tr><th>Minggu</th><th>Sesi</th><th>Ditutup</th><th>Merah/Kritis</th><th>Gangguan</th></tr></thead>
-                <tbody>{titik.map((t) => <tr key={t.minggu}><td>{t.minggu}</td><td>{t.sesi}</td><td>{t.ditutup}</td><td>{t.merah_kritis}</td><td>{t.gangguan}</td></tr>)}</tbody></table>
+              <TabelCari className="sr-only"><caption>Data tren mingguan</caption><thead><tr><th>Minggu</th><th>Sesi</th><th>Ditutup</th><th>Merah/Kritis</th><th>Gangguan</th></tr></thead>
+                <tbody>{titik.map((t) => <tr key={t.minggu}><td>{t.minggu}</td><td>{t.sesi}</td><td>{t.ditutup}</td><td>{t.merah_kritis}</td><td>{t.gangguan}</td></tr>)}</tbody></TabelCari>
             </>
           )}
         </CardContent>

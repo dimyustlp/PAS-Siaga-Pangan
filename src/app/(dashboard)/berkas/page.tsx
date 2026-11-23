@@ -11,6 +11,7 @@ import { requireUser } from "@/lib/auth";
 import { KATEGORI_BERKAS, KATEGORI_POKOK, fmtUkuran, ringkasPerKanwil, ringkasPerUpt } from "@/lib/domain/berkas";
 import { fmtTanggalPendek, hariIniWib } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
+import { TabelCari } from "@/components/ui/tabel-cari";
 
 export const metadata = { title: "Berkas" };
 export const dynamic = "force-dynamic";
@@ -169,7 +170,7 @@ export default async function BerkasPage({ searchParams }: { searchParams: Promi
               <p className="text-sm text-muted-foreground">Belum ada UPT pada pilihan ini.</p>
             ) : (
               <div className="max-h-[26rem] overflow-auto rounded-lg border">
-                <table className="w-full min-w-[40rem] text-sm">
+                <TabelCari className="w-full min-w-[40rem] text-sm">
                   <thead className="sticky top-0 bg-secondary text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     <tr>
                       <th className="px-3 py-2">UPT</th>
@@ -205,7 +206,7 @@ export default async function BerkasPage({ searchParams }: { searchParams: Promi
                       );
                     })}
                   </tbody>
-                </table>
+                </TabelCari>
               </div>
             )}
           </CardContent>
@@ -224,7 +225,7 @@ export default async function BerkasPage({ searchParams }: { searchParams: Promi
               <p className="text-sm text-muted-foreground">Belum ada UPT pada cakupan Anda.</p>
             ) : (
               <div className="max-h-[28rem] overflow-auto rounded-lg border">
-                <table className="w-full min-w-[36rem] text-sm">
+                <TabelCari className="w-full min-w-[36rem] text-sm">
                   <thead className="sticky top-0 bg-secondary text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     <tr>
                       <th className="px-3 py-2">Kanwil</th>
@@ -249,7 +250,7 @@ export default async function BerkasPage({ searchParams }: { searchParams: Promi
                       </tr>
                     ))}
                   </tbody>
-                </table>
+                </TabelCari>
               </div>
             )}
           </CardContent>

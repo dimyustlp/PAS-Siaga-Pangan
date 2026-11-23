@@ -8,6 +8,7 @@ import {
 } from "@/lib/actions/telegram";
 import { fmtTanggal, fmtWaktu } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
+import { TabelCari } from "@/components/ui/tabel-cari";
 
 export const metadata = { title: "Notifikasi dan mode latihan" };
 export const dynamic = "force-dynamic";
@@ -130,7 +131,7 @@ export default async function NotifikasiPage() {
         <CardHeader><CardTitle className="flex items-center gap-2"><Send className="h-4 w-4" aria-hidden />Riwayat pengiriman</CardTitle><CardDescription>40 pesan terakhir. Hasil dari Telegram tersedia beberapa jam setelah pengiriman.</CardDescription></CardHeader>
         <CardContent className="overflow-x-auto">
           {(log.data ?? []).length === 0 ? <p className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">Belum ada pesan.</p> : (
-            <table className="w-full min-w-[40rem] text-sm">
+            <TabelCari className="w-full min-w-[40rem] text-sm">
               <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="py-2 pr-3">Waktu</th><th className="py-2 pr-3">Grup</th><th className="py-2 pr-3">Jenis</th><th className="py-2">Hasil</th></tr></thead>
               <tbody className="divide-y">
                 {(log.data ?? []).map((n) => {
@@ -151,7 +152,7 @@ export default async function NotifikasiPage() {
                   );
                 })}
               </tbody>
-            </table>
+            </TabelCari>
           )}
         </CardContent>
       </Card>

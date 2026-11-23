@@ -1,5 +1,6 @@
 import { Activity, ClipboardCheck, WifiOff } from "lucide-react";
-import { Logo } from "@/components/layout/logo";
+import { Logo, LogoInstansi } from "@/components/layout/logo";
+import { DeretSektor, MotifPangan } from "@/components/layout/motif-pangan";
 import { LoginForm } from "./login-form";
 
 export const metadata = { title: "Masuk" };
@@ -44,11 +45,15 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           </svg>
                   </div>
 
+        <MotifPangan />
         <div className="relative flex items-center gap-3">
+          <LogoInstansi />
+          <span className="h-10 w-px bg-white/30" aria-hidden />
           <Logo />
           <div className="leading-tight">
-            <p className="font-semibold tracking-tight text-white">PAS-SIAGA Pangan</p>
-            <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Ditjen Pemasyarakatan</p>
+            <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Kementerian Imigrasi dan Pemasyarakatan RI</p>
+            <p className="text-lg font-bold tracking-tight text-white">PAS-SIAGA <span className="text-[hsl(44_90%_66%)]">PANGAN</span></p>
+            <p className="text-[11px] text-muted-foreground">Direktorat Jenderal Pemasyarakatan</p>
           </div>
         </div>
 
@@ -58,10 +63,11 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               <span className="h-1.5 w-1.5 rounded-full bg-status-hijau text-status-hijau titik-hidup" aria-hidden />
               33 Kanwil · 611 UPT
             </p>
-            <h1 className="text-4xl font-semibold leading-[1.05] tracking-tighter xl:text-5xl">
-              Kegiatan pangan di luar tembok,
-              <span className="text-white/75"> tetap terkendali.</span>
+            <h1 className="text-4xl font-semibold leading-[1.08] tracking-tight xl:text-5xl">
+              Mendukung ketahanan pangan nasional,
+              <span className="text-[hsl(44_90%_70%)]"> pengamanannya tetap terukur.</span>
             </h1>
+            <DeretSektor />
           </div>
           <ul className="grid gap-px overflow-hidden rounded-2xl border border-white/25 bg-white/25">
             {POIN.map(({ ikon: Ikon, judul, teks }) => (
@@ -83,6 +89,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       <section className="flex items-center justify-center px-4 py-10">
         <div className="halaman-masuk w-full max-w-[25rem]">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
+            <LogoInstansi kecil />
             <Logo />
             <div className="leading-tight">
               <p className="font-semibold">PAS-SIAGA Pangan</p>
@@ -92,7 +99,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <div className="bezel">
             <div className="kaca tepi-hidup p-6 sm:p-8">
               <h2 className="text-2xl font-semibold tracking-tight">Masuk</h2>
-              <p className="mb-6 mt-1 text-sm text-muted-foreground">Gunakan akun yang diberikan Administrator.</p>
+              <p className="mb-6 mt-1 text-sm text-muted-foreground">Gunakan akun yang diberikan Pusat, Kanwil, atau Administrator.</p>
               {error && PESAN[error] && (
                 <p role="alert" className="mb-4 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-[hsl(0_70%_38%)]">
                   {PESAN[error]}
@@ -101,7 +108,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               <LoginForm next={next} />
             </div>
           </div>
-          <p className="mt-5 text-center text-xs text-muted-foreground">Lupa kata sandi? Hubungi Administrator.</p>
+          <p className="mt-5 text-center text-xs text-muted-foreground">Lupa kata sandi? Hubungi pengelola akun di Kanwil atau Pusat.</p>
         </div>
       </section>
     </main>

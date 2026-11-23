@@ -12,6 +12,7 @@ import { ambilCakupan } from "@/lib/data/cakupan";
 import { fmtTanggal, hariIniWib } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import { JENIS_KEGIATAN, SATUAN_PANGAN } from "@/lib/validations/induk";
+import { TabelCari } from "@/components/ui/tabel-cari";
 
 export const metadata = { title: "Hasil ketahanan pangan" };
 export const dynamic = "force-dynamic";
@@ -112,7 +113,7 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
         <CardHeader><CardTitle>Per komoditas</CardTitle><CardDescription>Periode {fmtTanggal(dari)} sampai {fmtTanggal(sampai)}. Satuan yang berbeda tidak dijumlahkan.</CardDescription></CardHeader>
         <CardContent className="overflow-x-auto">
           {daftar.length === 0 ? <p className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">Belum ada hasil pangan pada periode ini.</p> : (
-            <table className="w-full min-w-[40rem] text-sm">
+            <TabelCari className="w-full min-w-[40rem] text-sm">
               <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="py-2 pr-3">Komoditas</th><th className="py-2 pr-3">Jenis</th><th className="py-2 pr-3 text-right">Volume</th><th className="py-2 pr-3 text-right">Luas (ha)</th><th className="py-2 pr-3 text-right">Catatan</th><th className="py-2 text-right">UPT</th></tr></thead>
               <tbody className="divide-y">
                 {daftar.map((d) => (
@@ -126,7 +127,7 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </TabelCari>
           )}
         </CardContent>
       </Card>
@@ -135,7 +136,7 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
         <Card>
           <CardHeader><CardTitle>Per UPT</CardTitle></CardHeader>
           <CardContent className="overflow-x-auto">
-            <table className="w-full min-w-[40rem] text-sm">
+            <TabelCari className="w-full min-w-[40rem] text-sm">
               <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="py-2 pr-3">UPT</th><th className="py-2 pr-3">Kanwil</th><th className="py-2 pr-3 text-right">Catatan</th><th className="py-2 pr-3 text-right">Luas (ha)</th><th className="py-2">Volume</th></tr></thead>
               <tbody className="divide-y">
                 {daftarUpt.slice(0, 100).map(([kode, u]) => (
@@ -148,7 +149,7 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </TabelCari>
           </CardContent>
         </Card>
       )}
@@ -157,7 +158,7 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
         <CardHeader><CardTitle>Catatan terbaru</CardTitle><CardDescription>Maksimal 50 catatan terakhir pada periode ini.</CardDescription></CardHeader>
         <CardContent className="overflow-x-auto">
           {(terbaru ?? []).length === 0 ? <p className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">Belum ada catatan.</p> : (
-            <table className="w-full min-w-[44rem] text-sm">
+            <TabelCari className="w-full min-w-[44rem] text-sm">
               <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="py-2 pr-3">Tanggal</th><th className="py-2 pr-3">UPT</th><th className="py-2 pr-3">Komoditas</th><th className="py-2 pr-3 text-right">Volume</th><th className="py-2 pr-3">Catatan</th><th className="py-2" /></tr></thead>
               <tbody className="divide-y">
                 {(terbaru ?? []).map((h) => (
@@ -171,7 +172,7 @@ export default async function PanganPage({ searchParams }: { searchParams: Promi
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </TabelCari>
           )}
         </CardContent>
       </Card>

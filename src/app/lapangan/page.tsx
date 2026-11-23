@@ -23,6 +23,10 @@ export default async function LapanganPage() {
   ]);
   const daftar = sesi.data ?? [];
   const tugas = tl.data ?? [];
+  const ids = daftar.map((s) => s.session_id!).filter(Boolean);
+  const { data: tahap } = ids.length ? await supabase.from("tahap_pengawalan").select("session_id").in("session_id", ids) : { data: [] };
+  const nTahap = new Map<string, number>();
+  (tahap ?? []).forEach((t) => nTahap.set(t.session_id, (nTahap.get(t.session_id) ?? 0) + 1));
 
   return (
     <div className="space-y-6">
@@ -38,7 +42,7 @@ export default async function LapanganPage() {
         {daftar.map((s) => {
           const siap = s.status_kesiapan === "Dapat Dimulai";
           const isi = (
-            <Card className={`lift flex items-center gap-3 p-4 ${siap ? "border-l-4 border-l-brand" : "border-l-4 border-l-border opacity-90"}`}>
+            <Card className={`lift flex items-center gap-3 p-4 ${siap ? "border-l-4 border-l-gold" : "border-l-4 border-l-border opacity-90"}`}>
               <div className="min-w-0 flex-1 space-y-1">
                 <p className="truncate font-medium">{s.jenis_kegiatan} · {s.lokasi_nama}</p>
                 <p className="text-xs text-muted-foreground">{s.kode_kegiatan}{s.latihan ? " · LATIHAN" : ""} · {fmtTanggalPendek(s.tanggal_sesi)} · {s.jumlah_narapidana} WB</p>
@@ -46,6 +50,12 @@ export default async function LapanganPage() {
                   {s.status_keamanan && <StatusBadge status={s.status_keamanan} />}
                   <FasePill fase={s.fase} />
                 </div>
+                {siap && (
+                  <div className="flex items-center gap-1 pt-1" aria-label="Kemajuan tahap">
+                    {[1, 2, 3, 4].map((i) => <span key={i} className={`h-1.5 w-8 rounded-full ${i <= (nTahap.get(s.session_id!) ?? 0) ? "bg-status-hijau" : "bg-ink/10"}`} />)}
+                    <span className="ml-1 text-[11px] text-muted-foreground">{nTahap.get(s.session_id!) ?? 0}/4 tahap</span>
+                  </div>
+                )}
                 {!siap && <p className="text-xs text-muted-foreground">Menunggu izin mulai dari Kepala Pengamanan.</p>}
               </div>
               {siap && <ChevronRight className="h-5 w-5 text-muted-foreground" aria-hidden />}

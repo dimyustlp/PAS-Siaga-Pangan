@@ -4,6 +4,7 @@ import { Field, PageHeader, Pill, Select } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { createKanwil, createUpt, ubahTitikUpt, updateKanwilTautan } from "@/lib/actions/admin";
 import { createClient } from "@/lib/supabase/server";
+import { TabelCari } from "@/components/ui/tabel-cari";
 
 export const metadata = { title: "UPT & Kanwil" };
 export const dynamic = "force-dynamic";
@@ -103,7 +104,7 @@ export default async function WilayahPage() {
                   <span className="font-mono text-xs text-muted-foreground">{isi.length} UPT</span>
                 </summary>
                 <div className="overflow-x-auto border-t border-ink/[0.06]">
-                  <table className="w-full min-w-[40rem] text-sm">
+                  <TabelCari className="w-full min-w-[40rem] text-sm">
                     <thead className="text-left text-[11px] uppercase tracking-wider text-muted-foreground"><tr><th className="px-4 py-2">Kode</th><th className="py-2 pr-3">Nama</th><th className="py-2 pr-3">Jenis</th><th className="py-2 pr-3">Kab/Kota</th><th className="py-2 pr-4">Titik</th></tr></thead>
                     <tbody className="divide-y divide-ink/[0.05]">
                       {isi.map((u) => (
@@ -116,7 +117,7 @@ export default async function WilayahPage() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
+                  </TabelCari>
                 </div>
               </details>
             );

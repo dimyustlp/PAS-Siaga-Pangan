@@ -9,13 +9,13 @@ export const metadata: Metadata = {
     "Sistem pemantauan dan pengamanan kegiatan ketahanan pangan pemasyarakatan.",
   robots: { index: false, follow: false },
   manifest: "/manifest.webmanifest",
-  icons: { icon: "/icon.svg" },
+  icons: { icon: "/icon-192.png", apple: "/icon-192.png" },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#eef4fc",
+  themeColor: "#13254d",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

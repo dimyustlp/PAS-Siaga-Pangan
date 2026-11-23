@@ -1,13 +1,26 @@
-/** Lambang PAS-SIAGA: perisai bergaris dengan titik pantau. Gambar vektor sendiri, tanpa berkas luar. */
-export function Logo({ kecil = false }: { kecil?: boolean }) {
-  const ukuran = kecil ? "h-8 w-8" : "h-10 w-10";
+/* eslint-disable @next/next/no-img-element */
+
+/** Logo PAS-SIAGA Pangan (perisai, lumbung padi, dan dokumen evaluasi). */
+export function Logo({ kecil = false, className = "" }: { kecil?: boolean; className?: string }) {
+  const ukuran = kecil ? "h-9 w-9" : "h-11 w-11";
   return (
-    <span className={`relative flex ${ukuran} shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[hsl(224_90%_60%)] to-[hsl(262_80%_62%)] ring-1 ring-white/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_18px_-8px_hsl(240_80%_50%/0.7)]`}>
-      <svg viewBox="0 0 24 24" className={kecil ? "h-4 w-4" : "h-5 w-5"} fill="none" aria-hidden>
-        <path d="M12 2.8 4.5 5.6v5.6c0 4.6 3.1 8.4 7.5 10 4.4-1.6 7.5-5.4 7.5-10V5.6L12 2.8Z" stroke="#fff" strokeWidth="1.5" strokeLinejoin="round" />
-        <path d="M8.5 12.2h7M12 8.6v7.2" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
-      </svg>
-      <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-primary text-primary titik-hidup" aria-hidden />
+    <img
+      src="/logo-pas-siaga.png"
+      alt="Logo PAS-SIAGA Pangan"
+      width={kecil ? 36 : 44}
+      height={kecil ? 36 : 44}
+      className={`${ukuran} shrink-0 object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.25)] ${className}`}
+    />
+  );
+}
+
+/** Lambang Kementerian Imigrasi dan Pemasyarakatan dan logo Pemasyarakatan, berdampingan. */
+export function LogoInstansi({ kecil = false }: { kecil?: boolean }) {
+  const h = kecil ? "h-8" : "h-10";
+  return (
+    <span className="flex shrink-0 items-center gap-1.5">
+      <img src="/logo-kemenimipas.png" alt="Kementerian Imigrasi dan Pemasyarakatan" width={40} height={40} className={`${h} w-auto object-contain`} />
+      <img src="/logo-pemasyarakatan.png" alt="Pemasyarakatan" width={30} height={40} className={`${h} w-auto object-contain`} />
     </span>
   );
 }

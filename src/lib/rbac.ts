@@ -4,25 +4,57 @@ export type Role =
   | "pengawal"
   | "kepala_pengamanan"
   | "pemantau_kanwil"
-  | "pemantau_pusat";
+  | "pemantau_pusat"
+  | "ka_upt";
 
 export const ALL_ROLES: Role[] = [
   "administrator",
+  "pemantau_pusat",
+  "pemantau_kanwil",
+  "ka_upt",
+  "kepala_pengamanan",
   "operator",
   "pengawal",
-  "kepala_pengamanan",
-  "pemantau_kanwil",
-  "pemantau_pusat",
 ];
-const NON_PENGAWAL: Role[] = ["administrator", "operator", "kepala_pengamanan", "pemantau_kanwil", "pemantau_pusat"];
+const NON_PENGAWAL: Role[] = ["administrator", "operator", "kepala_pengamanan", "pemantau_kanwil", "pemantau_pusat", "ka_upt"];
+const PENGELOLA_AKUN: Role[] = ["administrator", "pemantau_pusat", "pemantau_kanwil"];
+const UPT_SAJA: Role[] = ["ka_upt", "kepala_pengamanan", "operator"];
+
+/** Peran tingkat UPT (dipakai untuk pilihan saat membuat akun dari Kanwil). */
+export const ROLE_UPT: Role[] = ["ka_upt", "kepala_pengamanan", "operator", "pengawal"];
+
+export type Tingkat = "pusat" | "kanwil" | "upt" | "lapangan";
+
+export function tingkatPeran(role: Role): Tingkat {
+  if (role === "administrator" || role === "pemantau_pusat") return "pusat";
+  if (role === "pemantau_kanwil") return "kanwil";
+  if (role === "pengawal") return "lapangan";
+  return "upt";
+}
+
+export const LABEL_TINGKAT: Record<Tingkat, string> = {
+  pusat: "Tingkat Pusat",
+  kanwil: "Tingkat Kantor Wilayah",
+  upt: "Tingkat UPT",
+  lapangan: "Petugas Lapangan",
+};
+
+/** Peran yang boleh dibuat oleh pengelola akun tertentu (Administrator, Pusat, Kanwil). */
+export function peranBolehDibuat(role: Role): Role[] {
+  if (role === "administrator") return ALL_ROLES;
+  if (role === "pemantau_pusat") return ALL_ROLES.filter((r) => r !== "administrator");
+  if (role === "pemantau_kanwil") return ROLE_UPT;
+  return [];
+}
 
 export const ROLE_LABEL: Record<Role, string> = {
   administrator: "Administrator",
   operator: "Operator UPT",
-  pengawal: "Pengawal",
+  pengawal: "Pengawal Kegiatan Ketahanan Pangan",
   kepala_pengamanan: "Kepala Pengamanan",
   pemantau_kanwil: "Pemantau Kanwil",
   pemantau_pusat: "Pemantau Pusat",
+  ka_upt: "Ka.UPT",
 };
 
 /** Halaman pertama setelah masuk, menurut peran. */
@@ -33,6 +65,7 @@ export const HOME: Record<Role, string> = {
   pengawal: "/lapangan",
   pemantau_kanwil: "/",
   pemantau_pusat: "/",
+  ka_upt: "/",
 };
 
 type Rule = { prefix: string; exact?: boolean; roles: Role[] };
@@ -58,6 +91,10 @@ const RULES: Rule[] = [
   { prefix: "/berita", roles: ALL_ROLES },
   { prefix: "/gelang", roles: ALL_ROLES },
   { prefix: "/pedoman", roles: ALL_ROLES },
+  { prefix: "/laporan", roles: NON_PENGAWAL },
+  { prefix: "/akun", roles: PENGELOLA_AKUN },
+  { prefix: "/kop-surat", roles: [...UPT_SAJA, "administrator"] },
+  { prefix: "/lampiran", roles: ALL_ROLES },
   { prefix: "/admin", roles: ["administrator"] },
   { prefix: "/lapangan", roles: ["pengawal"] },
 ];

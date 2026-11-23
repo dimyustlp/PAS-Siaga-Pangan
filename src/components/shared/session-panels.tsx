@@ -10,6 +10,7 @@ import { fmtJam, fmtTanggal, fmtTanggalPendek, fmtWaktu, sejak, sisaWaktu } from
 import { INDIKATOR_KESIAPAN } from "@/lib/validations/planning";
 import type { SesiLengkap } from "@/lib/data/session-full";
 import { cn } from "@/lib/utils";
+import { TabelCari } from "@/components/ui/tabel-cari";
 
 const FASE_NADA: Record<string, "netral" | "biru" | "hijau" | "kuning" | "merah"> = {
   "Menunggu keputusan kesiapan": "kuning",
@@ -33,7 +34,7 @@ export function SesiTabel({ rows, now, tampilkanUpt }: { rows: Overview[]; now: 
   }
   return (
     <div className="overflow-x-auto rounded-xl border border-border/70 bg-card shadow-soft">
-      <table className="w-full min-w-[56rem] text-sm">
+      <TabelCari className="w-full min-w-[56rem] text-sm">
         <thead className="bg-secondary/70 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
           <tr>
             <th className="px-3 py-2">Kegiatan</th>
@@ -94,7 +95,7 @@ export function SesiTabel({ rows, now, tampilkanUpt }: { rows: Overview[]; now: 
             );
           })}
         </tbody>
-      </table>
+      </TabelCari>
     </div>
   );
 }

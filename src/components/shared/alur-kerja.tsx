@@ -7,10 +7,11 @@ import { cn } from "@/lib/utils";
 const WARNA: Record<PelakuAlur, string> = {
   Administrator: "bg-secondary text-secondary-foreground",
   Operator: "bg-primary/10 text-primary",
-  "Kepala Pengamanan": "bg-[hsl(234_80%_60%/0.12)] text-[hsl(234_70%_40%)]",
+  "Kepala Pengamanan": "bg-[hsl(222_64%_30%/0.12)] text-[hsl(222_64%_28%)]",
   Pengawal: "bg-[hsl(188_80%_42%/0.14)] text-[hsl(188_85%_26%)]",
   Sistem: "bg-ink/[0.06] text-muted-foreground",
   Pemantau: "bg-[hsl(262_60%_58%/0.12)] text-[hsl(262_55%_40%)]",
+  "Ka.UPT": "bg-gold/15 text-[hsl(36_80%_28%)]",
 };
 
 /** Peta alur kerja sistem. Tahap milik peran pengguna ditandai agar langsung tahu bagiannya. */
@@ -19,7 +20,7 @@ export function AlurKerja({ role }: { role: Role }) {
   const awal = milik[0];
 
   return (
-    <details open className="kaca group rounded-2xl">
+    <details open={role === "pengawal"} className="kaca group rounded-2xl">
       <summary className="flex cursor-pointer list-none items-center gap-3 p-4 md:p-5 [&::-webkit-details-marker]:hidden">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
           <Route className="h-5 w-5" aria-hidden />
@@ -29,7 +30,7 @@ export function AlurKerja({ role }: { role: Role }) {
           <span className="block text-sm text-muted-foreground">
             {milik.length > 0
               ? `Anda masuk sebagai ${ROLE_LABEL[role]}. Bagian Anda: tahap ${milik.map((t) => t.no).join(", ")}.`
-              : `Anda masuk sebagai ${ROLE_LABEL[role]}. Delapan tahap dari persiapan sampai evaluasi.`}
+              : `Anda masuk sebagai ${ROLE_LABEL[role]}. Delapan langkah dari persiapan sampai evaluasi.`}
           </span>
         </span>
         <ChevronDown className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" aria-hidden />
@@ -55,7 +56,7 @@ export function AlurKerja({ role }: { role: Role }) {
                   <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <h3 className="font-semibold leading-tight">{t.judul}</h3>
-                      {saya && <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-[hsl(224_76%_40%)] ring-1 ring-primary/30">Bagian Anda</span>}
+                      {saya && <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-[hsl(222_64%_30%)] ring-1 ring-primary/30">Bagian Anda</span>}
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       {t.pelaku.map((p) => (

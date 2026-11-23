@@ -16,6 +16,7 @@ import { ambilCakupan } from "@/lib/data/cakupan";
 import { fmtTanggal, hariIniWib } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
+import { TabelCari } from "@/components/ui/tabel-cari";
 
 export const metadata = { title: "Data induk" };
 export const dynamic = "force-dynamic";
@@ -115,7 +116,7 @@ async function TabLokasi({ supabase, upt, bisa }: Props) {
         <CardHeader><CardTitle>Lokasi terdaftar</CardTitle><CardDescription>{daftar.length} lokasi.</CardDescription></CardHeader>
         <CardContent className="overflow-x-auto">
           {daftar.length === 0 ? <Kosong>Belum ada lokasi.</Kosong> : (
-            <table className="w-full min-w-[44rem] text-sm">
+            <TabelCari className="w-full min-w-[44rem] text-sm">
               <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr><th className="py-2 pr-3">Lokasi</th><th className="py-2 pr-3">Lahan</th><th className="py-2 pr-3">Komoditas</th><th className="py-2 pr-3 text-right">Luas</th><th className="py-2 pr-3 text-right">Daya tampung</th><th className="py-2">Penanggung jawab</th></tr>
               </thead>
@@ -132,7 +133,7 @@ async function TabLokasi({ supabase, upt, bisa }: Props) {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </TabelCari>
           )}
         </CardContent>
       </Card>

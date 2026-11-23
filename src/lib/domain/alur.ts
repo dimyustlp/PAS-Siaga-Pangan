@@ -1,6 +1,6 @@
 import type { Role } from "@/lib/rbac";
 
-export type PelakuAlur = "Administrator" | "Operator" | "Kepala Pengamanan" | "Pengawal" | "Sistem" | "Pemantau";
+export type PelakuAlur = "Administrator" | "Operator" | "Kepala Pengamanan" | "Pengawal" | "Sistem" | "Pemantau" | "Ka.UPT";
 
 export type TahapAlur = {
   no: number;
@@ -16,10 +16,13 @@ export const ALUR_KERJA: TahapAlur[] = [
   {
     no: 1,
     judul: "Siapkan akun dan data induk",
-    pelaku: ["Administrator"],
-    peran: ["administrator"],
-    isi: ["Buat akun dan tentukan peran serta UPT-nya.", "Isi data lokasi kegiatan dan daftar warga binaan."],
-    tautan: { href: "/admin/akun", label: "Kelola akun" },
+    pelaku: ["Administrator", "Pemantau"],
+    peran: ["administrator", "pemantau_pusat", "pemantau_kanwil"],
+    isi: [
+      "Pusat membuat akun Kanwil dan UPT; Kanwil membuat akun UPT di wilayahnya (Ka.UPT, Kepala Pengamanan, Operator, Pengawal).",
+      "Isi data lokasi kegiatan, daftar warga binaan, dan kop surat UPT.",
+    ],
+    tautan: { href: "/akun", label: "Kelola akun" },
   },
   {
     no: 2,
@@ -47,13 +50,13 @@ export const ALUR_KERJA: TahapAlur[] = [
   },
   {
     no: 5,
-    judul: "Catat pelaksanaan di lapangan",
+    judul: "Isi 4 tahap pengawalan di lapangan",
     pelaku: ["Pengawal"],
     peran: ["pengawal"],
     isi: [
-      "Urutan umum: serah terima keluar dari blok, tiba di lokasi, pemeriksaan berkala, lalu pengembalian dan serah terima kembali ke blok.",
-      "Catat juga kejadian di tengah jalan: pindah area, pihak luar, alarm atau pemeriksaan gelang, dan gangguan.",
-      "Tanpa sinyal pun bisa: catatan tersimpan di perangkat dan terkirim otomatis saat online.",
+      "Tahap 1 pengeluaran melalui P2U, tahap 2 pengawalan menuju lokasi, tahap 3 pelaksanaan kegiatan pangan, tahap 4 kembali ke UPT.",
+      "Setiap tahap wajib foto dan berkas; waktunya dicatat otomatis oleh sistem dan berkas tersimpan di Google Drive.",
+      "Kejadian di tengah jalan (pihak luar, alarm gelang, gangguan) dicatat lewat Catatan cepat, tetap bisa tanpa sinyal.",
     ],
     tautan: { href: "/lapangan", label: "Buka tugas lapangan" },
   },
@@ -63,7 +66,7 @@ export const ALUR_KERJA: TahapAlur[] = [
     pelaku: ["Sistem", "Kepala Pengamanan"],
     peran: ["kepala_pengamanan"],
     isi: [
-      "Sistem menaikkan status ke MERAH otomatis bila jumlah WB tidak cocok, dan memberi peringatan bila data lama tidak masuk.",
+      "Sistem menaikkan status ke MERAH otomatis bila jumlah WB tidak cocok; setiap perubahan status (hijau, kuning, merah, kritis) dikirim ke grup Telegram.",
       "Kepala Pengamanan memverifikasi gangguan, mengubah status dengan catatan, dan memberi arahan.",
       "Setiap temuan punya tindak lanjut dengan penanggung jawab dan tenggat.",
     ],
@@ -71,16 +74,21 @@ export const ALUR_KERJA: TahapAlur[] = [
   },
   {
     no: 7,
-    judul: "Tutup kegiatan",
-    pelaku: ["Kepala Pengamanan"],
-    peran: ["kepala_pengamanan"],
-    isi: ["Penutupan hanya bisa bila WB keluar sama dengan WB kembali, gangguan sudah diverifikasi, dan tindak lanjut tertangani.", "Laporan sesi bisa dicetak dari halaman detail sesi."],
+    judul: "Sahkan laporan dan tutup kegiatan",
+    pelaku: ["Kepala Pengamanan", "Ka.UPT"],
+    peran: ["kepala_pengamanan", "ka_upt"],
+    isi: [
+      "Setelah 4 tahap lengkap, Kepala Pengamanan atau Ka.UPT memeriksa lampiran lalu mengesahkan berkas.",
+      "Laporan resmi berkop UPT diunduh sebagai PDF; penandatangan diisi manual.",
+      "Penutupan hanya bisa bila WB keluar sama dengan WB kembali dan gangguan sudah diverifikasi.",
+    ],
+    tautan: { href: "/laporan", label: "Buka laporan" },
   },
   {
     no: 8,
     judul: "Evaluasi dan perbaikan",
-    pelaku: ["Pemantau", "Kepala Pengamanan", "Administrator"],
-    peran: ["pemantau_kanwil", "pemantau_pusat", "administrator", "kepala_pengamanan"],
+    pelaku: ["Pemantau", "Ka.UPT", "Kepala Pengamanan", "Administrator"],
+    peran: ["pemantau_kanwil", "pemantau_pusat", "administrator", "kepala_pengamanan", "ka_upt"],
     isi: ["Lihat capaian indikator, tren mingguan, serta risiko dan mitigasi.", "Catatan kendala mingguan menjadi dasar memperbaiki pedoman dan SOP."],
     tautan: { href: "/evaluasi", label: "Buka Evaluasi" },
   },

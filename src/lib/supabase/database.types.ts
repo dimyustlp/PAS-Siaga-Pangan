@@ -1,5 +1,3 @@
-// Dihasilkan dari skema Supabase (proyek PAS-SIAGA Pangan) dengan generate_typescript_types. Jangan diubah manual.
-
 export type Json =
   | string
   | number
@@ -254,8 +252,11 @@ export type Database = {
         Row: {
           activity_id: string
           bimker_penanggung_jawab: string | null
+          catatan_pengesahan: string | null
           created_at: string
           created_by: string
+          disahkan_at: string | null
+          disahkan_oleh: string | null
           ditutup_at: string | null
           ditutup_oleh: string | null
           dokumen_rencana_pengamanan: string | null
@@ -277,8 +278,11 @@ export type Database = {
         Insert: {
           activity_id: string
           bimker_penanggung_jawab?: string | null
+          catatan_pengesahan?: string | null
           created_at?: string
           created_by?: string
+          disahkan_at?: string | null
+          disahkan_oleh?: string | null
           ditutup_at?: string | null
           ditutup_oleh?: string | null
           dokumen_rencana_pengamanan?: string | null
@@ -300,8 +304,11 @@ export type Database = {
         Update: {
           activity_id?: string
           bimker_penanggung_jawab?: string | null
+          catatan_pengesahan?: string | null
           created_at?: string
           created_by?: string
+          disahkan_at?: string | null
+          disahkan_oleh?: string | null
           ditutup_at?: string | null
           ditutup_oleh?: string | null
           dokumen_rencana_pengamanan?: string | null
@@ -331,6 +338,13 @@ export type Database = {
           {
             foreignKeyName: "daily_sessions_created_by_fkey"
             columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_sessions_disahkan_oleh_fkey"
+            columns: ["disahkan_oleh"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -1132,6 +1146,79 @@ export type Database = {
           },
         ]
       }
+      lampiran_tahap: {
+        Row: {
+          butir: string
+          diunggah_oleh: string
+          drive_file_id: string | null
+          drive_url: string | null
+          id: string
+          jenis: string
+          mime: string
+          nama_berkas: string
+          session_id: string
+          storage_path: string | null
+          sumber: string
+          tahap: number
+          ukuran_byte: number
+          waktu_sistem: string
+        }
+        Insert: {
+          butir: string
+          diunggah_oleh: string
+          drive_file_id?: string | null
+          drive_url?: string | null
+          id?: string
+          jenis: string
+          mime: string
+          nama_berkas: string
+          session_id: string
+          storage_path?: string | null
+          sumber: string
+          tahap: number
+          ukuran_byte: number
+          waktu_sistem?: string
+        }
+        Update: {
+          butir?: string
+          diunggah_oleh?: string
+          drive_file_id?: string | null
+          drive_url?: string | null
+          id?: string
+          jenis?: string
+          mime?: string
+          nama_berkas?: string
+          session_id?: string
+          storage_path?: string | null
+          sumber?: string
+          tahap?: number
+          ukuran_byte?: number
+          waktu_sistem?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lampiran_tahap_diunggah_oleh_fkey"
+            columns: ["diunggah_oleh"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lampiran_tahap_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "daily_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lampiran_tahap_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "v_session_overview"
+            referencedColumns: ["session_id"]
+          },
+        ]
+      }
       master_inmates: {
         Row: {
           aktif: boolean
@@ -1257,42 +1344,54 @@ export type Database = {
       }
       master_upt: {
         Row: {
+          alamat: string | null
+          email_kantor: string | null
           id: string
           jenis: string | null
           kab_kota: string | null
           kanwil_id: string | null
           kelas: string | null
           kode: string
+          kota_ttd: string | null
           latitude: number | null
           longitude: number | null
           nama: string
           provinsi: string | null
+          telepon: string | null
           titik_perkiraan: boolean
         }
         Insert: {
+          alamat?: string | null
+          email_kantor?: string | null
           id?: string
           jenis?: string | null
           kab_kota?: string | null
           kanwil_id?: string | null
           kelas?: string | null
           kode: string
+          kota_ttd?: string | null
           latitude?: number | null
           longitude?: number | null
           nama: string
           provinsi?: string | null
+          telepon?: string | null
           titik_perkiraan?: boolean
         }
         Update: {
+          alamat?: string | null
+          email_kantor?: string | null
           id?: string
           jenis?: string | null
           kab_kota?: string | null
           kanwil_id?: string | null
           kelas?: string | null
           kode?: string
+          kota_ttd?: string | null
           latitude?: number | null
           longitude?: number | null
           nama?: string
           provinsi?: string | null
+          telepon?: string | null
           titik_perkiraan?: boolean
         }
         Relationships: [
@@ -1362,8 +1461,13 @@ export type Database = {
       }
       pengaturan_aplikasi: {
         Row: {
+          batas_berkas_mb: number
+          batas_foto_mb: number
           diubah_at: string
           diubah_oleh: string | null
+          drive_aktif: boolean
+          drive_diatur_at: string | null
+          drive_url: string | null
           id: boolean
           mode_latihan: boolean
           rekap_jam_wib: number
@@ -1371,8 +1475,13 @@ export type Database = {
           telegram_aktif: boolean
         }
         Insert: {
+          batas_berkas_mb?: number
+          batas_foto_mb?: number
           diubah_at?: string
           diubah_oleh?: string | null
+          drive_aktif?: boolean
+          drive_diatur_at?: string | null
+          drive_url?: string | null
           id?: boolean
           mode_latihan?: boolean
           rekap_jam_wib?: number
@@ -1380,8 +1489,13 @@ export type Database = {
           telegram_aktif?: boolean
         }
         Update: {
+          batas_berkas_mb?: number
+          batas_foto_mb?: number
           diubah_at?: string
           diubah_oleh?: string | null
+          drive_aktif?: boolean
+          drive_diatur_at?: string | null
+          drive_url?: string | null
           id?: boolean
           mode_latihan?: boolean
           rekap_jam_wib?: number
@@ -1737,6 +1851,61 @@ export type Database = {
           },
         ]
       }
+      tahap_pengawalan: {
+        Row: {
+          id: string
+          isian: Json
+          jumlah_alat: number | null
+          jumlah_wb: number
+          pengawal_id: string
+          session_id: string
+          tahap: number
+          waktu_sistem: string
+        }
+        Insert: {
+          id?: string
+          isian?: Json
+          jumlah_alat?: number | null
+          jumlah_wb: number
+          pengawal_id: string
+          session_id: string
+          tahap: number
+          waktu_sistem?: string
+        }
+        Update: {
+          id?: string
+          isian?: Json
+          jumlah_alat?: number | null
+          jumlah_wb?: number
+          pengawal_id?: string
+          session_id?: string
+          tahap?: number
+          waktu_sistem?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tahap_pengawalan_pengawal_id_fkey"
+            columns: ["pengawal_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tahap_pengawalan_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "daily_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tahap_pengawalan_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "v_session_overview"
+            referencedColumns: ["session_id"]
+          },
+        ]
+      }
       weekly_notes: {
         Row: {
           created_at: string
@@ -2004,6 +2173,15 @@ export type Database = {
       }
     }
     Functions: {
+      admin_atur_drive: {
+        Args: {
+          p_aktif: boolean | null
+          p_batas_berkas: number | null
+          p_batas_foto: number | null
+          p_url: string | null
+        }
+        Returns: undefined
+      }
       admin_atur_kata_sandi: {
         Args: { p_password: string; p_user: string }
         Returns: undefined
@@ -2015,13 +2193,13 @@ export type Database = {
       }
       admin_buat_akun: {
         Args: {
-          p_email: string
+          p_email: string | null
           p_kanwil: string | null
           p_kode_upt: string | null
-          p_nama: string
+          p_nama: string | null
           p_nip: string | null
-          p_password: string
-          p_role: Database["public"]["Enums"]["user_role"]
+          p_password: string | null
+          p_role: Database["public"]["Enums"]["user_role"] | null
         }
         Returns: string
       }
@@ -2053,6 +2231,7 @@ export type Database = {
           waktu: string
         }[]
       }
+      admin_drive_kunci: { Args: never; Returns: string }
       admin_hapus_akun: { Args: { p_id: string }; Returns: undefined }
       admin_kirim_rekap_sekarang: { Args: never; Returns: number }
       admin_simpan_token_telegram: {
@@ -2066,6 +2245,19 @@ export type Database = {
         Args: { p_email: string; p_id: string; p_nama: string }
         Returns: undefined
       }
+      catat_lampiran: {
+        Args: {
+          p_bukti: string | null
+          p_file_id: string | null
+          p_path: string | null
+          p_sig: string | null
+          p_sumber: string | null
+          p_tiket: string | null
+          p_ukuran: number | null
+          p_url: string | null
+        }
+        Returns: string
+      }
       daftar_nominatif: {
         Args: { p_session: string }
         Returns: {
@@ -2074,49 +2266,129 @@ export type Database = {
           nomor_registrasi: string
         }[]
       }
+      hapus_lampiran: { Args: { p_id: string }; Returns: undefined }
       indikator_evaluasi: {
         Args: { p_dari: string; p_sampai: string }
         Returns: Json
+      }
+      kelola_atur_kata_sandi: {
+        Args: { p_id: string; p_password: string }
+        Returns: undefined
+      }
+      kelola_buat_akun: {
+        Args: {
+          p_email: string | null
+          p_kanwil: string | null
+          p_kode_upt: string | null
+          p_nama: string | null
+          p_nip: string | null
+          p_password: string | null
+          p_role: Database["public"]["Enums"]["user_role"] | null
+        }
+        Returns: string
+      }
+      kelola_daftar_akun: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          is_active: boolean
+          kanwil_id: string
+          kode_upt: string
+          last_sign_in_at: string
+          nip: string
+          role: Database["public"]["Enums"]["user_role"]
+        }[]
+      }
+      kelola_ubah_akun: {
+        Args: {
+          p_aktif: boolean | null
+          p_id: string | null
+          p_kanwil: string | null
+          p_kode_upt: string | null
+          p_nama: string | null
+          p_nip: string | null
+          p_role: Database["public"]["Enums"]["user_role"] | null
+        }
+        Returns: undefined
       }
       konfirmasi_alarm_gelang: {
         Args: { p_id: string; p_status: string; p_tindakan: string }
         Returns: undefined
       }
+      pemakaian_lampiran: { Args: never; Returns: Json }
       pembanding_sesudah: {
         Args: { p_dari: string; p_sampai: string }
         Returns: Json
       }
-      rekonsiliasi_sesi: { Args: { p_session: string }; Returns: Json }
       rekap_pangan: {
-        Args: { p_dari: string; p_kanwil?: string | null; p_sampai: string; p_upt?: string | null }
+        Args: {
+          p_dari: string | null
+          p_kanwil?: string | null
+          p_sampai: string | null
+          p_upt?: string | null
+        }
         Returns: {
           jenis: Database["public"]["Enums"]["activity_type"]
           jumlah: number
-          kanwil_id: string | null
-          kanwil_nama: string | null
+          kanwil_id: string
+          kanwil_nama: string
+          kode_upt: string
           komoditas: string
-          kode_upt: string | null
           luas_ha: number
           satuan: string
-          upt_nama: string | null
+          upt_nama: string
           volume: number
         }[]
+      }
+      rekonsiliasi_sesi: { Args: { p_session: string }; Returns: Json }
+      sahkan_laporan: {
+        Args: { p_catatan: string; p_session: string }
+        Returns: undefined
+      }
+      selesaikan_tahap: {
+        Args: { p_isian: Json; p_session: string; p_tahap: number }
+        Returns: string
       }
       terima_alarm_gelang: {
         Args: {
           p_baterai?: string | null
-          p_jenis: string
-          p_kunci: string
+          p_jenis: string | null
+          p_kunci: string | null
           p_lokasi?: string | null
-          p_payload?: Json
-          p_unit: string
+          p_payload?: Json | null
+          p_unit: string | null
           p_waktu?: string | null
         }
         Returns: string
       }
+      tiket_ambil: { Args: { p_lampiran: string }; Returns: Json }
+      tiket_unggah: {
+        Args: {
+          p_butir: string | null
+          p_mime: string | null
+          p_nama: string | null
+          p_session: string | null
+          p_tahap: number | null
+          p_ukuran: number | null
+        }
+        Returns: Json
+      }
       tren_mingguan: {
         Args: { p_dari: string; p_sampai: string }
         Returns: Json
+      }
+      ubah_kop_upt: {
+        Args: {
+          p_alamat: string | null
+          p_email: string | null
+          p_kode: string | null
+          p_kota: string | null
+          p_telepon: string | null
+        }
+        Returns: undefined
       }
     }
     Enums: {
@@ -2146,6 +2418,7 @@ export type Database = {
         | "administrator"
         | "pemantau_kanwil"
         | "pemantau_pusat"
+        | "ka_upt"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2301,6 +2574,7 @@ export const Constants = {
         "administrator",
         "pemantau_kanwil",
         "pemantau_pusat",
+        "ka_upt",
       ],
     },
   },

@@ -3,39 +3,41 @@
 @tailwind utilities;
 
 /*
- * Tema "Langit Pagi": dasar terang kebiruan, kartu putih, satu warna aksen biru kobalt.
- * Hijau, kuning, merah, dan magenta-tua DIPESAN khusus untuk status keamanan, jadi tidak dipakai
- * sebagai warna hiasan di mana pun.
+ * Tema "Lumbung Nusantara": dasar krem gabah, biru dongker resmi (Kemenimipas) untuk tombol dan tautan,
+ * emas untuk garis aksen, dan hijau daun untuk sentuhan pangan (pertanian, perkebunan, perikanan, peternakan).
+ * Hijau terang, kuning, merah, dan magenta-tua tetap DIPESAN untuk status keamanan.
  */
 @layer base {
   :root {
-    --background: 214 62% 96%;
-    --foreground: 226 44% 16%;
+    --background: 46 38% 96%;
+    --foreground: 222 47% 14%;
     --card: 0 0% 100%;
-    --card-foreground: 226 44% 16%;
-    --primary: 224 86% 55%;
+    --card-foreground: 222 47% 14%;
+    --primary: 222 64% 30%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 214 50% 92%;
-    --secondary-foreground: 226 36% 24%;
-    --muted: 214 46% 93%;
-    --muted-foreground: 222 20% 40%;
-    --accent: 224 90% 94%;
-    --accent-foreground: 224 76% 38%;
-    --brand: 224 86% 55%;
-    --brand-soft: 224 90% 94%;
-    --gold: 224 86% 55%;
-    --destructive: 0 76% 52%;
+    --secondary: 44 36% 91%;
+    --secondary-foreground: 222 36% 22%;
+    --muted: 44 32% 92%;
+    --muted-foreground: 222 14% 38%;
+    --accent: 140 36% 92%;
+    --accent-foreground: 156 58% 22%;
+    --brand: 156 56% 27%;
+    --brand-soft: 138 38% 91%;
+    --gold: 41 80% 48%;
+    --navy: 222 64% 17%;
+    --daun: 156 56% 27%;
+    --destructive: 0 76% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 216 40% 86%;
-    --input: 216 36% 80%;
-    --ring: 224 86% 55%;
-    --radius: 0.9rem;
-    --ink: 226 50% 20%;
+    --border: 40 24% 84%;
+    --input: 40 20% 78%;
+    --ring: 222 64% 40%;
+    --radius: 0.85rem;
+    --ink: 222 50% 16%;
 
-    --status-hijau: 152 66% 36%;
+    --status-hijau: 145 70% 34%;
     --status-kuning: 40 96% 48%;
-    --status-merah: 0 78% 54%;
-    --status-kritis: 322 80% 46%;
+    --status-merah: 0 78% 52%;
+    --status-kritis: 322 80% 44%;
 
     --ease-lembut: cubic-bezier(0.32, 0.72, 0, 1);
     --ease-pegas: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -55,18 +57,17 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "ss01", "cv11";
   }
-  /* Latar hidup: dua bola cahaya lambat bergeser + butir halus. Tetap (fixed), tidak ikut menggulir. */
+  /* Latar: cahaya pagi emas di kiri atas, hijau sawah di kanan bawah, dan motif bulir padi sangat halus. */
   body::before {
     content: "";
     position: fixed;
-    inset: -20%;
+    inset: -10%;
     z-index: -1;
     pointer-events: none;
     background:
-      radial-gradient(42rem 30rem at 12% 8%, hsl(204 100% 78% / 0.55), transparent 65%),
-      radial-gradient(36rem 28rem at 92% 2%, hsl(262 90% 86% / 0.5), transparent 62%),
-      radial-gradient(42rem 32rem at 72% 108%, hsl(172 76% 76% / 0.45), transparent 62%);
-    animation: hanyut 28s var(--ease-lembut) infinite alternate;
+      radial-gradient(40rem 26rem at 8% 0%, hsl(42 90% 70% / 0.28), transparent 65%),
+      radial-gradient(44rem 30rem at 100% 100%, hsl(140 50% 62% / 0.22), transparent 62%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'><g fill='none' stroke='%23a08a3c' stroke-opacity='0.055' stroke-width='1.2' stroke-linecap='round'><path d='M10 54c4-10 4-20 0-30'/><path d='M10 30c-4-1-6-4-6-7 3 0 6 2 6 7zM10 38c4-1 6-4 6-7-3 0-6 2-6 7zM10 46c-4-1-6-4-6-7 3 0 6 2 6 7z'/><path d='M42 22c6 0 12 3 14 6-2 3-8 6-14 6s-10-3-12-6c2-3 6-6 12-6z'/><path d='M30 28l-5-4v8z'/></g></svg>");
   }
   body::after {
     content: "";
@@ -78,7 +79,7 @@
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
   ::selection {
-    background: hsl(var(--primary) / 0.35);
+    background: hsl(var(--gold) / 0.35);
   }
   .font-mono,
   .tabular-nums {
@@ -97,28 +98,48 @@
 @layer components {
   /* Panel kaca dengan tepi bias cahaya 1px (bukan bayangan gelap tebal). */
   .kaca {
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.92), hsl(214 60% 98% / 0.86));
-    box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.9), 0 24px 48px -28px hsl(224 70% 40% / 0.28);
-    border: 1px solid hsl(216 50% 88%);
+    background: linear-gradient(180deg, hsl(0 0% 100% / 0.96), hsl(46 50% 98% / 0.92));
+    box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.9), 0 22px 44px -30px hsl(222 60% 20% / 0.32);
+    border: 1px solid hsl(40 26% 85%);
   }
   .bezel {
     padding: 0.375rem;
     border-radius: 1.5rem;
-    background: hsl(0 0% 100% / 0.55);
-    border: 1px solid hsl(216 50% 88% / 0.9);
+    background: hsl(0 0% 100% / 0.6);
+    border: 1px solid hsl(40 26% 85% / 0.9);
   }
   .bezel > * {
     border-radius: calc(1.5rem - 0.375rem);
   }
+  /* Panel utama: biru dongker ke hijau sawah, dengan cahaya emas. */
   .bg-brand-gradient {
     color: white;
     background:
-      radial-gradient(26rem 18rem at 100% 0%, hsl(180 90% 62% / 0.55), transparent 62%),
-      radial-gradient(24rem 18rem at 0% 100%, hsl(280 90% 70% / 0.5), transparent 65%),
-      linear-gradient(135deg, hsl(224 86% 52%), hsl(238 78% 58%) 55%, hsl(256 74% 60%));
+      radial-gradient(24rem 16rem at 100% 0%, hsl(42 90% 56% / 0.38), transparent 62%),
+      radial-gradient(26rem 18rem at 0% 110%, hsl(150 60% 40% / 0.55), transparent 65%),
+      linear-gradient(125deg, hsl(222 64% 17%), hsl(205 58% 22%) 48%, hsl(160 56% 22%));
+  }
+  .bg-kanwil-gradient {
+    color: white;
+    background:
+      radial-gradient(24rem 16rem at 100% 0%, hsl(42 90% 56% / 0.35), transparent 62%),
+      linear-gradient(125deg, hsl(196 62% 20%), hsl(176 52% 24%) 55%, hsl(150 50% 26%));
+  }
+  .bg-upt-gradient {
+    color: white;
+    background:
+      radial-gradient(24rem 16rem at 100% 0%, hsl(42 90% 56% / 0.4), transparent 62%),
+      linear-gradient(125deg, hsl(156 58% 18%), hsl(140 46% 26%) 55%, hsl(92 40% 30%));
   }
   .bg-sidebar {
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.9), hsl(214 70% 98% / 0.85));
+    background: linear-gradient(180deg, hsl(0 0% 100% / 0.94), hsl(46 50% 98% / 0.9));
+  }
+  .bg-navy {
+    background:
+      linear-gradient(90deg, hsl(222 64% 14%), hsl(222 58% 20%) 60%, hsl(210 56% 20%));
+  }
+  .garis-emas {
+    background: linear-gradient(90deg, transparent, hsl(var(--gold)) 20%, hsl(44 90% 66%) 50%, hsl(var(--gold)) 80%, transparent);
   }
   /* Garis tepi berputar pelan (dipakai hemat: kartu utama, tombol penting). */
   .tepi-hidup {
@@ -132,21 +153,21 @@
     z-index: -1;
     border-radius: inherit;
     padding: 1px;
-    background: conic-gradient(from var(--sudut, 0deg), transparent 0deg, hsl(224 86% 55% / 0.85) 60deg, transparent 140deg, transparent 360deg);
+    background: conic-gradient(from var(--sudut, 0deg), transparent 0deg, hsl(41 80% 48% / 0.9) 60deg, transparent 140deg, transparent 360deg);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     animation: putar 6s linear infinite;
   }
   .shadow-soft {
-    box-shadow: 0 1px 0 hsl(0 0% 100% / 0.9) inset, 0 14px 32px -20px hsl(224 70% 40% / 0.3);
+    box-shadow: 0 1px 0 hsl(0 0% 100% / 0.9) inset, 0 14px 32px -22px hsl(222 60% 20% / 0.3);
   }
   .lift {
     transition: transform 0.5s var(--ease-lembut), border-color 0.5s var(--ease-lembut), background-color 0.5s var(--ease-lembut);
   }
   .lift:hover {
     transform: translateY(-3px);
-    border-color: hsl(224 86% 55% / 0.35);
+    border-color: hsl(41 80% 48% / 0.5);
   }
   .halaman-masuk {
     animation: masuk 0.7s var(--ease-lembut) both;
@@ -179,7 +200,7 @@
     animation: denyut 2.2s var(--ease-lembut) infinite;
   }
   .kilau {
-    background: linear-gradient(100deg, hsl(214 46% 92%) 30%, hsl(214 60% 97%) 50%, hsl(214 46% 92%) 70%);
+    background: linear-gradient(100deg, hsl(44 30% 90%) 30%, hsl(44 50% 97%) 50%, hsl(44 30% 90%) 70%);
     background-size: 220% 100%;
     animation: kilau 1.6s linear infinite;
   }
@@ -242,6 +263,9 @@
   body::before,
   body::after {
     display: none;
+  }
+  .no-print {
+    display: none !important;
   }
 }
 

@@ -7,6 +7,7 @@ import maplibregl, { type GeoJSONSource, type LngLatBoundsLike, type StyleSpecif
 import { Bell, Crosshair, ExternalLink, Globe2, Layers, Minus, Plus, Search, X } from "lucide-react";
 import { LABEL_KONDISI, URUTAN_KONDISI, type Kondisi, type Letak, type Penanda, type UptPeta } from "@/lib/domain/peta";
 import { cn } from "@/lib/utils";
+import { Select } from "@/components/ui/select-cari";
 
 export type PetaProps = {
   upt: UptPeta[];
@@ -336,19 +337,18 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
         <div className="space-y-3 border-b border-ink/[0.06] p-4">
           <label className="block space-y-1.5">
             <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Kanwil</span>
-            <select
+            <Select
               value={kanwilId}
               onChange={(e) => {
                 setKanwilId(e.target.value);
                 arahkanKanwil(e.target.value);
               }}
-              className="h-10 w-full rounded-xl border border-input bg-white px-3 text-sm focus-visible:border-primary/70 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15"
             >
               <option value="">Seluruh Indonesia</option>
               {kanwil.map((k) => (
                 <option key={k.id} value={k.id}>{k.nama}</option>
               ))}
-            </select>
+            </Select>
           </label>
           <div className="grid grid-cols-3 rounded-full border border-border bg-white/80 p-1 text-xs" role="radiogroup" aria-label="Letak kegiatan">
             {(["Semua", "Dalam UPT", "Luar UPT"] as const).map((x) => (
@@ -360,7 +360,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
                 onClick={() => setLetak(x)}
                 className={cn(
                   "flex items-center justify-center gap-1.5 rounded-full py-1.5 font-medium transition-colors duration-300",
-                  letak === x ? "bg-white text-primary shadow-[0_1px_3px_hsl(224_60%_40%/0.25)]" : "text-muted-foreground hover:text-foreground"
+                  letak === x ? "bg-white text-primary shadow-[0_1px_3px_hsl(222_50%_25%/0.22)]" : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {x !== "Semua" && <Bentuk letak={x} kondisi="MENUNGGU" ukuran={10} />}
@@ -443,7 +443,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
       </aside>
 
       {/* Peta */}
-      <section className="relative order-1 h-[62dvh] min-h-[26rem] overflow-hidden rounded-[1.6rem] border border-ink/[0.07] bg-[hsl(205_60%_90%)] shadow-[0_24px_50px_-30px_hsl(224_70%_40%/0.4)] lg:order-2 lg:h-[calc(100dvh-12rem)] lg:min-h-[34rem]">
+      <section className="relative order-1 h-[62dvh] min-h-[26rem] overflow-hidden rounded-[1.6rem] border border-ink/[0.07] bg-[hsl(44_40%_90%)] shadow-[0_24px_50px_-30px_hsl(222_60%_20%/0.35)] lg:order-2 lg:h-[calc(100dvh-12rem)] lg:min-h-[34rem]">
         <div ref={wadah} className="!absolute inset-0" aria-label="Peta sebaran kegiatan pangan UPT" role="region" />
         {!siap && <div className="kilau absolute inset-0" aria-hidden />}
 

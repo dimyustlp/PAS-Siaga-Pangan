@@ -10,6 +10,7 @@ import { aturZonaUnit, hapusUnitGelang, konfirmasiAlarm, simpanUnitGelang } from
 import { requireUser } from "@/lib/auth";
 import { fmtWaktu, sejak } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
+import { TabelCari } from "@/components/ui/tabel-cari";
 
 export const metadata = { title: "Gelang" };
 export const dynamic = "force-dynamic";
@@ -99,7 +100,7 @@ export default async function GelangPage() {
           {daftarStatus.length === 0 ? (
             <p className="text-sm text-muted-foreground">Belum ada unit gelang aktif. Daftarkan unit pada bagian Pemetaan unit gelang.</p>
           ) : (
-            <table className="w-full min-w-[48rem] text-sm">
+            <TabelCari className="w-full min-w-[48rem] text-sm">
               <thead className="text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"><tr><th className="py-2 pr-3">Unit / WB</th><th className="py-2 pr-3">Zona</th><th className="py-2 pr-3">Baterai</th><th className="py-2 pr-3">Sinyal</th><th className="py-2">Alarm</th></tr></thead>
               <tbody className="divide-y">
                 {daftarStatus.map((u) => {
@@ -116,7 +117,7 @@ export default async function GelangPage() {
                   );
                 })}
               </tbody>
-            </table>
+            </TabelCari>
           )}
           {bisaAtur && daftarUnit.length > 0 && (
             <ActionForm action={aturZonaUnit} submit="Simpan zona" fields={{ id: { s: "z-unit" }, zona_nama: { s: "z-nama" }, zona_radius_m: { n: "z-rad" }, ambang_baterai: { n: "z-amb" } }} className="grid gap-3 rounded-xl border border-border/70 p-4 sm:grid-cols-2 lg:grid-cols-[1.4fr_1.4fr_0.8fr_0.8fr_auto] lg:items-end">
@@ -135,7 +136,7 @@ export default async function GelangPage() {
           {daftarRiwayat.length === 0 ? (
             <p className="text-sm text-muted-foreground">Belum ada riwayat.</p>
           ) : (
-            <table className="w-full min-w-[40rem] text-sm">
+            <TabelCari className="w-full min-w-[40rem] text-sm">
               <thead className="text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"><tr><th className="py-2 pr-3">Waktu</th><th className="py-2 pr-3">Alarm</th><th className="py-2 pr-3">Unit / WB</th><th className="py-2 pr-3">Hasil</th><th className="py-2">Keterangan</th></tr></thead>
               <tbody className="divide-y">
                 {daftarRiwayat.map((a) => (
@@ -148,7 +149,7 @@ export default async function GelangPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </TabelCari>
           )}
         </CardContent>
       </Card>
@@ -184,7 +185,7 @@ export default async function GelangPage() {
               {daftarUnit.length === 0 ? (
                 <p className="text-sm text-muted-foreground">Belum ada unit terdaftar.</p>
               ) : (
-                <table className="w-full min-w-[34rem] text-sm">
+                <TabelCari className="w-full min-w-[34rem] text-sm">
                   <thead className="text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"><tr><th className="py-2 pr-3">Kode</th><th className="py-2 pr-3">Nama unit</th><th className="py-2 pr-3">WB</th><th className="py-2 pr-3">UPT</th><th className="py-2" /></tr></thead>
                   <tbody className="divide-y">
                     {daftarUnit.map((u) => {
@@ -200,7 +201,7 @@ export default async function GelangPage() {
                       );
                     })}
                   </tbody>
-                </table>
+                </TabelCari>
               )}
             </div>
           </CardContent>
