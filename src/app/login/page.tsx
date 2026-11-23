@@ -51,15 +51,15 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <span className="h-10 w-px bg-white/30" aria-hidden />
           <Logo />
           <div className="leading-tight">
-            <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Kementerian Imigrasi dan Pemasyarakatan RI</p>
+            <p className="text-[0.625rem] uppercase tracking-[0.22em] text-muted-foreground">Kementerian Imigrasi dan Pemasyarakatan RI</p>
             <p className="text-lg font-bold tracking-tight text-white">PAS-SIAGA <span className="text-[hsl(44_90%_66%)]">PANGAN</span></p>
-            <p className="text-[11px] text-muted-foreground">Direktorat Jenderal Pemasyarakatan</p>
+            <p className="text-[0.6875rem] text-muted-foreground">Direktorat Jenderal Pemasyarakatan</p>
           </div>
         </div>
 
         <div className="relative max-w-xl space-y-10">
           <div className="space-y-4">
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[0.625rem] font-medium uppercase tracking-[0.2em] text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-status-hijau text-status-hijau titik-hidup" aria-hidden />
               33 Kanwil · 611 UPT
             </p>

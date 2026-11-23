@@ -156,11 +156,11 @@ export function NavLinks({ role }: { role: Role }) {
             href={href}
             aria-current={on ? "page" : undefined}
             className={cn(
-              "group relative flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 py-2.5 text-[15px] font-semibold transition-[background-color,color] duration-300",
-              on ? "bg-primary text-primary-foreground shadow-[0_8px_18px_-10px_hsl(222_64%_20%/0.8)]" : "text-secondary-foreground hover:bg-secondary hover:text-foreground"
+              "group relative flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-[0.95rem] font-medium transition-[background-color,color,box-shadow] duration-300",
+              on ? "bg-navy text-white shadow-[0_10px_22px_-12px_hsl(222_64%_20%/0.9)]" : "text-secondary-foreground hover:bg-secondary hover:text-ink"
             )}
           >
-            <Icon className={cn("h-5 w-5 shrink-0", on ? "text-[hsl(44_90%_66%)]" : "text-brand")} aria-hidden />
+            <Icon className={cn("h-5 w-5 shrink-0", on ? "text-[hsl(40_70%_68%)]" : "text-primary/70 group-hover:text-primary")} aria-hidden />
             {label}
           </Link>
         );
@@ -174,8 +174,8 @@ export function NavLinks({ role }: { role: Role }) {
             aria-haspopup="menu"
             onClick={() => setBuka((b) => !b)}
             className={cn(
-              "flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2.5 text-[15px] font-semibold transition-colors",
-              lainAktif ? "bg-primary text-primary-foreground" : "text-secondary-foreground hover:bg-secondary"
+              "flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-[0.95rem] font-medium transition-colors",
+              lainAktif ? "bg-navy text-white" : "text-secondary-foreground hover:bg-secondary"
             )}
           >
             {lainAktif ? lainAktif.label : "Menu lain"}

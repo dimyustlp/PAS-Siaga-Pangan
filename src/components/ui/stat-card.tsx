@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AngkaHitung } from "@/components/ui/angka-hitung";
 
 const TONE = {
   biru: { ikon: "text-primary bg-primary/10 ring-primary/20", garis: "from-primary/70" },
@@ -28,15 +29,17 @@ export function StatCard({
 }) {
   const t = TONE[nada];
   return (
-    <div className={cn("kaca lift group relative overflow-hidden rounded-2xl p-4 md:p-5", className)}>
-      <span className={cn("pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r to-transparent", t.garis)} aria-hidden />
+    <div className={cn("kaca lift group relative overflow-hidden rounded-xl p-4 md:p-5", className)}>
+      <span className={cn("pointer-events-none absolute inset-y-4 left-0 w-[3px] rounded-r-full bg-gradient-to-b to-transparent", t.garis)} aria-hidden />
       <div className="flex items-start justify-between gap-3">
-        <p className="font-mono text-3xl font-medium leading-none tracking-tight tabular-nums">{nilai}</p>
-        <span className={cn("flex h-9 w-9 shrink-0 items-center justify-center rounded-full ring-1 ring-inset transition-transform duration-500 group-hover:scale-110", t.ikon)}>
-          <Icon className="h-4 w-4" aria-hidden />
+        <p className="text-[2rem] font-semibold leading-none tracking-tight text-ink tabular-nums">
+          {typeof nilai === "number" ? <AngkaHitung nilai={nilai} /> : nilai}
+        </p>
+        <span className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ring-1 ring-inset transition-transform duration-500 group-hover:-translate-y-0.5", t.ikon)}>
+          <Icon className="h-[1.15rem] w-[1.15rem]" aria-hidden />
         </span>
       </div>
-      <p className="mt-3 text-xs leading-snug text-muted-foreground">{label}</p>
+      <p className="mt-3 text-[0.82rem] leading-snug text-muted-foreground">{label}</p>
     </div>
   );
 }

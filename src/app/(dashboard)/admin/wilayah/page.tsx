@@ -105,7 +105,7 @@ export default async function WilayahPage() {
                 </summary>
                 <div className="overflow-x-auto border-t border-ink/[0.06]">
                   <TabelCari className="w-full min-w-[40rem] text-sm">
-                    <thead className="text-left text-[11px] uppercase tracking-wider text-muted-foreground"><tr><th className="px-4 py-2">Kode</th><th className="py-2 pr-3">Nama</th><th className="py-2 pr-3">Jenis</th><th className="py-2 pr-3">Kab/Kota</th><th className="py-2 pr-4">Titik</th></tr></thead>
+                    <thead className="text-left text-[0.6875rem] uppercase tracking-wider text-muted-foreground"><tr><th className="px-4 py-2">Kode</th><th className="py-2 pr-3">Nama</th><th className="py-2 pr-3">Jenis</th><th className="py-2 pr-3">Kab/Kota</th><th className="py-2 pr-4">Titik</th></tr></thead>
                     <tbody className="divide-y divide-ink/[0.05]">
                       {isi.map((u) => (
                         <tr key={u.id}>

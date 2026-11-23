@@ -45,7 +45,7 @@ function TabelRekap({ judul, kolom, data }: { judul: string; kolom: string; data
       <h2 className="text-lg font-semibold tracking-tight">{judul}</h2>
       <div className="overflow-x-auto rounded-2xl border border-border/70 bg-card shadow-soft">
         <TabelCari className="w-full min-w-[48rem] text-sm">
-          <thead className="bg-secondary/80 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <thead className="bg-secondary/80 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">
             <tr>
               <th className="px-3 py-2 text-left">{kolom}</th>
               <th className="px-3 py-2">Sesi aktif</th>
@@ -166,15 +166,15 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="mx-auto max-w-[1680px] space-y-6">
-      <section className={`${latar} relative overflow-hidden rounded-[1.6rem] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_28px_50px_-30px_hsl(222_64%_14%/0.8)] md:p-8 [&_.text-muted-foreground]:!text-white/80`}>
+      <section className={`${latar} kilap-panel relative overflow-hidden rounded-2xl p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_30px_60px_-34px_hsl(222_64%_14%/0.85)] md:p-9 [&_.text-muted-foreground]:!text-white/80`}>
         <MotifPangan />
         <div className="relative grid gap-6 md:grid-cols-[1.6fr_1fr] md:items-end">
           <div className="min-w-0">
-            <p className="inline-flex items-center gap-2 rounded-full border border-[hsl(44_90%_66%/0.5)] bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[hsl(44_90%_76%)]">
+            <p className="flex items-center gap-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-[hsl(40_70%_72%)]"><span className="h-px w-8 bg-[hsl(40_70%_72%)]" aria-hidden />
               {LABEL_TINGKAT[tingkat]} · {fmtTanggal(now)}
             </p>
-            <h1 className="mt-4 text-2xl font-semibold tracking-tight md:text-[2.2rem] md:leading-[1.1]">{judul}</h1>
-            <p className="mt-2 text-sm text-white/85">
+            <h1 className="mt-4 max-w-[22ch] text-[1.75rem] font-semibold leading-[1.12] tracking-tight md:text-[2.5rem]">{judul}</h1>
+            <p className="mt-3 max-w-[60ch] text-[0.95rem] text-white/80">
               {sapaan(jam)}, {user.fullName.split(" ")[0]} ({ROLE_LABEL[user.role]}).{" "}
               {perlu.length > 0 ? `${perlu.length} kegiatan perlu perhatian sekarang.` : "Tidak ada kegiatan yang perlu perhatian khusus saat ini."}
             </p>
@@ -242,7 +242,7 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
                         {["P2U", "Perjalanan", "Pelaksanaan", "Kembali"].map((t, i) => (
                           <div key={t} className="text-center">
                             <div className={cn("h-1.5 rounded-full", i < n ? "bg-status-hijau" : "bg-ink/10")} />
-                            <p className={cn("mt-1 text-[10px]", i < n ? "font-semibold text-[hsl(152_70%_24%)]" : "text-muted-foreground")}>{t}</p>
+                            <p className={cn("mt-1 text-[0.625rem]", i < n ? "font-semibold text-[hsl(152_70%_24%)]" : "text-muted-foreground")}>{t}</p>
                           </div>
                         ))}
                       </div>

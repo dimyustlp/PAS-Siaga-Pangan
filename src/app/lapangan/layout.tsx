@@ -17,7 +17,7 @@ export default async function LapanganLayout({ children }: { children: React.Rea
             <Logo kecil />
             <span className="min-w-0 leading-tight">
               <span className="block font-bold tracking-tight">PAS-SIAGA <span className="text-[hsl(44_90%_66%)]">PANGAN</span></span>
-              <span className="block truncate text-[11px] text-white/75">{unit ?? "Pengawal kegiatan"}</span>
+              <span className="block truncate text-[0.6875rem] text-white/75">{unit ?? "Pengawal kegiatan"}</span>
             </span>
           </Link>
           <UserBar name={user.fullName} role={user.role} ringkas gelap />

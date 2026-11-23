@@ -38,11 +38,11 @@ export default async function KopSuratPage({ searchParams }: { searchParams: Pro
                 <div className="flex items-center gap-4">
                   <img src="/logo-kemenimipas.png" alt="" className="h-16 w-16" />
                   <div className="flex-1 text-center leading-tight">
-                    <p className="text-[13px] font-bold">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN REPUBLIK INDONESIA</p>
-                    <p className="text-[13px] font-bold">DIREKTORAT JENDERAL PEMASYARAKATAN</p>
-                    {kanwil && <p className="text-[13px] font-bold">{kanwil.toUpperCase()}</p>}
-                    <p className="text-[15px] font-bold">{upt.nama.toUpperCase()}</p>
-                    <p className="mt-1 text-[10px]">{[upt.alamat, upt.telepon ? `Telepon ${upt.telepon}` : null, upt.email_kantor ? `Pos-el ${upt.email_kantor}` : null].filter(Boolean).join(" · ") || "Alamat belum diisi"}</p>
+                    <p className="text-[0.8125rem] font-bold">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN REPUBLIK INDONESIA</p>
+                    <p className="text-[0.8125rem] font-bold">DIREKTORAT JENDERAL PEMASYARAKATAN</p>
+                    {kanwil && <p className="text-[0.8125rem] font-bold">{kanwil.toUpperCase()}</p>}
+                    <p className="text-[0.9375rem] font-bold">{upt.nama.toUpperCase()}</p>
+                    <p className="mt-1 text-[0.625rem]">{[upt.alamat, upt.telepon ? `Telepon ${upt.telepon}` : null, upt.email_kantor ? `Pos-el ${upt.email_kantor}` : null].filter(Boolean).join(" · ") || "Alamat belum diisi"}</p>
                   </div>
                   <img src="/logo-pemasyarakatan.png" alt="" className="h-16 w-auto" />
                 </div>

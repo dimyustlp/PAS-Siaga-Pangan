@@ -9,29 +9,29 @@
  */
 @layer base {
   :root {
-    --background: 46 38% 96%;
+    --background: 36 18% 97%;
     --foreground: 222 47% 14%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 14%;
     --primary: 222 64% 30%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 44 36% 91%;
+    --secondary: 220 18% 94%;
     --secondary-foreground: 222 36% 22%;
-    --muted: 44 32% 92%;
-    --muted-foreground: 222 14% 38%;
-    --accent: 140 36% 92%;
+    --muted: 220 16% 95%;
+    --muted-foreground: 222 12% 40%;
+    --accent: 152 24% 93%;
     --accent-foreground: 156 58% 22%;
     --brand: 156 56% 27%;
     --brand-soft: 138 38% 91%;
-    --gold: 41 80% 48%;
+    --gold: 40 62% 48%;
     --navy: 222 64% 17%;
     --daun: 156 56% 27%;
     --destructive: 0 76% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 40 24% 84%;
-    --input: 40 20% 78%;
+    --border: 222 16% 88%;
+    --input: 222 14% 82%;
     --ring: 222 64% 40%;
-    --radius: 0.85rem;
+    --radius: 0.75rem;
     --ink: 222 50% 16%;
 
     --status-hijau: 145 70% 34%;
@@ -52,13 +52,28 @@
   html {
     font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
     scroll-behavior: smooth;
+    font-size: 16.5px;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (min-width: 1024px) {
+    html { font-size: 17px; }
+  }
+  @media (min-width: 1600px) {
+    html { font-size: 17.5px; }
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+    letter-spacing: -0.018em;
+  }
+  p {
+    text-wrap: pretty;
   }
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "ss01", "cv11";
   }
-  /* Latar: cahaya pagi emas, motif bulir padi, sawah, ikan, dan tunas (tile SVG ringan, tanpa gambar besar),
-     ditutup siluet sawah berundak di bagian bawah layar. */
+  /* Latar: porselen hangat, cahaya lembut di atas, kisi titik halus yang memudar,
+     dan garis kontur terasering tipis di sudut kanan bawah (SVG ringan, tanpa gambar). */
   body::before {
     content: "";
     position: fixed;
@@ -66,22 +81,25 @@
     z-index: -1;
     pointer-events: none;
     background:
-      radial-gradient(48rem 30rem at 6% -4%, hsl(42 90% 68% / 0.30), transparent 65%),
-      radial-gradient(52rem 34rem at 104% 104%, hsl(140 48% 58% / 0.26), transparent 62%),
-      url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E %3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E %3Cg stroke='%232f7a4f' stroke-opacity='.13' stroke-width='1.3'%3E %3Cpath d='M38 120c3-22 2-44-4-64'/%3E%3Cpath d='M38 120c-6-18-16-30-28-38'/%3E%3Cpath d='M38 120c8-16 20-26 34-30'/%3E %3Cpath d='M120 210c2-16 1-30-3-44'/%3E%3Cpath d='M120 210c-5-12-12-20-22-26'/%3E %3C/g%3E %3Cg fill='%23b8902a' fill-opacity='.16' stroke='none'%3E %3Cellipse cx='31' cy='62' rx='2.6' ry='5' transform='rotate%28-28 31 62%29'/%3E%3Cellipse cx='38' cy='58' rx='2.6' ry='5' transform='rotate%2824 38 58%29'/%3E %3Cellipse cx='30' cy='73' rx='2.6' ry='5' transform='rotate%28-34 30 73%29'/%3E%3Cellipse cx='40' cy='69' rx='2.6' ry='5' transform='rotate%2830 40 69%29'/%3E %3Cellipse cx='31' cy='84' rx='2.6' ry='5' transform='rotate%28-38 31 84%29'/%3E%3Cellipse cx='41' cy='80' rx='2.6' ry='5' transform='rotate%2834 41 80%29'/%3E %3Cellipse cx='114' cy='170' rx='2.2' ry='4.4' transform='rotate%28-26 114 170%29'/%3E%3Cellipse cx='121' cy='167' rx='2.2' ry='4.4' transform='rotate%2822 121 167%29'/%3E %3Cellipse cx='114' cy='180' rx='2.2' ry='4.4' transform='rotate%28-32 114 180%29'/%3E%3Cellipse cx='122' cy='177' rx='2.2' ry='4.4' transform='rotate%2828 122 177%29'/%3E %3C/g%3E %3Cg stroke='%232f7a4f' stroke-opacity='.09' stroke-width='1.1'%3E %3Cpath d='M96 40c18-8 40-8 58 0s40 8 58 0'/%3E%3Cpath d='M96 52c18-8 40-8 58 0s40 8 58 0'/%3E%3Cpath d='M96 64c18-8 40-8 58 0s40 8 58 0'/%3E %3Cpath d='M-10 160c18-8 40-8 58 0s40 8 58 0'/%3E%3Cpath d='M-10 172c18-8 40-8 58 0'/%3E %3C/g%3E %3Cg stroke='%231d3a7a' stroke-opacity='.10' stroke-width='1.2'%3E %3Cpath d='M168 128c8 0 16 4 18 8-2 4-10 8-18 8s-13-4-15-8c2-4 7-8 15-8z'/%3E%3Cpath d='M153 136l-7-5v10z'/%3E %3Cpath d='M176 196v-14m0 0c0-6 5-9 10-9 0 6-5 9-10 9zm0 4c0-6-5-9-10-9 0 6 5 9 10 9z'/%3E %3C/g%3E %3Cg fill='%23b8902a' fill-opacity='.14' stroke='none'%3E%3Ccircle cx='80' cy='140' r='1.6'/%3E%3Ccircle cx='196' cy='92' r='1.4'/%3E%3Ccircle cx='150' cy='14' r='1.4'/%3E%3Ccircle cx='12' cy='14' r='1.2'/%3E%3C/g%3E %3C/g%3E%3C/svg%3E") 0 0 / 220px 220px,
-      linear-gradient(180deg, hsl(46 44% 96%), hsl(60 30% 94%));
+      radial-gradient(60rem 26rem at 50% -8rem, hsl(222 60% 30% / 0.07), transparent 70%),
+      radial-gradient(36rem 20rem at 92% 0%, hsl(40 70% 55% / 0.09), transparent 70%),
+      radial-gradient(hsl(222 40% 30% / 0.07) 1px, transparent 1.2px) 0 0 / 22px 22px;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 35%, transparent 85%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 35%, transparent 85%);
   }
   body::after {
     content: "";
     position: fixed;
-    inset: auto 0 0 0;
-    height: min(26vh, 260px);
+    right: 0;
+    bottom: 0;
+    width: min(900px, 70vw);
+    height: min(520px, 60vh);
     z-index: -1;
     pointer-events: none;
-    background: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='260' viewBox='0 0 1600 260' preserveAspectRatio='none'%3E %3Cpath d='M0 150C220 110 420 140 640 120S1100 80 1320 104 1520 120 1600 110V260H0Z' fill='%233d8a5a' fill-opacity='.10'/%3E %3Cpath d='M0 190C260 160 520 182 780 164S1260 140 1600 160V260H0Z' fill='%232f7a4f' fill-opacity='.12'/%3E %3Cpath d='M0 226C300 204 640 222 960 206S1400 196 1600 204V260H0Z' fill='%231f5e3c' fill-opacity='.12'/%3E %3Cg fill='none' stroke='%23b8902a' stroke-opacity='.22' stroke-width='1.4'%3E%3Cpath d='M0 176C260 148 520 170 780 152S1260 128 1600 148'/%3E%3Cpath d='M0 212C300 190 640 208 960 192S1400 182 1600 190'/%3E%3C/g%3E %3C/svg%3E") bottom / 100% 100% no-repeat;
+    background: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='520' viewBox='0 0 900 520' fill='none' stroke='%231d2f5c' stroke-width='1'%3E %3Cpath d='M900 120C760 150 640 210 560 290S420 450 300 520' stroke-opacity='.06'/%3E %3Cpath d='M900 170C780 196 676 250 604 324S470 474 360 520' stroke-opacity='.055'/%3E %3Cpath d='M900 220C800 242 712 290 648 356S520 490 420 520' stroke-opacity='.05'/%3E %3Cpath d='M900 270C820 288 748 330 692 388S572 500 484 520' stroke-opacity='.045'/%3E %3Cpath d='M900 320C840 334 784 370 736 420S624 510 552 520' stroke-opacity='.04'/%3E %3Cpath d='M900 370C860 380 820 410 780 452S680 516 620 520' stroke-opacity='.035'/%3E %3Cpath d='M900 420C880 426 856 446 828 480S760 520 700 520' stroke-opacity='.03'/%3E %3C/svg%3E") right bottom / contain no-repeat;
   }
   ::selection {
-    background: hsl(var(--gold) / 0.35);
+    background: hsl(222 60% 40% / 0.18);
   }
   .font-mono,
   .tabular-nums {
@@ -100,15 +118,15 @@
 @layer components {
   /* Panel kaca dengan tepi bias cahaya 1px (bukan bayangan gelap tebal). */
   .kaca {
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.96), hsl(46 50% 98% / 0.92));
-    box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.9), 0 22px 44px -30px hsl(222 60% 20% / 0.32);
-    border: 1px solid hsl(40 26% 85%);
+    background: hsl(0 0% 100%);
+    box-shadow: 0 1px 2px hsl(222 40% 20% / 0.04), 0 12px 32px -20px hsl(222 50% 20% / 0.18);
+    border: 1px solid hsl(222 16% 89%);
   }
   .bezel {
     padding: 0.375rem;
     border-radius: 1.5rem;
     background: hsl(0 0% 100% / 0.6);
-    border: 1px solid hsl(40 26% 85% / 0.9);
+    border: 1px solid hsl(222 16% 89%);
   }
   .bezel > * {
     border-radius: calc(1.5rem - 0.375rem);
@@ -117,24 +135,26 @@
   .bg-brand-gradient {
     color: white;
     background:
-      radial-gradient(24rem 16rem at 100% 0%, hsl(42 90% 56% / 0.38), transparent 62%),
-      radial-gradient(26rem 18rem at 0% 110%, hsl(150 60% 40% / 0.55), transparent 65%),
-      linear-gradient(125deg, hsl(222 64% 17%), hsl(205 58% 22%) 48%, hsl(160 56% 22%));
+      radial-gradient(34rem 18rem at 100% 0%, hsl(40 70% 55% / 0.22), transparent 65%),
+      radial-gradient(30rem 20rem at 0% 120%, hsl(212 60% 40% / 0.35), transparent 65%),
+      linear-gradient(135deg, hsl(222 62% 13%), hsl(222 56% 19%) 55%, hsl(214 52% 22%));
   }
   .bg-kanwil-gradient {
     color: white;
     background:
-      radial-gradient(24rem 16rem at 100% 0%, hsl(42 90% 56% / 0.35), transparent 62%),
-      linear-gradient(125deg, hsl(196 62% 20%), hsl(176 52% 24%) 55%, hsl(150 50% 26%));
+      radial-gradient(34rem 18rem at 100% 0%, hsl(40 70% 55% / 0.2), transparent 65%),
+      linear-gradient(135deg, hsl(208 60% 14%), hsl(198 52% 20%) 55%, hsl(188 46% 22%));
   }
   .bg-upt-gradient {
     color: white;
     background:
-      radial-gradient(24rem 16rem at 100% 0%, hsl(42 90% 56% / 0.4), transparent 62%),
-      linear-gradient(125deg, hsl(156 58% 18%), hsl(140 46% 26%) 55%, hsl(92 40% 30%));
+      radial-gradient(34rem 18rem at 100% 0%, hsl(40 70% 55% / 0.2), transparent 65%),
+      linear-gradient(135deg, hsl(162 50% 12%), hsl(158 42% 18%) 55%, hsl(150 36% 22%));
   }
   .bg-sidebar {
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.94), hsl(46 50% 98% / 0.9));
+    background: hsl(0 0% 100% / 0.86);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    backdrop-filter: saturate(1.4) blur(14px);
   }
   .bg-navy {
     background:
@@ -165,19 +185,41 @@
     box-shadow: 0 1px 0 hsl(0 0% 100% / 0.9) inset, 0 14px 32px -22px hsl(222 60% 20% / 0.3);
   }
   .lift {
-    transition: transform 0.5s var(--ease-lembut), border-color 0.5s var(--ease-lembut), background-color 0.5s var(--ease-lembut);
+    transition: transform 0.45s var(--ease-lembut), border-color 0.45s var(--ease-lembut), box-shadow 0.45s var(--ease-lembut), background-color 0.45s var(--ease-lembut);
   }
   .lift:hover {
-    transform: translateY(-3px);
-    border-color: hsl(41 80% 48% / 0.5);
+    transform: translateY(-2px);
+    border-color: hsl(222 30% 78%);
+    box-shadow: 0 1px 2px hsl(222 40% 20% / 0.05), 0 22px 40px -22px hsl(222 55% 20% / 0.28);
+  }
+  .lift:active {
+    transform: translateY(0) scale(0.995);
+  }
+  /* Kilap cahaya yang melintas pelan di panel utama. */
+  .kilap-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 38%, hsl(0 0% 100% / 0.07) 48%, hsl(40 80% 70% / 0.08) 52%, transparent 62%);
+    transform: translateX(-100%);
+    animation: lintas 9s var(--ease-lembut) 1.2s infinite;
+  }
+  /* Garis emas tipis di bawah kepala situs yang berkilau pelan. */
+  .garis-emas {
+    background-size: 200% 100%;
+    animation: emas-geser 8s linear infinite;
+  }
+  .angka-hitung {
+    font-variant-numeric: tabular-nums;
   }
   .halaman-masuk {
     animation: masuk 0.7s var(--ease-lembut) both;
   }
   /* Urutan muncul bertahap: beri style={{ "--i": n }} pada anak. */
   .muncul > * {
-    animation: masuk 0.8s var(--ease-lembut) both;
-    animation-delay: calc(var(--i, 0) * 70ms);
+    animation: masuk 0.7s var(--ease-lembut) both;
+    animation-delay: calc(var(--i, 0) * 60ms);
   }
   .muncul > *:nth-child(1) { --i: 0; }
   .muncul > *:nth-child(2) { --i: 1; }
@@ -222,13 +264,11 @@
 @keyframes masuk {
   from {
     opacity: 0;
-    transform: translateY(14px);
-    filter: blur(6px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
     transform: none;
-    filter: blur(0);
   }
 }
 @keyframes denyut {
@@ -250,6 +290,13 @@
     transform: translate3d(-4%, 3%, 0) scale(1.08);
   }
 }
+@keyframes lintas {
+  0% { transform: translateX(-100%); }
+  35%, 100% { transform: translateX(100%); }
+}
+@keyframes emas-geser {
+  to { background-position: -200% 0; }
+}
 @keyframes kilau {
   to {
     background-position: -120% 0;
@@ -257,6 +304,9 @@
 }
 
 @media print {
+  html {
+    font-size: 16px;
+  }
   :root {
     --background: 0 0% 100%;
     --card: 0 0% 100%;

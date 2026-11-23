@@ -198,12 +198,12 @@ export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttrib
                 >
                   <Check className={cn("h-3.5 w-3.5 shrink-0", o.value === nilai ? "opacity-100" : "opacity-0")} aria-hidden />
                   <span className="min-w-0 flex-1 truncate">{o.label || "—"}</span>
-                  {o.grup && <span className="shrink-0 text-[11px] text-muted-foreground">{o.grup}</span>}
+                  {o.grup && <span className="shrink-0 text-[0.6875rem] text-muted-foreground">{o.grup}</span>}
                 </li>
               ))}
               {tersaring.length === 0 && <li className="px-2.5 py-3 text-muted-foreground">Tidak ditemukan.</li>}
             </ul>
-            <p className="px-2.5 pt-1 text-[11px] text-muted-foreground">{tersaring.length} dari {opsi.length} pilihan</p>
+            <p className="px-2.5 pt-1 text-[0.6875rem] text-muted-foreground">{tersaring.length} dari {opsi.length} pilihan</p>
           </div>
         )}
       </div>

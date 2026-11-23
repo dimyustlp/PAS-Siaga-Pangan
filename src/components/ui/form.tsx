@@ -66,7 +66,7 @@ const PILL = {
 
 export function Pill({ tone = "netral", children, className }: { tone?: keyof typeof PILL; children: React.ReactNode; className?: string }) {
   return (
-    <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium", PILL[tone], className)}>{children}</span>
+    <span className={cn("inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium", PILL[tone], className)}>{children}</span>
   );
 }
 
@@ -74,12 +74,12 @@ export function PageHeader({ title, description, actions }: { title: string; des
   return (
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div className="min-w-0">
-        <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          <span className="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden />
+        <p className="mb-2.5 flex items-center gap-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-gold">
+          <span className="h-px w-8 bg-gold/70" aria-hidden />
           PAS-SIAGA Pangan
         </p>
-        <h1 className="text-2xl font-semibold tracking-tight md:text-[1.75rem]">{title}</h1>
-        {description && <p className="mt-1.5 max-w-[65ch] text-sm leading-relaxed text-muted-foreground">{description}</p>}
+        <h1 className="text-[1.6rem] font-semibold leading-tight tracking-tight text-ink md:text-[2rem]">{title}</h1>
+        {description && <p className="mt-2 max-w-[68ch] text-[0.95rem] leading-relaxed text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>

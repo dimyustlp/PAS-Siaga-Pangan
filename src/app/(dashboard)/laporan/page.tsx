@@ -86,7 +86,7 @@ export default async function DaftarLaporanPage({ searchParams }: { searchParams
       {error && <Alert tone="bahaya">Data belum bisa dibaca. Muat ulang halaman.</Alert>}
       <div className="overflow-x-auto rounded-2xl border border-border/70 bg-card shadow-soft">
         <TabelCari className="w-full min-w-[58rem] text-sm">
-          <thead className="bg-secondary/80 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <thead className="bg-secondary/80 text-left text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">
             <tr><th className="px-3 py-2">Tanggal</th><th className="px-3 py-2">Kegiatan</th>{!cak.terkunci && <th className="px-3 py-2">UPT</th>}<th className="px-3 py-2">Tahap</th><th className="px-3 py-2">Lampiran</th><th className="px-3 py-2">Status</th><th className="px-3 py-2">Laporan</th><th className="px-3 py-2" /></tr>
           </thead>
           <tbody className="divide-y">
