@@ -37,7 +37,7 @@ export const ALUR_KERJA: TahapAlur[] = [
     judul: "Lengkapi syarat kesiapan",
     pelaku: ["Operator"],
     peran: ["operator"],
-    isi: ["Unggah dokumen yang diwajibkan.", "Isi daftar nominatif WB dan enam aspek kesiapan (A sampai F).", "Setelah lengkap, sesi masuk antrean keputusan."],
+    isi: ["Centang dokumen wajib a sampai m di Kendali sesi (nominatif, rencana pengamanan, dan surat perintah terisi otomatis).", "Isi daftar nominatif WB dan enam aspek kesiapan (A sampai F).", "Setelah lengkap, sesi masuk antrean keputusan."],
     tautan: { href: "/kegiatan", label: "Buka Kegiatan" },
   },
   {
@@ -45,7 +45,7 @@ export const ALUR_KERJA: TahapAlur[] = [
     judul: "Putuskan kesiapan",
     pelaku: ["Kepala Pengamanan"],
     peran: ["kepala_pengamanan"],
-    isi: ["Pilih: Dapat Dimulai, Perlu Diperbaiki, atau Ditunda, lengkap dengan alasan.", "Bila perlu diperbaiki, Operator memperbaiki lalu mengajukan ulang."],
+    isi: ["Pilih: Dapat Dimulai, Perbaiki Dulu, atau Ditunda, lengkap dengan alasan. Ditunda wajib memuat syarat pengajuan ulang.", "Bila perlu diperbaiki, Operator memperbaiki lalu mengajukan ulang."],
     tautan: { href: "/keputusan", label: "Buka antrean keputusan" },
   },
   {
@@ -66,7 +66,7 @@ export const ALUR_KERJA: TahapAlur[] = [
     pelaku: ["Sistem", "Kepala Pengamanan"],
     peran: ["kepala_pengamanan"],
     isi: [
-      "Sistem menaikkan status ke MERAH otomatis bila jumlah WB tidak cocok; setiap perubahan status (hijau, kuning, merah, kritis) dikirim ke grup Telegram.",
+      "Status dinilai per delapan variabel dan keseluruhan mengikuti temuan terberat. Selisih yang belum terjelaskan sekurangnya MERAH; WB tidak ditemukan KRITIS. Setiap perubahan status dikirim ke grup Telegram.",
       "Kepala Pengamanan memverifikasi gangguan, mengubah status dengan catatan, dan memberi arahan.",
       "Setiap temuan punya tindak lanjut dengan penanggung jawab dan tenggat.",
     ],
@@ -89,7 +89,7 @@ export const ALUR_KERJA: TahapAlur[] = [
     judul: "Evaluasi dan perbaikan",
     pelaku: ["Pemantau", "Ka.UPT", "Kepala Pengamanan", "Administrator"],
     peran: ["pemantau_kanwil", "pemantau_pusat", "administrator", "kepala_pengamanan", "ka_upt"],
-    isi: ["Lihat capaian indikator, tren mingguan, serta risiko dan mitigasi.", "Catatan kendala mingguan menjadi dasar memperbaiki pedoman dan SOP."],
+    isi: ["Isi penilaian pelaksanaan 19 indikator (saran otomatis, penilai mengoreksi), lalu Ka.UPT mengesahkan.", "Lihat capaian indikator, tren mingguan, serta risiko dan mitigasi.", "Catatan kendala mingguan menjadi dasar memperbaiki pedoman dan SOP."],
     tautan: { href: "/evaluasi", label: "Buka Evaluasi" },
   },
 ];

@@ -25,7 +25,10 @@ export const PANDUAN: Panduan[] = [
       { judul: "Lengkapi rincian", isi: "Isi tiga bagian: periode dan luas, nomor surat dan persetujuan, serta pengamanan di lokasi (titik komunikasi, batas area, rute, akses warga). Tiap bagian punya tombol simpan sendiri.", menu: { href: "/rencana", label: "Rencana kegiatan" } },
       { judul: "Tambah sesi harian", isi: "Di halaman rincian, buat sesi per tanggal. Tentukan jarak waktu hitung WB dan apakah memakai gelang monitor." },
       { judul: "Tugaskan Pengawal", isi: "Pada tabel sesi, tekan Tugaskan pengawal lalu pilih orangnya. Tugas langsung muncul di dasbor Pengawal; ia baru bisa bekerja setelah Kepala Pengamanan menyatakan siap." },
-      { judul: "Siapkan sesi", isi: "Buka sesi, lengkapi nominatif WB, dokumen surat perintah dan rencana pengamanan, serta aspek kesiapan dan dokumen wajib a sampai m. Sesi yang lengkap masuk antrean keputusan Kepala Pengamanan." },
+      { judul: "Siapkan sesi", isi: "Buka sesi, lengkapi nominatif WB, dokumen surat perintah dan rencana pengamanan, serta aspek kesiapan A sampai F. Sesi yang lengkap masuk antrean keputusan Kepala Pengamanan." },
+      { judul: "Centang dokumen wajib a sampai m", isi: "Di halaman Kendali sesi, tandai dokumen yang sudah tersedia. Nominatif, rencana pengamanan, dan surat perintah terisi otomatis. Dokumen f dan g hanya untuk kegiatan di luar perimeter. Tanpa dokumen lengkap, Kepala Pengamanan belum bisa memutuskan Dapat Dimulai.", menu: { href: "/kegiatan", label: "Kegiatan" } },
+      { judul: "Catat lahan aktif dan kelompok kerja", isi: "Isi lahan aktif hari itu, kelompok kerja, pengawas, pengganti, dan jalur serah terima. Perubahan rencana dicatat bersama alasan dan pejabat yang menyetujui." },
+      { judul: "Cetak formulir lampiran", isi: "Sepuluh formulir pedoman tersedia di menu Formulir pada tiap sesi, lengkap dengan kop UPT dan siap dicetak." },
       { judul: "Atur kop surat", isi: "Isi kop surat UPT agar dokumen persuratan memakai identitas UPT. Isinya bisa diubah sesuai kondisi di lapangan.", menu: { href: "/kop-surat", label: "Kop surat UPT" } },
       { judul: "Buat akun pegawai UPT", isi: "Buat akun Ka.UPT, Kepala Pengamanan, dan Pengawal. Berikan kata sandi awal langsung ke pemiliknya. Akun hanya bisa dibuat untuk UPT Anda sendiri.", menu: { href: "/akun", label: "Akun UPT" } },
     ],
@@ -41,10 +44,13 @@ export const PANDUAN: Panduan[] = [
     ],
     langkah: [
       { judul: "Buka antrean keputusan", isi: "Sesi yang sudah disiapkan Operator muncul di sini. Periksa nominatif, dokumen, dan indikator kesiapan.", menu: { href: "/keputusan", label: "Keputusan" } },
-      { judul: "Beri keputusan", isi: "Setujui bila siap sehingga Pengawal bisa mulai mencatat. Bila belum siap, kembalikan dengan catatan." },
+      { judul: "Beri keputusan", isi: "Pilih Dapat Dimulai, Perbaiki Dulu, atau Ditunda. Dapat Dimulai butuh dokumen a sampai m lengkap. Ditunda wajib memuat alasan dan syarat pengajuan ulang." },
+      { judul: "Isi status per variabel", isi: "Di Kendali sesi, catat status Hijau, Kuning, Merah, atau Kritis untuk tiap dari delapan variabel, dengan temuan dan bukti. Status keseluruhan mengikuti temuan terberat. Penurunan status hanya setelah ada bukti pemulihan." },
+      { judul: "Verifikasi entri lapangan", isi: "Entri yang terlambat atau susulan ditandai. Verifikasi sebelum dianggap data mutakhir." },
       { judul: "Pantau saat kegiatan berjalan", isi: "Dasbor menampilkan warna status Hijau, Kuning, Merah, dan Kritis. Perhatikan kegiatan yang tidak mengirim data atau terlambat memeriksa.", menu: { href: "/", label: "Dasbor" } },
       { judul: "Tindak lanjuti temuan", isi: "Buat dan pantau tindak lanjut sampai selesai dan diverifikasi.", menu: { href: "/tindak-lanjut", label: "Tindak lanjut" } },
       { judul: "Baca laporan", isi: "Laporan yang tahapnya sudah lengkap bisa dibaca dan diunduh. Pengesahan dilakukan Ka.UPT.", menu: { href: "/laporan", label: "Laporan kegiatan" } },
+      { judul: "Isi penilaian pelaksanaan", isi: "Buat penilaian untuk kegiatan yang selesai. Sembilan belas indikator terisi saran otomatis dari data aplikasi; koreksi skornya, lampirkan bukti, lalu kunci.", menu: { href: "/penilaian", label: "Penilaian" } },
     ],
   },
   {
@@ -58,6 +64,8 @@ export const PANDUAN: Panduan[] = [
     langkah: [
       { judul: "Mulai dari dasbor", isi: "Tiga angka di bagian atas menunjukkan laporan menunggu pengesahan, kegiatan perlu perhatian, dan kegiatan berjalan.", menu: { href: "/", label: "Dasbor" } },
       { judul: "Sahkan laporan", isi: "Buka laporan yang tahapnya sudah lengkap, periksa, lalu sahkan.", menu: { href: "/laporan", label: "Laporan kegiatan" } },
+      { judul: "Sahkan penilaian pelaksanaan", isi: "Penilaian yang sudah dikunci diperiksa, lalu disahkan. Hanya Ka.UPT yang dapat mengesahkan. Skor di bawah 2 ditindaklanjuti dengan penanggung jawab dan batas waktu.", menu: { href: "/penilaian", label: "Penilaian" } },
+      { judul: "Setujui kegiatan dan perubahan rencana", isi: "Persetujuan pelaksanaan kegiatan dan perubahan rencana yang memengaruhi pengamanan berasal dari Ka.UPT atau pejabat yang berwenang." },
       { judul: "Lihat evaluasi dan risiko", isi: "Gunakan untuk menilai kinerja dan potensi gangguan kegiatan di UPT.", menu: { href: "/evaluasi", label: "Evaluasi" } },
       { judul: "Pantau peta dan data pangan", isi: "Peta menampilkan lokasi kegiatan; halaman Hasil pangan merangkum produksi.", menu: { href: "/peta", label: "Peta kegiatan" } },
     ],
@@ -76,6 +84,7 @@ export const PANDUAN: Panduan[] = [
       { judul: "Catat nama petugas", isi: "Tulis nama petugas yang bertugas hari itu. NIP dan seksi boleh dikosongkan. Tambah nama lain bila bertugas berdua atau lebih." },
       { judul: "Kerjakan empat tahap", isi: "Urutannya: keluar melalui P2U, menuju lokasi, pelaksanaan kegiatan, lalu kembali ke UPT. Unggah foto dan berkas wajib tiap tahap, pilih petugas yang mengisi, lalu selesaikan tahap." },
       { judul: "Catatan cepat", isi: "Dipakai untuk mencatat kejadian di luar tahap, termasuk keadaan darurat. Tab ini tidak terkunci." },
+      { judul: "Isi Kendali sesi", isi: "Catat status variabel, penyerahan dan pengembalian alat, pihak luar yang masuk, serta pengembalian WB bertahap. Selisih alat wajib ditindaklanjuti sebelum kegiatan ditutup." },
       { judul: "Baca alur kerja", isi: "Ringkasan alur dari penugasan sampai laporan ada di menu Alur kerja.", menu: { href: "/lapangan/alur", label: "Alur kerja" } },
     ],
     catatan: ["Waktu tahap dan lampiran dicatat otomatis oleh sistem dan tidak bisa diubah dari HP."],
@@ -83,16 +92,17 @@ export const PANDUAN: Panduan[] = [
   {
     role: "pemantau_kanwil",
     ringkas: "Memantau seluruh UPT di wilayah dan mengelola akun UPT di wilayahnya.",
-    tugas: ["Memantau dasbor wilayah dan rekap per UPT.", "Membuat dan mengelola akun UPT di wilayah.", "Membaca laporan dan evaluasi."],
+    tugas: ["Memantau dasbor wilayah dan rekap per UPT.", "Membuat dan mengelola akun UPT di wilayah.", "Membaca laporan, evaluasi, dan penilaian pelaksanaan."],
     langkah: [
       { judul: "Dasbor wilayah", isi: "Lihat rekap per UPT, lalu buka UPT yang perlu perhatian.", menu: { href: "/", label: "Dasbor" } },
       { judul: "Kelola akun UPT", isi: "Buat atau nonaktifkan akun Ka.UPT, Kepala Pengamanan, Operator, dan Pengawal.", menu: { href: "/akun", label: "Akun UPT" } },
+      { judul: "Baca penilaian pelaksanaan", isi: "Lihat skor, persentase, dan kategori penilaian tiap UPT. Kategori tidak menggantikan status operasional.", menu: { href: "/penilaian", label: "Penilaian" } },
     ],
   },
   {
     role: "pemantau_pusat",
     ringkas: "Memantau seluruh Kanwil dan UPT secara nasional.",
-    tugas: ["Memantau dasbor nasional.", "Mengelola akun Kanwil dan UPT.", "Membaca laporan, evaluasi, dan data SDP."],
+    tugas: ["Memantau dasbor nasional.", "Mengelola akun Kanwil dan UPT.", "Membaca laporan, evaluasi, penilaian pelaksanaan, dan data SDP."],
     langkah: [
       { judul: "Dasbor nasional", isi: "Rekap per Kanwil; buka Kanwil lalu UPT untuk rincian.", menu: { href: "/", label: "Dasbor" } },
       { judul: "Kelola akun", isi: "Buat atau nonaktifkan akun Kanwil dan UPT.", menu: { href: "/akun", label: "Akun" } },
