@@ -34,6 +34,12 @@ export type Database = {
           tanggal_mulai: string
           titik_komunikasi: string | null
           updated_at: string
+          komoditas: string | null
+          tahap_pekerjaan: string | null
+          mitra: string | null
+          pendamping_teknis: string | null
+          jam_kegiatan: string | null
+          jam_kembali: string | null
         }
         Insert: {
           akses_warga?: string | null
@@ -54,6 +60,12 @@ export type Database = {
           tanggal_mulai: string
           titik_komunikasi?: string | null
           updated_at?: string
+          komoditas?: string | null
+          tahap_pekerjaan?: string | null
+          mitra?: string | null
+          pendamping_teknis?: string | null
+          jam_kegiatan?: string | null
+          jam_kembali?: string | null
         }
         Update: {
           akses_warga?: string | null
@@ -74,6 +86,12 @@ export type Database = {
           tanggal_mulai?: string
           titik_komunikasi?: string | null
           updated_at?: string
+          komoditas?: string | null
+          tahap_pekerjaan?: string | null
+          mitra?: string | null
+          pendamping_teknis?: string | null
+          jam_kegiatan?: string | null
+          jam_kembali?: string | null
         }
         Relationships: [
           {
@@ -280,6 +298,8 @@ export type Database = {
           status_kesiapan: Database["public"]["Enums"]["readiness_status"]
           tanggal_sesi: string
           updated_at: string
+          lahan_aktif_ha: number | null
+          batas_keterlambatan_menit: number
         }
         Insert: {
           activity_id: string
@@ -306,6 +326,8 @@ export type Database = {
           status_kesiapan?: Database["public"]["Enums"]["readiness_status"]
           tanggal_sesi: string
           updated_at?: string
+          lahan_aktif_ha?: number | null
+          batas_keterlambatan_menit?: number
         }
         Update: {
           activity_id?: string
@@ -332,6 +354,8 @@ export type Database = {
           status_kesiapan?: Database["public"]["Enums"]["readiness_status"]
           tanggal_sesi?: string
           updated_at?: string
+          lahan_aktif_ha?: number | null
+          batas_keterlambatan_menit?: number
         }
         Relationships: [
           {
@@ -375,6 +399,7 @@ export type Database = {
           pejabat_id: string
           session_id: string
           status_baru: Database["public"]["Enums"]["security_status"] | null
+          syarat_pengajuan_ulang: string | null
         }
         Insert: {
           bukti_url?: string | null
@@ -386,6 +411,7 @@ export type Database = {
           pejabat_id?: string
           session_id: string
           status_baru?: Database["public"]["Enums"]["security_status"] | null
+          syarat_pengajuan_ulang?: string | null
         }
         Update: {
           bukti_url?: string | null
@@ -397,6 +423,7 @@ export type Database = {
           pejabat_id?: string
           session_id?: string
           status_baru?: Database["public"]["Enums"]["security_status"] | null
+          syarat_pengajuan_ulang?: string | null
         }
         Relationships: [
           {
@@ -441,6 +468,8 @@ export type Database = {
           session_id: string
           susulan: boolean
           waktu_kejadian: string
+          diverifikasi_at: string | null
+          diverifikasi_oleh: string | null
         }
         Insert: {
           bukti_url?: string | null
@@ -453,6 +482,8 @@ export type Database = {
           session_id: string
           susulan?: boolean
           waktu_kejadian: string
+          diverifikasi_at?: string | null
+          diverifikasi_oleh?: string | null
         }
         Update: {
           bukti_url?: string | null
@@ -465,6 +496,8 @@ export type Database = {
           session_id?: string
           susulan?: boolean
           waktu_kejadian?: string
+          diverifikasi_at?: string | null
+          diverifikasi_oleh?: string | null
         }
         Relationships: [
           {
