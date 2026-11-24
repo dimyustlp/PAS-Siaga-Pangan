@@ -17,7 +17,7 @@ export default async function LapanganLayout({ children }: { children: React.Rea
           <Link href="/lapangan" className="flex min-w-0 items-center gap-2">
             <Logo kecil />
             <span className="min-w-0 leading-tight">
-              <span className="block font-bold tracking-tight">PAS-SIAGA <span className="text-[#e6c06a]">PANGAN</span></span>
+              <span className="block font-bold tracking-tight">PAS-SIAGA <span className="text-[#FBBF24]">PANGAN</span></span>
               <span className="block truncate text-[0.6875rem] text-white/75">{unit ?? "Pengawal kegiatan"}</span>
             </span>
           </Link>
