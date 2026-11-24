@@ -133,7 +133,8 @@ test("keputusan Kepala Pengamanan", () => {
   assert.equal(readinessDecisionSchema.safeParse({ session_id: SID, keputusan: "Dapat Dimulai" }).success, true);
   assert.equal(readinessDecisionSchema.safeParse({ session_id: SID, keputusan: "Perbaiki Dulu" }).success, false);
   assert.equal(readinessDecisionSchema.safeParse({ session_id: SID, keputusan: "Perbaiki Dulu", catatan: "  " }).success, false);
-  assert.equal(readinessDecisionSchema.safeParse({ session_id: SID, keputusan: "Ditunda", catatan: "Cuaca buruk" }).success, true);
+  assert.equal(readinessDecisionSchema.safeParse({ session_id: SID, keputusan: "Ditunda", catatan: "Cuaca buruk" }).success, false);
+  assert.equal(readinessDecisionSchema.safeParse({ session_id: SID, keputusan: "Ditunda", catatan: "Cuaca buruk", syarat_pengajuan_ulang: "Cuaca membaik" }).success, true);
   assert.equal(readinessDecisionSchema.safeParse({ session_id: SID, keputusan: "Tutup Kegiatan" }).success, false);
   assert.equal(verifyIncidentSchema.safeParse({ session_id: SID, incident_id: CID, catatan: "ok" }).success, false);
   assert.equal(verifyIncidentSchema.safeParse({ session_id: SID, incident_id: CID, catatan: "Sudah kondusif" }).success, true);

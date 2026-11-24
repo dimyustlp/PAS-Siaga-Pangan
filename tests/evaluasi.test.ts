@@ -39,9 +39,9 @@ test("CSV: titik koma, kutip, dan baris baru aman", () => {
   assert.equal(parseIndikator(null), null);
 });
 
-test("isi acuan RPP lengkap: empat status, enam indikator kesiapan, sembilan bagian SOP", () => {
+test("isi acuan pedoman lengkap: empat status, enam aspek kesiapan, dua belas pokok pedoman", () => {
   assert.deepEqual(Object.keys(PANDUAN_STATUS), ["HIJAU", "KUNING", "MERAH", "KRITIS"]);
   assert.equal(INDIKATOR_KESIAPAN.length, 6);
-  assert.equal(POKOK_SOP.length, 9);
+  assert.equal(POKOK_SOP.length, 12);
   assert.match(PANDUAN_STATUS.MERAH.minimum, /hitung WB/);
 });
