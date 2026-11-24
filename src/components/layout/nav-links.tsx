@@ -64,6 +64,7 @@ const PETA: Item = { href: "/peta", label: "Peta kegiatan", icon: "peta" };
 const RENCANA: Item = { href: "/rencana", label: "Rencana kegiatan", icon: "kegiatan" };
 const LAPORAN: Item = { href: "/laporan", label: "Laporan kegiatan", icon: "laporan" };
 const EVALUASI: Item = { href: "/evaluasi", label: "Evaluasi", icon: "evaluasi" };
+const PENILAIAN: Item = { href: "/penilaian", label: "Penilaian pelaksanaan", icon: "evaluasi" };
 const PANGAN: Item = { href: "/pangan", label: "Hasil pangan", icon: "pangan" };
 const LALU: Item = { href: "/lalu-lintas", label: "Lalu lintas WBP", icon: "lalulintas" };
 const INDUK: Item = { href: "/data-induk", label: "Data induk", icon: "induk" };
@@ -81,7 +82,7 @@ const MENU: Record<Role, { utama: Item[]; lain: Item[] }> = {
   administrator: {
     utama: [DASBOR, PETA, RENCANA, LAPORAN, EVALUASI, PANGAN, { href: "/akun", label: "Akun", icon: "akun" }],
     lain: [
-      SDP, LALU, INDUK, BERKAS, GELANG, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN,
+      PENILAIAN, SDP, LALU, INDUK, BERKAS, GELANG, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN,
       { href: "/admin/wilayah", label: "UPT & Kanwil", icon: "wilayah" },
       { href: "/admin/drive", label: "Google Drive & batas unggah", icon: "drive" },
       { href: "/admin/gelang", label: "Penerima gelang", icon: "gelang" },
@@ -91,23 +92,23 @@ const MENU: Record<Role, { utama: Item[]; lain: Item[] }> = {
   },
   pemantau_pusat: {
     utama: [DASBOR, PETA, RENCANA, LAPORAN, EVALUASI, PANGAN, { href: "/akun", label: "Akun Kanwil & UPT", icon: "akun" }],
-    lain: [SDP, LALU, INDUK, BERKAS, GELANG, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
+    lain: [PENILAIAN, SDP, LALU, INDUK, BERKAS, GELANG, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
   },
   pemantau_kanwil: {
     utama: [DASBOR, PETA, RENCANA, LAPORAN, EVALUASI, PANGAN, { href: "/akun", label: "Akun UPT", icon: "akun" }],
-    lain: [SDP, LALU, INDUK, BERKAS, GELANG, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
+    lain: [PENILAIAN, SDP, LALU, INDUK, BERKAS, GELANG, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
   },
   ka_upt: {
     utama: [DASBOR, RENCANA, LAPORAN, EVALUASI, PANGAN, INDUK],
-    lain: [SDP, PETA, LALU, BERKAS, GELANG, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
+    lain: [PENILAIAN, SDP, PETA, LALU, BERKAS, GELANG, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
   },
   operator: {
     utama: [DASBOR, { href: "/kegiatan", label: "Kegiatan", icon: "kegiatan" }, RENCANA, LAPORAN, TINDAK, BERKAS, KOP, { href: "/akun", label: "Akun UPT", icon: "akun" }],
-    lain: [SDP, PETA, LALU, PANGAN, INDUK, GELANG, EVALUASI, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
+    lain: [PENILAIAN, SDP, PETA, LALU, PANGAN, INDUK, GELANG, EVALUASI, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
   },
   kepala_pengamanan: {
     utama: [DASBOR, { href: "/keputusan", label: "Keputusan", icon: "keputusan" }, RENCANA, LAPORAN, TINDAK, EVALUASI, GELANG],
-    lain: [SDP, PETA, LALU, PANGAN, INDUK, BERKAS, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
+    lain: [PENILAIAN, SDP, PETA, LALU, PANGAN, INDUK, BERKAS, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
   },
   pengawal: {
     utama: [{ href: "/lapangan", label: "Tugas lapangan", icon: "kegiatan" }, BERKAS, GELANG, BERITA, PANDUAN_PERAN, PEDOMAN],
