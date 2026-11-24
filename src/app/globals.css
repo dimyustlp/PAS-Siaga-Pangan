@@ -471,3 +471,33 @@
   from { opacity: 0; transform: translateY(18px) scale(0.985); filter: blur(4px); }
   to { opacity: 1; transform: none; filter: blur(0); }
 }
+
+/* Kolom pilihan & tanggal bawaan peramban diberi tampilan senada. */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232D6A4F' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.25rem !important;
+  border-radius: 0.75rem;
+}
+input[type="date"], input[type="time"], input[type="datetime-local"] { border-radius: 0.75rem; accent-color: #2D6A4F; }
+input[type="checkbox"], input[type="radio"] { accent-color: #2D6A4F; }
+
+/* Tabel data: kepala tabel lembut dan baris berganti warna tipis. */
+main table thead th {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(153 25% 32%);
+  background: hsl(150 30% 96%);
+}
+main table tbody tr { transition: background-color 0.25s cubic-bezier(0.32, 0.72, 0, 1); }
+main table tbody tr:hover { background: hsl(150 40% 96%); }
+main details > summary { transition: color 0.25s cubic-bezier(0.32, 0.72, 0, 1); }
+main details > summary:hover { color: #2D6A4F; }
+@media (max-width: 767px) {
+  main .kaca { box-shadow: 0 0 0 1px rgba(27, 67, 50, 0.06), 0 10px 24px -18px rgba(27, 67, 50, 0.3); }
+}
