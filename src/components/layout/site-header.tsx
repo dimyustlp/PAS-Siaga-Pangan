@@ -22,7 +22,7 @@ export function SiteHeader({ name, role, unit }: { name: string; role: Role; uni
     <KerangkaSamping kelas={kelas}>
       <div className="px-5 pt-5">
         <LogoInstansi kecil />
-        <p className="mt-3 font-mono text-[0.6rem] font-medium uppercase leading-relaxed tracking-[0.16em] text-[#95D5B2]">
+        <p className="mt-3 font-mono text-[0.68rem] font-medium uppercase leading-relaxed tracking-[0.14em] text-[#95D5B2]">
           Kementerian Imigrasi dan Pemasyarakatan
           <br />
           Direktorat Jenderal Pemasyarakatan

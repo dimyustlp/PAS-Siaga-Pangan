@@ -129,8 +129,8 @@ function Butir({ item, pathname }: { item: Item; pathname: string }) {
         href={item.href}
         aria-current={on ? "page" : undefined}
         className={cn(
-          "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-[0.95rem] font-medium transition-[background-color,color] duration-200",
-          on ? "bg-white/[0.11] text-white" : "text-[#B7E4C7] hover:bg-white/[0.06] hover:text-white"
+          "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[0.95rem] font-medium transition-[background-color,color] duration-200",
+          on ? "bg-white/[0.13] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]" : "text-[#B7E4C7] hover:bg-white/[0.06] hover:text-white"
         )}
       >
         <span
@@ -150,13 +150,13 @@ export function NavLinks({ role }: { role: Role }) {
   const { utama, lain } = MENU[role];
   return (
     <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-4 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin]" aria-label="Menu utama">
-      <p className="px-3 pb-2 font-mono text-[0.65rem] font-medium uppercase tracking-[0.2em] text-[#95D5B2]">Menu utama</p>
+      <p className="px-3 pb-2 font-mono text-[0.7rem] font-medium uppercase tracking-[0.2em] text-[#95D5B2]">Menu utama</p>
       <ul className="space-y-0.5">
         {utama.map((item) => <Butir key={item.href} item={item} pathname={pathname} />)}
       </ul>
       {lain.length > 0 && (
         <>
-          <p className="mt-5 px-3 pb-2 font-mono text-[0.65rem] font-medium uppercase tracking-[0.2em] text-[#95D5B2]">Lainnya</p>
+          <p className="mt-5 px-3 pb-2 font-mono text-[0.7rem] font-medium uppercase tracking-[0.2em] text-[#95D5B2]">Lainnya</p>
           <ul className="space-y-0.5">
             {lain.map((item) => <Butir key={item.href} item={item} pathname={pathname} />)}
           </ul>
