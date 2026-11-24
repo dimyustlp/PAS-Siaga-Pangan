@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, PageHeader } from "@/components/ui/form";
 import { TautanGelang } from "@/components/shared/tautan-gelang";
+import { BlokDasborSesi } from "@/components/kendali/blok-dasbor";
 import { PanelTahap } from "@/components/shared/panel-tahap";
 import { RealtimeRefresh } from "@/components/shared/realtime-refresh";
 import {
@@ -49,6 +50,8 @@ export default async function DetailSesiPage({ params }: { params: Promise<{ ses
             {data.sesi.pakai_gelang_monitor && <TautanGelang />}
             {user.role === "kepala_pengamanan" && <Button asChild size="sm"><Link href={`/keputusan/${sessionId}`}>Buka keputusan</Link></Button>}
             {user.role === "operator" && <Button asChild size="sm"><Link href={`/kegiatan/${sessionId}`}>Buka persiapan</Link></Button>}
+            <Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}/kendali`}>Kendali sesi</Link></Button>
+            <Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}/formulir`}>Formulir</Link></Button>
             <Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}/laporan`}><Printer className="h-4 w-4" aria-hidden />Laporan resmi (PDF)</Link></Button>
           </>
         }
@@ -57,6 +60,8 @@ export default async function DetailSesiPage({ params }: { params: Promise<{ ses
       {peringatan.map((p) => <Alert key={p.teks} tone={p.tingkat === "kritis" ? "bahaya" : "waspada"}>{p.teks}</Alert>)}
 
       <KepalaSesi data={data} />
+
+      <BlokDasborSesi data={data} />
 
       <PanelTahap sessionId={sessionId} />
 
