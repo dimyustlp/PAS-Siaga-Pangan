@@ -21,18 +21,17 @@ function Isi({ p }: { p: Panduan }) {
       </div>
       <div>
         <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Cara menggunakan</h3>
-        <ol className="mt-2 space-y-3">
+        <div className="mt-2 space-y-2">
           {p.langkah.map((l, i) => (
-            <li key={l.judul} className="flex gap-3">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">{i + 1}</span>
-              <div className="min-w-0">
-                <p className="font-semibold">{l.judul}</p>
-                <p className="text-sm text-muted-foreground">{l.isi}</p>
-                {l.menu && <Link href={l.menu.href} className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">Buka {l.menu.label}<ArrowRight className="h-3 w-3" aria-hidden /></Link>}
+            <details key={l.judul} className="rounded-lg border border-border/70 p-3 text-sm">
+              <summary className="cursor-pointer font-medium">{i + 1}. {l.judul}</summary>
+              <div className="mt-2 space-y-1">
+                <p className="text-muted-foreground">{l.isi}</p>
+                {l.menu && <Link href={l.menu.href} className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">Buka {l.menu.label}<ArrowRight className="h-3 w-3" aria-hidden /></Link>}
               </div>
-            </li>
+            </details>
           ))}
-        </ol>
+        </div>
       </div>
       {p.catatan && (
         <ul className="space-y-1 rounded-xl bg-secondary/60 p-3 text-sm">
@@ -49,7 +48,7 @@ export default async function PanduanPage() {
   const lain = PANDUAN.filter((p) => p.role !== user.role && ["operator", "kepala_pengamanan", "ka_upt", "pengawal"].includes(p.role));
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <PageHeader title="Panduan peran" description="Tugas yang dikerjakan tiap peran dan cara memakai fitur-fiturnya. Panduan peran Anda ada di paling atas." />
+      <PageHeader title="Panduan peran" description="Tugas yang dikerjakan tiap peran dan cara memakai fitur-fiturnya. Panduan peran Anda ada di paling atas. Klik tiap langkah untuk melihat rinciannya." />
       {saya && (
         <section className="kaca space-y-4 rounded-2xl border-l-4 border-l-gold p-5">
           <div className="flex flex-wrap items-center gap-2">
