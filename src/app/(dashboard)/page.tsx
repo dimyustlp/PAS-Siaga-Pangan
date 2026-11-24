@@ -321,9 +321,9 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
           </div>
           <dl className="mt-3 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-5">
             {KPI_SDP.map((k) => (
-              <div key={k.kunci} className="min-w-0 rounded-xl border border-border/60 bg-white/60 px-3 py-2">
-                <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">{k.label}</dt>
-                <dd className="mt-0.5 break-words font-mono text-base font-medium tabular-nums">{sdp.kpi[k.kunci] || "-"}</dd>
+              <div key={k.kunci} className="min-w-0 rounded-2xl border border-[hsl(153_25%_88%)] bg-gradient-to-b from-white to-[hsl(150_30%_97%)] px-4 py-3 shadow-[0_10px_24px_-18px_rgba(27,67,50,0.35)]">
+                <dt className="text-[11px] font-semibold uppercase tracking-wider text-[hsl(153_25%_32%)]">{k.label}</dt>
+                <dd className="mt-1 break-words font-display text-xl font-bold tracking-tight tabular-nums text-ink">{sdp.kpi[k.kunci] || "-"}</dd>
               </div>
             ))}
           </dl>
