@@ -1,45 +1,52 @@
-// Isi acuan operasional dari RPP final: status kegiatan (Tabel 3.3) dan pokok pedoman/SOP (Tabel 3.4).
+// Isi acuan operasional dari Pedoman Penyelenggaraan Pengamanan Kegiatan Ketahanan Pangan Pemasyarakatan:
+// status pengamanan, pokok pedoman, dan aturan pencatatan data. Diubah hanya mengikuti pedoman yang berlaku.
 
 export type StatusKey = "HIJAU" | "KUNING" | "MERAH" | "KRITIS";
 
 export const PANDUAN_STATUS: Record<StatusKey, { kondisi: string; minimum: string; ringkas: string }> = {
   HIJAU: {
-    kondisi: "Pelaksanaan sesuai rencana; identitas, jumlah WB, pengendalian lokasi, pengawalan, komunikasi, dan sarana pendukung sesuai.",
-    minimum: "Kegiatan dilanjutkan dengan pemantauan rutin dan pencatatan.",
+    kondisi: "Seluruh kendali wajib terpenuhi; jumlah WB cocok dan kegiatan dalam penguasaan petugas.",
+    minimum: "Lanjutkan sesuai persetujuan dan lakukan pemantauan rutin.",
     ringkas: "Lanjutkan, pantau rutin, catat.",
   },
   KUNING: {
-    kondisi: "Ditemukan penyimpangan yang masih dapat dikendalikan, misalnya kendala komunikasi, perubahan kondisi lokasi, atau ketidaksesuaian administrasi yang dapat diperbaiki.",
-    minimum: "Perkuat pengawasan; lakukan mitigasi awal; tetapkan penanggung jawab, tenggat, dan pemeriksaan ulang.",
-    ringkas: "Perkuat pengawasan, mitigasi awal, tetapkan penanggung jawab dan tenggat.",
+    kondisi: "Ada penyimpangan yang terkendali; seluruh WB terlihat langsung, jumlah cocok, dan pengawasan tetap berjalan.",
+    minimum: "Perkuat pengawasan, lakukan perbaikan, tetapkan penanggung jawab dan pemeriksaan ulang.",
+    ringkas: "Perkuat pengawasan, perbaiki, tetapkan penanggung jawab dan pemeriksaan ulang.",
   },
   MERAH: {
-    kondisi: "Gangguan mempengaruhi pengendalian kegiatan, misalnya selisih jumlah WB, gangguan komunikasi atau perangkat, atau peringatan yang belum dapat dipastikan.",
-    minimum: "Batasi atau hentikan kegiatan; lakukan pengamanan khusus sesuai SOP; hitung WB; dan laporkan segera.",
-    ringkas: "Batasi atau hentikan kegiatan, hitung WB, laporkan segera.",
+    kondisi: "Kendali utama belum dapat dipastikan, misalnya selisih hitung, pengawasan terputus, atau alarm belum dikonfirmasi.",
+    minimum: "Batasi atau hentikan kegiatan; hitung WB, pulihkan penguasaan dan laporkan prioritas.",
+    ringkas: "Batasi atau hentikan kegiatan, hitung WB, pulihkan penguasaan, laporkan.",
   },
   KRITIS: {
-    kondisi: "Terdapat ancaman langsung terhadap keselamatan, WB tidak ditemukan, atau terjadi gangguan berat.",
-    minimum: "Hentikan kegiatan; amankan WB dan petugas; lakukan eskalasi komando dan tindakan kedaruratan sesuai prosedur.",
+    kondisi: "WB tidak ditemukan setelah pemeriksaan langsung, atau ada ancaman langsung terhadap keselamatan.",
+    minimum: "Hentikan kegiatan; amankan WB dan petugas; aktifkan eskalasi komando dan tindakan kedaruratan.",
     ringkas: "Hentikan kegiatan, amankan WB dan petugas, eskalasi komando.",
   },
 };
 
 export const CATATAN_STATUS = [
-  "Status ditetapkan berdasarkan temuan yang dicatat bersama waktu dan sumbernya.",
-  "Jika keselamatan memerlukan tindakan segera, petugas meningkatkan status dan mengambil tindakan awal tanpa menunggu dasbor diperbarui.",
-  "Status hanya dapat diturunkan oleh pejabat berwenang setelah perbaikan diperiksa dan alasannya dicatat.",
+  "Status keseluruhan mengikuti temuan terberat yang masih berlangsung: KRITIS lebih tinggi daripada MERAH, KUNING, dan HIJAU. Status tidak dijumlahkan atau dirata-ratakan.",
+  "Variabel yang tidak berlaku diberi tanda tidak berlaku disertai alasan. Tindakan awal tidak menunggu pembaruan dasbor.",
+  "Selisih yang belum terjelaskan sekurang-kurangnya MERAH. WB tidak ditemukan setelah pemeriksaan langsung, atau ancaman langsung terhadap keselamatan, berstatus KRITIS.",
+  "Status otomatis atau pilihan yang kosong tidak boleh menurunkan status tertinggi yang masih berlaku.",
+  "Penurunan status dilakukan pejabat berwenang setelah verifikasi pemulihan berdasarkan pemeriksaan langsung, dengan catatan pemeriksaan, berita acara, atau dokumentasi. Riwayat perubahan tetap disimpan.",
   "Saat jaringan atau gelang terganggu, petugas tetap mengawasi langsung dan mencatat secara manual. Ketiadaan data tidak berarti keadaan aman.",
+  "Status menunjukkan kondisi pengamanan menurut temuan lapangan, bukan penilaian risiko pribadi WB. Keputusan kesiapan sebelum berangkat, tahap pelaksanaan harian, dan status pengamanan lapangan adalah tiga hal yang berbeda.",
 ];
 
 export const POKOK_SOP: { bagian: string; isi: string }[] = [
-  { bagian: "Pendahuluan", isi: "Latar belakang, maksud dan tujuan, ruang lingkup kegiatan di dalam dan di luar tembok UPT, batas kewenangan Bimker, petugas pengamanan, pengawal, petugas blok, dan P2U, serta dasar hukum." },
-  { bagian: "Persyaratan dan rencana kegiatan", isi: "Rencana Bimker memuat jadwal, lokasi, luas dan batas lahan, akses warga, daftar nominatif WB, jumlah serta posisi petugas pengawal/pengawas, rute dan komunikasi, daftar alat kerja, persetujuan sesuai kewenangan, serta surat perintah pengawalan. Keputusan asimilasi tetap diproses melalui kewenangan tersendiri." },
-  { bagian: "Kegiatan di dalam tembok UPT", isi: "Persetujuan pergerakan dari blok, pencocokan identitas dan jumlah WB, serah terima kepada petugas pendamping, pengawasan batas area dan penggunaan alat, penghitungan akhir sebelum kembali ke blok." },
-  { bagian: "Kegiatan di luar tembok UPT", isi: "Pengarahan petugas, penetapan rute, waktu, posisi petugas, dan sarana komunikasi, penghitungan pada setiap perpindahan lokasi, pengendalian perubahan lokasi atau rute, serah terima saat pergantian pengawal. Pada pengarahan ditetapkan indikator kondisi lapangan yang menyebabkan pengawasan diperkuat, kegiatan dibatasi atau dihentikan, dan eskalasi dilakukan." },
-  { bagian: "Gelang pemantau", isi: "Penetapan WB dan kegiatan yang memakai gelang, pemeriksaan dan pencatatan perangkat, konfirmasi langsung atas setiap alarm, penanganan perangkat rusak, baterai lemah, atau sinyal terputus. Setiap peringatan dikonfirmasi kepada petugas di lokasi; hasil konfirmasi, tindakan, serta gangguan perangkat dicatat dan ditindaklanjuti." },
-  { bagian: "Pengeluaran dan pengembalian", isi: "Pengajuan dan persetujuan kegiatan, surat perintah pengawalan, pemeriksaan di P2U, pencatatan jam keluar dan masuk pada buku lalu lintas dan ekspedisi, serah terima sampai petugas blok, pencocokan catatan sebelum administrasi ditutup." },
-  { bagian: "Gangguan dan pelaporan", isi: "Kondisi yang mengharuskan kegiatan dihentikan, pengamanan dan penghitungan WB lainnya, tindakan awal atas WB yang tidak ditemukan, kecelakaan, kekerasan, kehilangan alat, atau gangguan perangkat, serta pelaporan kepada pejabat yang membidangi pengamanan dan Kepala Lapas. SOP menetapkan tindakan petugas menurut status HIJAU, KUNING, MERAH, dan KRITIS, pejabat yang menerima eskalasi, serta syarat verifikasi sebelum status diturunkan." },
-  { bagian: "Pemantauan dan evaluasi", isi: "Pemeriksaan kecocokan jumlah WB di setiap serah terima, luas lahan dan jumlah petugas yang benar-benar ditugaskan, catatan waktu pembaruan, respons terhadap alarm, keputusan, dan penyelesaian gangguan. Evaluasi juga memeriksa dasar setiap keputusan, waktu perubahan status, pemilik dan tenggat mitigasi, penyelesaian tindakan, serta verifikasi penutupan kejadian." },
-  { bagian: "Lampiran", isi: "SOP: pergerakan internal; pengeluaran dan pengawalan; pengawasan di lokasi; penggunaan gelang pemantau; penanganan gangguan; dan pengembalian. Format pencatatan: rencana kegiatan, daftar nominatif, ekspedisi, log pengawalan, log gelang pemantau, dan laporan kejadian." },
+  { bagian: "Maksud dan ruang lingkup", isi: "Pedoman berlaku bagi Lapas dan Rutan untuk kegiatan ketahanan pangan di dalam maupun di luar perimeter pengamanan utama. Pengamanan dilaksanakan secara terencana, tertib, terukur, dan dapat dipertanggungjawabkan, dengan pemeriksaan kesiapan, pengawalan, pengawasan, pengembalian, serta pencatatan dan pelaporan." },
+  { bagian: "Pembagian peran", isi: "Kepala UPT menyetujui kegiatan dan penugasan serta mengesahkan tindak lanjut dan evaluasi. Kepala Pengamanan memeriksa kesiapan, merencanakan pengawasan, menetapkan penanggung jawab operasional, dan memverifikasi laporan. Bimker menyiapkan pekerjaan, komoditas, tahap produksi, peserta, alat, mesin, bahan, APD, lahan, dan koordinasi mitra. Petugas blok dan P2U mencocokkan identitas, jumlah, dokumen, alat, dan waktu pergerakan. Pengawal dan pengawas lokasi menguasai pergerakan, memeriksa keberadaan WB, mencatat temuan, dan melapor. Operator memasukkan data dari petugas lapangan dan menjaga jejak pembaruan." },
+  { bagian: "Dokumen sebelum kegiatan", isi: "Dokumen a sampai m: rencana kegiatan, daftar nominatif, persetujuan, rencana pengamanan, surat perintah, dasar pengeluaran dan rencana perjalanan (khusus di luar perimeter), inventaris alat dan bahan, izin lahan mitra, perubahan rencana, denah pengamanan, daftar pihak luar dan kendaraan, serta catatan kelayakan teknis, APD, dan pertolongan pertama. Keputusan Dapat Dimulai tidak menggantikan persetujuan kegiatan atau dasar pengeluaran, dan tidak menggantikan pemeriksaan P2U." },
+  { bagian: "Kesiapan pengamanan (aspek A sampai F)", isi: "Sebelum setiap pelaksanaan harian diperiksa enam aspek: persetujuan dan penugasan; daftar peserta dan rencana pergerakan; lokasi dan pengawasan; alat, mesin, bahan, dan keselamatan kerja; komunikasi dan pencatatan; serta gelang monitor (tidak berlaku bila tidak ditetapkan). Kepala Pengamanan memutuskan Dapat Dimulai, Perbaiki Dulu, atau Ditunda. Keputusan Ditunda memuat alasan dan syarat pengajuan ulang." },
+  { bagian: "Kebutuhan petugas dan beban pengawasan", isi: "Kebutuhan petugas ditentukan dari luas lahan aktif pada hari itu, jumlah dan sebaran kelompok, kemampuan melihat langsung keberadaan peserta, akses masyarakat, penggunaan alat, komunikasi, serta pergantian tugas. Perbandingan peserta atau luas per petugas hanya informasi beban, bukan satu-satunya dasar kecukupan. Bila petugas belum cukup, kurangi peserta atau area, bagi jadwal kelompok, tambah petugas, atau tunda." },
+  { bagian: "Perubahan rencana dan koreksi data", isi: "Perubahan yang memengaruhi pengamanan diperiksa ulang kesiapannya dan disetujui pejabat berwenang sebelum dijalankan. Catat rencana awal, perubahan, alasan, waktu, pejabat, dan bukti persetujuan. Salah tulis dikoreksi sesuai dokumen sumber dengan mencatat data sebelum dan sesudah, nama petugas, dan waktu koreksi." },
+  { bagian: "Status pengamanan", isi: "Delapan variabel dinilai HIJAU, KUNING, MERAH, atau KRITIS dengan bukti. Status keseluruhan mengikuti temuan terberat yang masih berlangsung. Penurunan memerlukan bukti pemulihan dan verifikasi pejabat berwenang." },
+  { bagian: "Alat, mesin, bahan, dan pihak luar", isi: "Pengendalian dilakukan lewat pencatatan penerimaan, penyerahan, penggunaan, pengembalian, dan penyimpanan. Alat tajam dan bahan yang dikendalikan ditempatkan pada lokasi dengan akses terbatas; bahan kimia dan pestisida disimpan terpisah dari bahan pangan dan area hunian. Selisih diperiksa dan dilaporkan segera. Pihak luar dan kendaraan hanya mengakses lokasi sesuai persetujuan dan pemeriksaan. Pendamping atau mitra tidak memberikan izin pergerakan WB. Pengangkutan hasil produksi dicatat jenis, jumlah, asal, tujuan, kendaraan, serta petugas penyerah dan penerima." },
+  { bagian: "Gelang monitor", isi: "Penggunaan ditetapkan pejabat berwenang dengan mencantumkan kegiatan, pemakai, perangkat, waktu, dan petugas pengelola. Gelang tidak digunakan sebagai hukuman disiplin dan tidak menggantikan pengawasan langsung. Alarm dikonfirmasi petugas di lokasi, lalu waktu alarm, sumber laporan, hasil pemeriksaan, keputusan, dan tindakan dicatat. Bila gelang tidak ditetapkan, variabelnya tidak berlaku, sedangkan kewajiban pengamanan lain tetap berjalan." },
+  { bagian: "Pelaporan dan kualitas data", isi: "Dasbor menampilkan waktu pemeriksaan lapangan dan waktu data diterima. Entri terlambat, susulan, atau belum diverifikasi tidak ditampilkan sebagai keadaan mutakhir. Saat jaringan terputus petugas mencatat manual, lalu memasukkannya kembali dengan waktu kejadian asli. Operator tidak mengubah hasil penghitungan atau keputusan komando tanpa sumber dan kewenangan yang tercatat." },
+  { bagian: "Pengembalian dan penutupan", isi: "Pejabat pengamanan memverifikasi identitas dan jumlah peserta, alat, pemeriksaan wajib, serah terima, dan gangguan. Pengembalian sebagian dicatat per penyerahan dan dijumlahkan tanpa menghitung peserta dua kali. Kepala Pengamanan menutup pelaksanaan harian setelah kecocokan dikonfirmasi, gangguan diverifikasi, dan temuan yang menghambat pengamanan diselesaikan. Tahap Sudah Kembali ke Blok belum berarti siap ditutup." },
+  { bagian: "Monitoring dan evaluasi", isi: "Pelaksanaan dinilai dengan 19 indikator berskor 2, 1, 0, atau TB. Indikator berlaku = 19 dikurangi TB; total skor = (jumlah skor 2 × 2) + jumlah skor 1; skor maksimal = indikator berlaku × 2; persentase = total skor ÷ skor maksimal × 100. Kategori: Kurang 0–50%, Cukup di atas 50–70%, Baik di atas 70–90%, Sangat Baik di atas 90–100%. Kategori tidak menggantikan status operasional. Setiap skor 0 atau 1 ditindaklanjuti dengan penanggung jawab, batas waktu, dan pemeriksaan penyelesaian." },
 ];

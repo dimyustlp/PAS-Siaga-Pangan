@@ -37,7 +37,7 @@ export const ALUR_KERJA: TahapAlur[] = [
     judul: "Lengkapi syarat kesiapan",
     pelaku: ["Operator"],
     peran: ["operator"],
-    isi: ["Unggah dokumen yang diwajibkan.", "Isi daftar nominatif WB dan enam indikator kesiapan.", "Setelah lengkap, sesi masuk antrean keputusan."],
+    isi: ["Unggah dokumen yang diwajibkan.", "Isi daftar nominatif WB dan enam aspek kesiapan (A sampai F).", "Setelah lengkap, sesi masuk antrean keputusan."],
     tautan: { href: "/kegiatan", label: "Buka Kegiatan" },
   },
   {

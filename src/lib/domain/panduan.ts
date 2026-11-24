@@ -17,7 +17,7 @@ export const PANDUAN: Panduan[] = [
       "Menyusun rencana kegiatan dan melengkapi rinciannya.",
       "Membuat sesi harian, satu per satu sesuai jadwal.",
       "Menugaskan Pengawal pada tiap sesi.",
-      "Menyiapkan nominatif WB, dokumen, dan indikator kesiapan sebelum diputuskan Kepala Pengamanan.",
+      "Menyiapkan nominatif WB, dokumen, dan aspek kesiapan sebelum diputuskan Kepala Pengamanan.",
       "Membuat dan mengelola akun Ka.UPT, Kepala Pengamanan, dan Pengawal di UPT sendiri.",
     ],
     langkah: [
@@ -25,7 +25,7 @@ export const PANDUAN: Panduan[] = [
       { judul: "Lengkapi rincian", isi: "Isi tiga bagian: periode dan luas, nomor surat dan persetujuan, serta pengamanan di lokasi (titik komunikasi, batas area, rute, akses warga). Tiap bagian punya tombol simpan sendiri.", menu: { href: "/rencana", label: "Rencana kegiatan" } },
       { judul: "Tambah sesi harian", isi: "Di halaman rincian, buat sesi per tanggal. Tentukan jarak waktu hitung WB dan apakah memakai gelang monitor." },
       { judul: "Tugaskan Pengawal", isi: "Pada tabel sesi, tekan Tugaskan pengawal lalu pilih orangnya. Tugas langsung muncul di dasbor Pengawal; ia baru bisa bekerja setelah Kepala Pengamanan menyatakan siap." },
-      { judul: "Siapkan sesi", isi: "Buka sesi, lengkapi nominatif WB, dokumen surat perintah dan rencana pengamanan, serta indikator kesiapan. Sesi yang lengkap masuk antrean keputusan Kepala Pengamanan." },
+      { judul: "Siapkan sesi", isi: "Buka sesi, lengkapi nominatif WB, dokumen surat perintah dan rencana pengamanan, serta aspek kesiapan dan dokumen wajib a sampai m. Sesi yang lengkap masuk antrean keputusan Kepala Pengamanan." },
       { judul: "Atur kop surat", isi: "Isi kop surat UPT agar dokumen persuratan memakai identitas UPT. Isinya bisa diubah sesuai kondisi di lapangan.", menu: { href: "/kop-surat", label: "Kop surat UPT" } },
       { judul: "Buat akun pegawai UPT", isi: "Buat akun Ka.UPT, Kepala Pengamanan, dan Pengawal. Berikan kata sandi awal langsung ke pemiliknya. Akun hanya bisa dibuat untuk UPT Anda sendiri.", menu: { href: "/akun", label: "Akun UPT" } },
     ],
