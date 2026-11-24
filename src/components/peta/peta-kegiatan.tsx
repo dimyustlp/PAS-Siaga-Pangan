@@ -205,7 +205,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
           id: "garis-luar",
           type: "line",
           source: "garis",
-          paint: { "line-color": "hsl(226, 50%, 28%)", "line-opacity": 0.55, "line-width": 1.4, "line-dasharray": [2, 2] },
+          paint: { "line-color": "hsl(153, 43%, 22%)", "line-opacity": 0.55, "line-width": 1.4, "line-dasharray": [2, 2] },
         });
         m.addLayer({
           id: "upt-titik",
@@ -213,7 +213,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
           source: "upt",
           paint: {
             "circle-radius": ["interpolate", ["linear"], ["zoom"], 3, 1.8, 6, 2.8, 10, 4.5],
-            "circle-color": "hsl(224, 45%, 48%)",
+            "circle-color": "hsl(153, 40%, 32%)",
             "circle-opacity": 0.7,
             "circle-stroke-color": "#ffffff",
             "circle-stroke-width": 0.8,
@@ -226,7 +226,7 @@ export function PetaKegiatan({ upt, penanda, kanwil, fokus }: PetaProps) {
             source: "upt",
             minzoom: 8.5,
             layout: { "text-field": ["get", "nama"], "text-size": 11, "text-offset": [0, 1.1], "text-anchor": "top", "text-max-width": 10 },
-            paint: { "text-color": "hsl(226, 44%, 22%)", "text-halo-color": "#ffffff", "text-halo-width": 1.4 },
+            paint: { "text-color": "hsl(153, 43%, 14%)", "text-halo-color": "#ffffff", "text-halo-width": 1.4 },
           });
         }
         const sembul = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10, className: "peta-sembul" });
