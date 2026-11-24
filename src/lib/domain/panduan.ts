@@ -33,19 +33,18 @@ export const PANDUAN: Panduan[] = [
   },
   {
     role: "kepala_pengamanan",
-    ringkas: "Memutuskan kesiapan pengamanan, memantau kegiatan berjalan, dan mengesahkan laporan.",
+    ringkas: "Memutuskan kesiapan pengamanan, menangani gangguan dan tindak lanjut, serta memantau kegiatan berjalan.",
     tugas: [
       "Memeriksa kesiapan tiap sesi lalu memberi izin mulai.",
       "Memantau status keamanan kegiatan yang sedang berjalan.",
       "Menindaklanjuti gangguan, alarm gelang, dan tindak lanjut yang terlambat.",
-      "Mengesahkan laporan kegiatan yang tahapnya sudah lengkap.",
     ],
     langkah: [
       { judul: "Buka antrean keputusan", isi: "Sesi yang sudah disiapkan Operator muncul di sini. Periksa nominatif, dokumen, dan indikator kesiapan.", menu: { href: "/keputusan", label: "Keputusan" } },
       { judul: "Beri keputusan", isi: "Setujui bila siap sehingga Pengawal bisa mulai mencatat. Bila belum siap, kembalikan dengan catatan." },
       { judul: "Pantau saat kegiatan berjalan", isi: "Dasbor menampilkan warna status Hijau, Kuning, Merah, dan Kritis. Perhatikan kegiatan yang tidak mengirim data atau terlambat memeriksa.", menu: { href: "/", label: "Dasbor" } },
       { judul: "Tindak lanjuti temuan", isi: "Buat dan pantau tindak lanjut sampai selesai dan diverifikasi.", menu: { href: "/tindak-lanjut", label: "Tindak lanjut" } },
-      { judul: "Sahkan laporan", isi: "Setelah empat tahap pengawalan lengkap, laporan siap disahkan lalu bisa diunduh sebagai PDF.", menu: { href: "/laporan", label: "Laporan kegiatan" } },
+      { judul: "Baca laporan", isi: "Laporan yang tahapnya sudah lengkap bisa dibaca dan diunduh. Pengesahan dilakukan Ka.UPT.", menu: { href: "/laporan", label: "Laporan kegiatan" } },
     ],
   },
   {

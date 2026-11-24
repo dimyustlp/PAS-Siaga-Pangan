@@ -35,7 +35,7 @@ export const TAHAP: TahapDef[] = [
     isian: [
       { name: "jumlah_wb", label: "Jumlah WB keluar (hasil hitung)", tipe: "angka", wajib: true },
       { name: "jumlah_alat", label: "Jumlah alat kerja dibawa", tipe: "angka", wajib: true },
-      { name: "petugas_p2u", label: "Nama petugas P2U", tipe: "teks" },
+      { name: "petugas_p2u", label: "Nama petugas P2U yang mengeluarkan WB", tipe: "teks", wajib: true },
       catatan,
     ],
   },
@@ -83,7 +83,8 @@ export const TAHAP: TahapDef[] = [
       { name: "jumlah_wb", label: "Jumlah WB kembali (hasil hitung)", tipe: "angka", wajib: true },
       { name: "jumlah_alat", label: "Jumlah alat kerja kembali", tipe: "angka", wajib: true },
       { name: "penggeledahan", label: "Penggeledahan sudah dilakukan?", tipe: "yt", wajib: true },
-      { name: "penerima", label: "Petugas blok yang menerima", tipe: "teks" },
+      { name: "petugas_p2u_terima", label: "Nama petugas P2U yang menerima WB kembali", tipe: "teks", wajib: true },
+      { name: "penerima", label: "Nama petugas blok yang menerima", tipe: "teks", wajib: true },
       catatan,
     ],
   },

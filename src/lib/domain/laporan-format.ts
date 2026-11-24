@@ -84,12 +84,13 @@ export function susunLaporan(d: DataLaporan): IsiLaporan {
     const i = t.isian;
     const ket: string[] = [];
     if (t.jumlah_alat !== null) ket.push(`${t.jumlah_alat} alat kerja`);
-    if (i.petugas_p2u) ket.push(`petugas P2U: ${String(i.petugas_p2u)}`);
+    if (i.petugas_p2u) ket.push(`P2U yang mengeluarkan: ${String(i.petugas_p2u)}`);
+    if (i.petugas_p2u_terima) ket.push(`P2U yang menerima: ${String(i.petugas_p2u_terima)}`);
     if (i.kendaraan) ket.push(`kendaraan: ${String(i.kendaraan)}`);
     if (i.uraian) ket.push(String(i.uraian));
     if (i.hasil) ket.push(`hasil: ${String(i.hasil)}`);
     if (typeof i.penggeledahan === "boolean") ket.push(i.penggeledahan ? "penggeledahan dilakukan" : "penggeledahan belum dilakukan");
-    if (i.penerima) ket.push(`diterima: ${String(i.penerima)}`);
+    if (i.penerima) ket.push(`petugas blok penerima: ${String(i.penerima)}`);
     if (i.catatan) ket.push(String(i.catatan));
     ket.push(`pencatat: ${t.pengawal}`);
     return { tahap: `${t.tahap}. ${NAMA_TAHAP[t.tahap]}`, waktu: waktuLengkap(t.waktu_sistem), wb: `${t.jumlah_wb} orang`, ket: ket.join("; ") };
