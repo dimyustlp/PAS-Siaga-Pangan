@@ -77,7 +77,12 @@ export default async function PersiapanSesiPage({ params }: { params: Promise<{ 
       {sesi.status_kesiapan === "Dapat Dimulai" && <Alert tone="sukses">Sesi sudah disetujui dan tidak bisa diubah lagi. Pelaksanaan dicatat Pengawal di lapangan.</Alert>}
 
       <Card>
-        <CardHeader><CardTitle>Enam indikator kesiapan</CardTitle><CardDescription>Centang setelah Anda memeriksa sendiri kondisinya; tambahkan catatan bila perlu.</CardDescription></CardHeader>
+        <CardHeader><CardTitle>Dokumen wajib, kelompok kerja, dan kendali sesi</CardTitle><CardDescription>Dokumen wajib a sampai m, lahan aktif, kelompok kerja, perubahan rencana, status per variabel, alat dan bahan, serta akses pihak luar dicatat pada halaman Kendali sesi. Kepala Pengamanan baru dapat memutuskan Dapat Dimulai setelah dokumen yang berlaku tersedia.</CardDescription></CardHeader>
+        <CardContent><Button asChild size="sm"><Link href={`/sesi/${sessionId}/kendali`}>Buka kendali sesi</Link></Button></CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Enam aspek kesiapan (A sampai F)</CardTitle><CardDescription>Centang setelah Anda memeriksa sendiri kondisinya; tambahkan catatan bila perlu.</CardDescription></CardHeader>
         <CardContent className="divide-y">
           {INDIKATOR_KESIAPAN.map((i) => {
             const k = peta.get(i.kode);
