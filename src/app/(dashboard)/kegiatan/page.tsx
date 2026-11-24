@@ -36,7 +36,7 @@ export default async function KegiatanPage() {
     <div className="mx-auto max-w-[1680px] space-y-8">
       <PageHeader
         title="Kegiatan"
-        description="Dua langkah: buat rencana kegiatan, lalu sesi hariannya. Kepala Pengamanan memutuskan kesiapan setelah dokumen, daftar nominatif, dan enam indikator kesiapan lengkap."
+        description="Dua langkah: buat rencana kegiatan, lalu sesi hariannya. Kepala Pengamanan memutuskan kesiapan setelah dokumen, daftar nominatif, dan enam aspek kesiapan (A sampai F) lengkap."
       />
 
       <div className="grid gap-6 lg:grid-cols-2">
