@@ -22,7 +22,7 @@ export default async function LaporanPage({ params }: { params: Promise<{ sessio
   if (!d) notFound();
   const isi = susunLaporan(d);
   const lengkap = d.tahap.length === 4;
-  const bisaSahkan = (user.role === "kepala_pengamanan" || user.role === "ka_upt") && lengkap && !d.pengesahan;
+  const bisaSahkan = user.role === "ka_upt" && lengkap && !d.pengesahan;
   const namaBerkas = `Laporan-Ketahanan-Pangan-${d.kegiatan.kode}-${d.kegiatan.tanggalSesi}.pdf`;
 
   return (
