@@ -75,7 +75,6 @@ export function SiteFooter() {
     <footer className="no-print mt-10 border-t border-border">
       <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-2 px-4 py-4 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground md:px-8">
         <span>Direktorat Pengamanan dan Intelijen · Ditjen Pemasyarakatan</span>
-        <span>Pertanian · Perkebunan · Perikanan · Peternakan</span>
       </div>
     </footer>
   );
