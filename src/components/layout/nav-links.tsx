@@ -129,15 +129,15 @@ function Butir({ item, pathname }: { item: Item; pathname: string }) {
         href={item.href}
         aria-current={on ? "page" : undefined}
         className={cn(
-          "group relative flex items-center gap-3 rounded-[9px] px-3 py-2.5 text-[0.95rem] font-medium transition-[background-color,color] duration-200",
-          on ? "bg-white/[0.11] text-white" : "text-[#b9cce8] hover:bg-white/[0.06] hover:text-white"
+          "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-[0.95rem] font-medium transition-[background-color,color] duration-200",
+          on ? "bg-white/[0.11] text-white" : "text-[#B7E4C7] hover:bg-white/[0.06] hover:text-white"
         )}
       >
         <span
-          className={cn("absolute bottom-2 left-0 top-2 w-[3px] rounded-full bg-[#c89a34] transition-opacity duration-300", on ? "opacity-100" : "opacity-0")}
+          className={cn("absolute bottom-2 left-0 top-2 w-[3px] rounded-full bg-[#D97706] transition-opacity duration-300", on ? "opacity-100" : "opacity-0")}
           aria-hidden
         />
-        <Icon className={cn("h-[1.15rem] w-[1.15rem] shrink-0 transition-colors", on ? "text-[#e6c06a]" : "text-[#7fa5dc] group-hover:text-[#b9cce8]")} aria-hidden />
+        <Icon className={cn("h-[1.15rem] w-[1.15rem] shrink-0 transition-colors", on ? "text-[#FBBF24]" : "text-[#95D5B2] group-hover:text-[#B7E4C7]")} aria-hidden />
         <span className="min-w-0 truncate">{item.label}</span>
       </Link>
     </li>
@@ -150,13 +150,13 @@ export function NavLinks({ role }: { role: Role }) {
   const { utama, lain } = MENU[role];
   return (
     <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-4 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin]" aria-label="Menu utama">
-      <p className="px-3 pb-2 font-mono text-[0.65rem] font-medium uppercase tracking-[0.2em] text-[#8fa6cc]">Menu utama</p>
+      <p className="px-3 pb-2 font-mono text-[0.65rem] font-medium uppercase tracking-[0.2em] text-[#95D5B2]">Menu utama</p>
       <ul className="space-y-0.5">
         {utama.map((item) => <Butir key={item.href} item={item} pathname={pathname} />)}
       </ul>
       {lain.length > 0 && (
         <>
-          <p className="mt-5 px-3 pb-2 font-mono text-[0.65rem] font-medium uppercase tracking-[0.2em] text-[#8fa6cc]">Lainnya</p>
+          <p className="mt-5 px-3 pb-2 font-mono text-[0.65rem] font-medium uppercase tracking-[0.2em] text-[#95D5B2]">Lainnya</p>
           <ul className="space-y-0.5">
             {lain.map((item) => <Butir key={item.href} item={item} pathname={pathname} />)}
           </ul>

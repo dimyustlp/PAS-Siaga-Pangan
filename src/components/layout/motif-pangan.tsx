@@ -10,11 +10,11 @@ export function MotifPangan() {
     >
       <defs>
         <linearGradient id="mp-sapu" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#c89a34" stopOpacity="0" />
-          <stop offset="1" stopColor="#e6c06a" stopOpacity="0.32" />
+          <stop offset="0" stopColor="#D97706" stopOpacity="0" />
+          <stop offset="1" stopColor="#FBBF24" stopOpacity="0.32" />
         </linearGradient>
       </defs>
-      <g fill="none" stroke="#c89a34" strokeWidth="1">
+      <g fill="none" stroke="#D97706" strokeWidth="1">
         {[56, 100, 144, 188].map((r) => (
           <circle key={r} cx="200" cy="200" r={r} strokeOpacity={0.26 - r / 1200} />
         ))}
@@ -39,8 +39,8 @@ export function DeretSektor({ hitung }: { hitung?: Partial<Record<string, number
   return (
     <ul className="flex flex-wrap gap-2">
       {SEKTOR.map(({ ikon: Ikon, label }) => (
-        <li key={label} className="flex items-center gap-2 rounded-[9px] border border-white/15 bg-white/[0.07] px-3 py-1.5 font-mono text-[0.72rem] font-medium uppercase tracking-[0.06em]">
-          <Ikon className="h-4 w-4 text-[#e6c06a]" aria-hidden />
+        <li key={label} className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.07] px-3 py-1.5 font-mono text-[0.72rem] font-medium uppercase tracking-[0.06em]">
+          <Ikon className="h-4 w-4 text-[#FBBF24]" aria-hidden />
           {label}
           {hitung && <span className="font-mono text-white/80">{hitung[label] ?? 0}</span>}
         </li>

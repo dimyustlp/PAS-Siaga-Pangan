@@ -37,14 +37,14 @@ export function KerangkaSamping({ kelas, children }: { kelas: string; children: 
           aria-label="Buka menu"
           aria-expanded={buka}
           aria-controls="menu-samping"
-          className="flex h-10 w-10 items-center justify-center rounded-[9px] border border-white/15 bg-white/[0.07] transition-colors active:scale-95 hover:bg-white/[0.14]"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-white/[0.07] transition-colors active:scale-95 hover:bg-white/[0.14]"
         >
           <Menu className="h-5 w-5" aria-hidden />
         </button>
         <Link href="/" className="flex min-w-0 items-center gap-2.5">
           <Logo kecil />
           <span className="block text-[1.05rem] font-bold tracking-tight">
-            PAS-SIAGA <span className="text-[#e6c06a]">PANGAN</span>
+            PAS-SIAGA <span className="text-[#FBBF24]">PANGAN</span>
           </span>
         </Link>
       </div>
@@ -67,7 +67,7 @@ export function KerangkaSamping({ kelas, children }: { kelas: string; children: 
           type="button"
           onClick={() => setBuka(false)}
           aria-label="Tutup menu"
-          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-[9px] text-white/70 transition-colors hover:bg-white/10 hover:text-white lg:hidden"
+          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-lg text-white/70 transition-colors hover:bg-white/10 hover:text-white lg:hidden"
         >
           <X className="h-5 w-5" aria-hidden />
         </button>
