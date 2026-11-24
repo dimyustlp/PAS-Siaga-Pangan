@@ -98,7 +98,7 @@ const MENU: Record<Role, { utama: Item[]; lain: Item[] }> = {
     lain: [SDP, LALU, INDUK, BERKAS, GELANG, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
   },
   ka_upt: {
-    utama: [DASBOR, RENCANA, LAPORAN, EVALUASI, PANGAN, INDUK, KOP],
+    utama: [DASBOR, RENCANA, LAPORAN, EVALUASI, PANGAN, INDUK],
     lain: [SDP, PETA, LALU, BERKAS, GELANG, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
   },
   operator: {
@@ -107,7 +107,7 @@ const MENU: Record<Role, { utama: Item[]; lain: Item[] }> = {
   },
   kepala_pengamanan: {
     utama: [DASBOR, { href: "/keputusan", label: "Keputusan", icon: "keputusan" }, RENCANA, LAPORAN, TINDAK, EVALUASI, GELANG],
-    lain: [SDP, PETA, LALU, PANGAN, INDUK, BERKAS, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN, KOP],
+    lain: [SDP, PETA, LALU, PANGAN, INDUK, BERKAS, RISIKO, BERITA, PANDUAN_PERAN, PEDOMAN],
   },
   pengawal: {
     utama: [{ href: "/lapangan", label: "Tugas lapangan", icon: "kegiatan" }, BERKAS, GELANG, BERITA, PANDUAN_PERAN, PEDOMAN],
