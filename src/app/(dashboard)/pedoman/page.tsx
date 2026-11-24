@@ -9,10 +9,19 @@ import { INDIKATOR_KESIAPAN } from "@/lib/validations/planning";
 
 export const metadata = { title: "Pedoman & SOP" };
 
+function Lipat({ judul, children }: { judul: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <details className="rounded-lg border border-border/70 p-3 text-sm">
+      <summary className="cursor-pointer font-medium">{judul}</summary>
+      <div className="mt-2 space-y-1 text-muted-foreground">{children}</div>
+    </details>
+  );
+}
+
 export default function PedomanPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <PageHeader title="Pedoman & SOP" description="Rujukan cepat dari Pedoman Penyelenggaraan Pengamanan Kegiatan Ketahanan Pangan Pemasyarakatan. Isi di halaman ini mengikuti pedoman; bila ada perbedaan, naskah resmi yang berlaku." />
+      <PageHeader title="Pedoman & SOP" description="Rujukan ringkas dari Pedoman Penyelenggaraan Pengamanan Kegiatan Ketahanan Pangan Pemasyarakatan. Isi di halaman ini mengikuti pedoman; bila ada perbedaan, naskah resmi yang berlaku. Klik judul untuk melihat rinciannya." />
       <Alert>Status adalah acuan bersama untuk mengendalikan kegiatan, bukan penilaian risiko pribadi WB.</Alert>
 
       <Card>
@@ -33,16 +42,16 @@ export default function PedomanPage() {
 
       <Card>
         <CardHeader><CardTitle>Aspek kesiapan pengamanan (A sampai F)</CardTitle><CardDescription>Diperiksa sebelum kegiatan dimulai. Tanpa skor risiko pribadi WB.</CardDescription></CardHeader>
-        <CardContent>
-          <ol className="space-y-2 text-sm">{INDIKATOR_KESIAPAN.map((i) => <li key={i.kode}><span className="font-medium">{i.kode.toUpperCase()}.</span> {i.uraian}</li>)}</ol>
-          <p className="mt-3 text-sm text-muted-foreground">Pejabat berwenang memutuskan: dapat dimulai, perlu diperbaiki persiapannya, atau harus ditunda. Alasan, perbaikan yang diminta, penanggung jawab, dan waktu pemeriksaan ulang dicatat.</p>
+        <CardContent className="space-y-3">
+          {INDIKATOR_KESIAPAN.map((i) => <Lipat key={i.kode} judul={<>{i.kode.toUpperCase()}. {i.judul}</>}><p>{i.uraian}</p></Lipat>)}
+          <p className="pt-1 text-sm text-muted-foreground">Pejabat berwenang memutuskan: dapat dimulai, perlu diperbaiki persiapannya, atau harus ditunda. Alasan, perbaikan yang diminta, penanggung jawab, dan waktu pemeriksaan ulang dicatat.</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader><CardTitle>Dokumen yang harus tersedia (a sampai m)</CardTitle><CardDescription>Dicek pada halaman Kendali sesi. Dokumen f dan g hanya untuk kegiatan di luar perimeter pengamanan utama.</CardDescription></CardHeader>
-        <CardContent>
-          <ol className="space-y-2 text-sm">{DOKUMEN_WAJIB.map((d) => <li key={d.kode}><span className="font-medium">{d.kode}. {d.judul}.</span> <span className="text-muted-foreground">{d.uraian}</span></li>)}</ol>
+        <CardContent className="space-y-3">
+          {DOKUMEN_WAJIB.map((d) => <Lipat key={d.kode} judul={<>{d.kode}. {d.judul}{d.hanyaLuar ? " (khusus di luar perimeter)" : ""}</>}><p>{d.uraian}</p></Lipat>)}
         </CardContent>
       </Card>
 
@@ -66,26 +75,21 @@ export default function PedomanPage() {
 
       <Card>
         <CardHeader><CardTitle>Isi dasbor</CardTitle><CardDescription>Delapan blok data minimum menurut pedoman.</CardDescription></CardHeader>
-        <CardContent><ol className="space-y-2 text-sm">{BLOK_DASBOR.map((b, i) => <li key={b.judul}><span className="font-medium">{i + 1}. {b.judul}.</span> <span className="text-muted-foreground">{b.isi}</span></li>)}</ol></CardContent>
+        <CardContent className="space-y-3">{BLOK_DASBOR.map((b, i) => <Lipat key={b.judul} judul={<>{i + 1}. {b.judul}</>}><p>{b.isi}</p></Lipat>)}</CardContent>
       </Card>
 
       <Card>
         <CardHeader><CardTitle>Penilaian pelaksanaan (19 indikator)</CardTitle><CardDescription>Diisi pada menu Penilaian pelaksanaan. {CATATAN_KATEGORI}</CardDescription></CardHeader>
         <CardContent className="space-y-3">
-          <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">{PETUNJUK_PENILAIAN.map((x) => <li key={x}>{x}</li>)}</ul>
-          <ol className="space-y-2 text-sm">{INDIKATOR_PENILAIAN.map((i) => <li key={i.no}><span className="font-medium">{i.no}. {i.judul}.</span> <span className="text-muted-foreground">{i.uraian}{i.tb && <> ({i.tb})</>}</span></li>)}</ol>
+          <Lipat judul="Petunjuk pengisian dan rumus skor"><ul className="list-disc space-y-1 pl-5">{PETUNJUK_PENILAIAN.map((x) => <li key={x}>{x}</li>)}</ul></Lipat>
+          {INDIKATOR_PENILAIAN.map((i) => <Lipat key={i.no} judul={<>{i.no}. {i.judul}</>}><p>{i.uraian}{i.tb && <> ({i.tb})</>}</p></Lipat>)}
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader><CardTitle>Pokok isi pedoman dan SOP</CardTitle></CardHeader>
-        <CardContent className="divide-y">
-          {POKOK_SOP.map((s) => (
-            <div key={s.bagian} className="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-[12rem_1fr]">
-              <h3 className="text-sm font-semibold">{s.bagian}</h3>
-              <p className="text-sm text-muted-foreground">{s.isi}</p>
-            </div>
-          ))}
+        <CardHeader><CardTitle>Pokok isi pedoman dan SOP</CardTitle><CardDescription>Klik judul untuk membaca isinya.</CardDescription></CardHeader>
+        <CardContent className="space-y-3">
+          {POKOK_SOP.map((x) => <Lipat key={x.bagian} judul={x.bagian}><p>{x.isi}</p></Lipat>)}
         </CardContent>
       </Card>
     </div>
