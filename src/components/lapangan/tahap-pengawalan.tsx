@@ -255,7 +255,7 @@ export function TahapPengawalan(p: Props) {
       </ol>
 
       {berikut === 0 && (
-        <Alert tone="sukses">Keempat tahap selesai. Laporan kegiatan siap disahkan Kepala Pengamanan atau Ka.UPT, lalu bisa diunduh sebagai PDF.</Alert>
+        <Alert tone="sukses">Keempat tahap selesai. Laporan kegiatan siap disahkan Ka.UPT, lalu bisa diunduh sebagai PDF.</Alert>
       )}
 
       <div className="kaca space-y-4 rounded-2xl p-4">
