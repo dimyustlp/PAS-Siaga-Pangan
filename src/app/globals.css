@@ -9,7 +9,7 @@
  */
 @layer base {
   :root {
-    --background: 210 40% 98%;
+    --background: 150 22% 95%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
@@ -79,7 +79,18 @@
   }
   /* Latar: biru-abu dingin dengan cahaya dongker tipis di kiri atas dan kisi teknis yang memudar ke bawah.
      Statis (tanpa animasi), jadi tidak membebani perangkat. */
-  body::before { content: none; }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(60rem 34rem at 0% -6rem, hsl(153 45% 30% / 0.16), transparent 70%),
+      radial-gradient(46rem 28rem at 100% 0%, hsl(32 95% 50% / 0.12), transparent 70%),
+      radial-gradient(52rem 30rem at 85% 105%, hsl(153 40% 35% / 0.14), transparent 70%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160' fill='none' stroke='%231B4332' stroke-opacity='0.07' stroke-width='1.2'%3E%3Cpath d='M-10 40c30-22 60 22 90 0s60-22 90 0'/%3E%3Cpath d='M-10 80c30-22 60 22 90 0s60-22 90 0'/%3E%3Cpath d='M-10 120c30-22 60 22 90 0s60-22 90 0'/%3E%3Cpath d='M-10 160c30-22 60 22 90 0s60-22 90 0'/%3E%3C/svg%3E") 0 0 / 160px 160px;
+  }
   ::selection {
     background: hsl(153 40% 35% / 0.22);
   }
