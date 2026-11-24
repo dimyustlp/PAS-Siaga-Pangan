@@ -48,7 +48,7 @@ export async function hapusLampiran(input: unknown): Promise<ActionResult> {
 }
 
 export async function sahkanLaporan(input: unknown): Promise<ActionResult> {
-  const auth = await authorize(["kepala_pengamanan", "ka_upt"]);
+  const auth = await authorize(["ka_upt"]);
   if (!auth.ok) return fail(auth.error);
   const p = z.object({ session_id: z.string().uuid(), catatan: z.string().trim().max(1000).optional() }).safeParse(input);
   if (!p.success) return fail("Isian tidak valid.");
@@ -69,7 +69,7 @@ const kopSchema = z.object({
 });
 
 export async function ubahKopSurat(input: unknown): Promise<ActionResult> {
-  const auth = await authorize(["administrator", "ka_upt", "kepala_pengamanan", "operator"]);
+  const auth = await authorize(["administrator", "operator"]);
   if (!auth.ok) return fail(auth.error);
   const p = kopSchema.safeParse(input);
   if (!p.success) return fail(p.error.issues[0]?.message ?? "Isian tidak valid.");
@@ -99,7 +99,7 @@ const kopLengkapSchema = z.object({
 
 /** Menyimpan seluruh isi kop surat UPT. Dipakai pada setiap surat dan laporan berikutnya. */
 export async function ubahKopLengkap(input: unknown): Promise<ActionResult> {
-  const auth = await authorize(["administrator", "ka_upt", "kepala_pengamanan", "operator"]);
+  const auth = await authorize(["administrator", "operator"]);
   if (!auth.ok) return fail(auth.error);
   const p = kopLengkapSchema.safeParse(input);
   if (!p.success) return fail(p.error.issues[0]?.message ?? "Isian tidak valid.");
