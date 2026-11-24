@@ -18,7 +18,7 @@ type Props = {
 
 function Kotak({ judul, uraian, aksi, children, nada }: { judul: string; uraian?: string; aksi?: ReactNode; children: ReactNode; nada?: "kuning" | "biru" }) {
   return (
-    <section className={cn("kaca rounded-2xl p-4 md:p-5", nada === "kuning" && "border-l-4 border-l-gold", nada === "biru" && "border-l-4 border-l-primary")}>
+    <section className={cn("kaca min-w-0 rounded-2xl p-4 md:p-5", nada === "kuning" && "border-l-4 border-l-gold", nada === "biru" && "border-l-4 border-l-primary")}>
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <h2 className="text-base font-semibold tracking-tight">{judul}</h2>
@@ -26,7 +26,7 @@ function Kotak({ judul, uraian, aksi, children, nada }: { judul: string; uraian?
         </div>
         {aksi}
       </div>
-      <div className="mt-3">{children}</div>
+      <div className="mt-3 min-w-0">{children}</div>
     </section>
   );
 }
@@ -34,7 +34,7 @@ function Kotak({ judul, uraian, aksi, children, nada }: { judul: string; uraian?
 function Daftar({ rows, kosong, href, tambahan }: { rows: Overview[]; kosong: string; href: (r: Overview) => string; tambahan?: (r: Overview) => ReactNode }) {
   if (rows.length === 0) return <p className="rounded-xl border border-dashed p-4 text-center text-sm text-muted-foreground">{kosong}</p>;
   return (
-    <ul className="divide-y divide-border/60">
+    <ul className="min-w-0 divide-y divide-border/60">
       {rows.slice(0, 6).map((r) => (
         <li key={r.session_id}>
           <Link href={href(r)} className="flex items-center gap-3 py-2.5 hover:bg-secondary/40">
