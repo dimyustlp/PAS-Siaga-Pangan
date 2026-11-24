@@ -50,7 +50,6 @@ export default async function CetakPenilaianPage({ params }: { params: Promise<{
       </div>
       <article className="mx-auto max-w-[21cm] bg-white px-[1.4cm] py-[1.2cm] font-serif text-[10.5pt] leading-snug text-black shadow-soft print:max-w-none print:p-0 print:shadow-none">
         <KopCetak kop={kop} />
-        <p className="text-center font-bold">FORMULIR 8</p>
         <p className="text-center font-bold">REKAP EVALUASI DAN PERBAIKAN PELAKSANAAN PENGAMANAN KEGIATAN KETAHANAN PANGAN</p>
         <p className="mb-3 text-center">Nomor: ......................................</p>
 
@@ -94,18 +93,35 @@ export default async function CetakPenilaianPage({ params }: { params: Promise<{
 
         <p className="mb-1 mt-4 font-bold">Tindak lanjut</p>
         <table className="w-full border-collapse text-[9.5pt]">
-          <thead className="bg-[#eceff1]"><tr><th className={`${tabel} w-10`}>No</th><th className={tabel}>Temuan</th><th className={tabel}>Tindakan</th><th className={tabel}>PJ</th><th className={tabel}>Batas waktu</th><th className={tabel}>Bukti dan hasil pemeriksaan</th><th className={tabel}>Selesai</th></tr></thead>
+          <thead className="bg-[#eceff1]">
+            <tr><th className={tabel}>Temuan</th><th className={tabel}>Bukti atau Indikator</th><th className={tabel}>Perbaikan</th><th className={tabel}>Penanggung jawab dan tenggat</th><th className={tabel}>Hasil verifikasi</th></tr>
+            <tr>{[1, 2, 3, 4, 5].map((n) => <th key={n} className={`${tabel} font-normal`}>({n})</th>)}</tr>
+          </thead>
           <tbody>
             {tindak.map((t) => (
-              <tr key={s(t.id)}><td className={`${tabel} text-center`}>{s(t.no_indikator) || "-"}</td><td className={tabel}>{s(t.temuan)}</td><td className={tabel}>{s(t.tindakan)}</td><td className={tabel}>{s(t.penanggung_jawab)}</td><td className={tabel}>{t.batas_waktu ? fmtTanggal(s(t.batas_waktu)) : ""}</td><td className={tabel}>{s(t.bukti_penyelesaian)} {s(t.hasil_verifikasi)}</td><td className={`${tabel} text-center`}>{t.selesai ? "✓" : ""}</td></tr>
+              <tr key={s(t.id)}>
+                <td className={tabel}>{s(t.temuan)}</td>
+                <td className={tabel}>{[t.no_indikator ? `Indikator ${s(t.no_indikator)}` : "", s(t.bukti_penyelesaian)].filter(Boolean).join("; ")}</td>
+                <td className={tabel}>{s(t.tindakan)}</td>
+                <td className={tabel}>{[s(t.penanggung_jawab), t.batas_waktu ? fmtTanggal(s(t.batas_waktu)) : ""].filter(Boolean).join("; ")}</td>
+                <td className={tabel}>{[s(t.hasil_verifikasi), t.selesai ? "Selesai" : ""].filter(Boolean).join("; ")}</td>
+              </tr>
             ))}
-            {tindak.length === 0 && <tr><td colSpan={7} className={tabel}>Tidak ada tindak lanjut.</td></tr>}
+            {tindak.length === 0 && <tr><td colSpan={5} className={tabel}>Tidak ada tindak lanjut.</td></tr>}
           </tbody>
         </table>
+        <p className="mt-2 text-[9pt]">Dokumen elektronik dapat menggantikan formulir apabila unsur data, persetujuan, jejak perubahan, tanda pengesahan, dan akses sesuai kewenangan tetap terpenuhi. Lampiran ini tidak membuat instrumen penilaian risiko individual WB.</p>
+        <div className="mt-2 text-[9pt] leading-tight">
+          <p className="font-bold">Keterangan Pengisian:</p>
+          <ol className="ml-4 list-decimal">
+            <li>Tambahkan baris pada matriks untuk menyesuaikan dengan kondisi masing-masing satker atau wilayah.</li>
+            <li>Keterangan kolom: kolom (1) diisi dengan temuan; kolom (2) bukti atau indikator temuan; kolom (3) perbaikan; kolom (4) penanggung jawab dan tenggat waktu; kolom (5) hasil verifikasi.</li>
+          </ol>
+        </div>
 
         <div className="mt-8 grid grid-cols-2 gap-8 text-center">
-          <div><p>Penilai,</p><div className="h-16" /><p className="font-bold underline">{s(pen.penilai_nama)}</p><p>{s(pen.penilai_jabatan)}</p></div>
-          <div><p>{kop.kota ? `${kop.kota}, ` : ""}{fmtTanggal(s(pen.tanggal_penilaian))}<br />Mengetahui, Kepala UPT</p><div className="h-16" />{pengesah ? <p className="font-bold underline">{pengesah}</p> : <p>(.......................................)</p>}</div>
+          <div><p>Menyetujui,<br />Pejabat Berwenang</p><div className="h-16" />{pengesah ? <p className="font-bold underline">{pengesah}</p> : <><p>(Nama)</p><p>(NIP)</p></>}</div>
+          <div><p>{kop.kota ? `${kop.kota}` : "(Nama kota)"}, {fmtTanggal(s(pen.tanggal_penilaian))}<br />Petugas Pelaksana</p><div className="h-16" /><p className="font-bold underline">{s(pen.penilai_nama)}</p><p>{s(pen.penilai_jabatan)}</p></div>
         </div>
       </article>
     </div>
