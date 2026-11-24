@@ -74,11 +74,11 @@ export function PageHeader({ title, description, actions }: { title: string; des
   return (
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div className="min-w-0">
-        <p className="mb-2.5 flex items-center gap-2.5 font-mono text-[0.68rem] font-medium uppercase tracking-[0.2em] text-gold">
-          <span className="h-[2px] w-6 rounded-full bg-gold" aria-hidden />
+        <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[hsl(32_90%_30%)]">
+          <span className="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden />
           PAS-SIAGA Pangan
         </p>
-        <h1 className="text-[1.6rem] font-bold leading-tight tracking-tight text-ink md:text-[2rem]">{title}</h1>
+        <h1 className="font-display text-[1.6rem] font-bold leading-tight tracking-tight text-ink md:text-[2rem]">{title}</h1>
         {description && <p className="mt-2 max-w-[68ch] text-[0.95rem] leading-relaxed text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}

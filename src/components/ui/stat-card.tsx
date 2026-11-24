@@ -31,10 +31,10 @@ export function StatCard({
 }) {
   const t = TONE[nada];
   return (
-    <div className={cn("kaca lift group relative overflow-hidden rounded-xl p-4 md:p-5", className)}>
+    <div className={cn("kaca lift group relative overflow-hidden rounded-[1.125rem] p-4 md:p-5", className)}>
       <span className={cn("pointer-events-none absolute inset-y-4 left-0 w-[3px] rounded-r-full bg-gradient-to-b to-transparent", t.garis)} aria-hidden />
       <div className="flex items-start justify-between gap-3">
-        <p className="text-[2.1rem] font-bold leading-none tracking-tight text-ink tabular-nums">
+        <p className="font-display text-[2.1rem] font-bold leading-none tracking-tight text-ink tabular-nums">
           {typeof nilai === "number" ? <AngkaHitung nilai={nilai} /> : nilai}
         </p>
         <span className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ring-1 ring-inset transition-transform duration-500 group-hover:-translate-y-0.5", t.ikon)}>
