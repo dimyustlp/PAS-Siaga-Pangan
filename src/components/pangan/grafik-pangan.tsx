@@ -3,8 +3,8 @@
 import { Area, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from "recharts";
 import { labelBulan, type RekapBulan } from "@/lib/domain/pangan-sdp";
 
-const SUMBU = { fontSize: 12, fill: "hsl(222 20% 40%)" };
-const KOTAK = { background: "#fff", border: "1px solid hsl(216 50% 86%)", borderRadius: 12, color: "hsl(226 44% 16%)", fontSize: 12 };
+const SUMBU = { fontSize: 12, fill: "hsl(215 16% 47%)" };
+const KOTAK = { background: "#fff", border: "1px solid hsl(214 32% 91%)", borderRadius: 12, color: "hsl(222 47% 11%)", fontSize: 12 };
 const nf = new Intl.NumberFormat("id-ID", { maximumFractionDigits: 2 });
 const nf0 = new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 });
 
@@ -43,7 +43,7 @@ export function GrafikWbp({ data }: { data: RekapBulan[] }) {
           <YAxis yAxisId="w" tick={SUMBU} axisLine={false} tickLine={false} tickFormatter={(v) => nf0.format(v as number)} />
           <YAxis yAxisId="p" orientation="right" tick={SUMBU} axisLine={false} tickLine={false} tickFormatter={(v) => nf.format(v as number)} />
           <Tooltip contentStyle={KOTAK} formatter={(v, nama) => (nama === "Premi (juta)" ? [`Rp ${nf.format(Number(v))} juta`, "Premi"] : [`${nf0.format(Number(v))} orang`, "WBP terlibat"])} />
-          <Legend wrapperStyle={{ fontSize: 12, color: "hsl(222 20% 40%)" }} />
+          <Legend wrapperStyle={{ fontSize: 12, color: "hsl(215 16% 47%)" }} />
           <Area yAxisId="p" type="monotone" dataKey="premi" name="Premi (juta)" stroke="hsl(214 70% 68%)" strokeWidth={2} fill="url(#isiPremi)" animationDuration={800} />
           <Line yAxisId="w" type="monotone" dataKey="wbp" name="WBP terlibat" stroke="hsl(214 82% 46%)" strokeWidth={2.4} dot={{ r: 3 }} animationDuration={800} />
         </ComposedChart>
