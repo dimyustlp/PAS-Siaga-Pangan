@@ -98,7 +98,7 @@ export async function PanelKendali({ sessionId, peran }: { sessionId: string; pe
               const tb = !!baris && baris.status === null;
               const gelangTb = v.no === 7 && !sesi.pakai_gelang_monitor;
               return (
-                <div key={v.no} className="space-y-3 rounded-xl border border-border/70 bg-white/70 p-4">
+                <div key={v.no} className="space-y-3 rounded-2xl border border-[hsl(153_25%_88%)] bg-gradient-to-b from-white to-[hsl(150_30%_97%)] p-4 shadow-[0_10px_24px_-18px_rgba(27,67,50,0.35)] transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:shadow-[0_16px_30px_-18px_rgba(27,67,50,0.45)]">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <p className="font-medium">{v.no}. {v.judul}</p>
                     {status ? <StatusBadge status={status} /> : tb ? <Pill>Tidak berlaku</Pill> : gelangTb ? <Pill>Tidak berlaku (tanpa gelang)</Pill> : <Pill tone="kuning">Belum diperiksa</Pill>}
