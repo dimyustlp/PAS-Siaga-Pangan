@@ -44,6 +44,7 @@ export default async function EntriPage({ params, searchParams }: { params: Prom
         <h1 className="text-lg font-semibold">{o.jenis_kegiatan} · {o.lokasi_nama}</h1>
         <p className="text-xs text-muted-foreground">{o.kode_kegiatan}{o.latihan ? " · LATIHAN" : ""} · {o.upt_nama ?? o.kode_upt}</p>
       </div>
+      <Link href={`/lapangan/${sessionId}/kendali`} className="inline-flex rounded-full border border-border bg-white/80 px-3 py-1.5 text-sm font-medium text-primary">Kendali sesi: status variabel, alat, pihak luar</Link>
       {o.pakai_gelang_monitor && siap && <TautanGelang kecil={false} className="w-full" />}
       {!siap ? (
         <Alert tone="waspada">Sesi ini belum mendapat izin mulai dari Kepala Pengamanan ({o.status_kesiapan}). Pencatatan dibuka setelah disetujui.</Alert>
