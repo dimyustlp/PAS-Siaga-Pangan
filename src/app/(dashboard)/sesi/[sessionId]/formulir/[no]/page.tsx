@@ -22,13 +22,19 @@ type Baris = Record<string, unknown>;
 const s = (v: unknown) => (v === null || v === undefined ? "" : String(v));
 const T = "border border-black px-1.5 py-0.5 align-top";
 
-function Tabel({ kolom, baris, kosong = "Tidak ada catatan." }: { kolom: string[]; baris: React.ReactNode[][]; kosong?: string }) {
+function Tabel({ kolom, baris, kosong = "Tidak ada catatan.", nomor = true, noUrut = false, minBaris = 0 }: { kolom: string[]; baris: React.ReactNode[][]; kosong?: string; nomor?: boolean; noUrut?: boolean; minBaris?: number }) {
+  const lebar = kolom.length + (noUrut ? 1 : 0);
+  const pad = Math.max(0, minBaris - baris.length);
   return (
     <table className="mb-3 w-full border-collapse text-[9.5pt]">
-      <thead className="bg-[#eceff1]"><tr><th className={`${T} w-8`}>No</th>{kolom.map((k) => <th key={k} className={`${T} text-left`}>{k}</th>)}</tr></thead>
+      <thead className="bg-[#eceff1]">
+        <tr>{noUrut && <th className={`${T} w-8`}>No</th>}{kolom.map((k) => <th key={k} className={`${T} text-center`}>{k}</th>)}</tr>
+        {nomor && <tr>{noUrut && <th className={`${T} font-normal`}>(1)</th>}{kolom.map((k, i) => <th key={k} className={`${T} font-normal`}>({i + 1 + (noUrut ? 1 : 0)})</th>)}</tr>}
+      </thead>
       <tbody>
-        {baris.map((b, i) => <tr key={i}><td className={`${T} text-center`}>{i + 1}</td>{b.map((c, j) => <td key={j} className={T}>{c}</td>)}</tr>)}
-        {baris.length === 0 && <tr><td colSpan={kolom.length + 1} className={T}>{kosong}</td></tr>}
+        {baris.map((b, i) => <tr key={i}>{noUrut && <td className={`${T} text-center`}>{i + 1}</td>}{b.map((c, j) => <td key={j} className={T}>{c}</td>)}</tr>)}
+        {Array.from({ length: baris.length === 0 ? 0 : pad }).map((_, i) => <tr key={`p${i}`}>{noUrut && <td className={`${T} h-6 text-center`}>{baris.length + i + 1}</td>}{kolom.map((k) => <td key={k} className={`${T} h-6`} />)}</tr>)}
+        {baris.length === 0 && <tr><td colSpan={lebar} className={T}>{kosong}</td></tr>}
       </tbody>
     </table>
   );
@@ -37,10 +43,22 @@ const Judul = ({ children }: { children: React.ReactNode }) => <p className="mb-
 function Pasangan({ item }: { item: [string, React.ReactNode][] }) {
   return (
     <table className="mb-2 w-full"><tbody>
-      {item.map(([k, v]) => <tr key={k} className="align-top"><td className="w-52 py-0.5">{k}</td><td className="w-4">:</td><td>{v || "-"}</td></tr>)}
+      {item.map(([k, v]) => <tr key={k} className="align-top"><td className="w-[38%] py-0.5 pr-2">{k}</td><td className="w-4">:</td><td className="whitespace-pre-line">{v || "…"}</td></tr>)}
     </tbody></table>
   );
 }
+function Keterangan({ kolom }: { kolom: string[] }) {
+  return (
+    <div className="mt-2 text-[9pt] leading-tight">
+      <p className="font-bold">Keterangan Pengisian:</p>
+      <ol className="ml-4 list-decimal">
+        <li>Tambahkan baris pada matriks untuk menyesuaikan dengan kondisi masing-masing satker atau wilayah.</li>
+        <li>Keterangan kolom: {kolom.map((k, i) => <span key={i}>{i > 0 ? "; " : ""}kolom ({i + 1}) diisi dengan {k}</span>)}.</li>
+      </ol>
+    </div>
+  );
+}
+const KET_NOMINATIF = ["nomor urut", "nama warga binaan", "kelompok", "waktu keluar", "waktu kembali", "catatan"];
 
 export default async function FormulirPage({ params }: { params: Promise<{ sessionId: string; no: string }> }) {
   const { sessionId, no } = await params;
@@ -56,8 +74,21 @@ export default async function FormulirPage({ params }: { params: Promise<{ sessi
   const kop = await ambilKopUpt(kegiatan.kode_upt ?? "");
   const meta = FORMULIR.find((f) => f.no === nomor)!;
   const nama = (id: string | null | undefined) => (id ? data.nama.get(id) ?? "-" : "-");
+  const tgl = fmtTanggal(sesi.tanggal_sesi);
+  const kode = kegiatan.kode_kegiatan;
+  const lokNama = lokasi?.nama ?? "";
+  const gabung = (...x: unknown[]) => x.map((v) => s(v).trim()).filter(Boolean).join("; ");
+  const petugasSesi = (sesi.petugas_ids ?? []).map((id: string) => nama(id)).filter((n: string) => n !== "-");
+  const payloadTeks = (v: unknown) => {
+    const o = (v ?? {}) as Record<string, unknown>;
+    return Object.entries(o).map(([k, x]) => `${k.replace(/_/g, " ")}: ${typeof x === "boolean" ? (x ? "ya" : "tidak") : s(x)}`).join(", ");
+  };
+  const pl = (l: { payload: unknown }) => (l.payload ?? {}) as Record<string, unknown>;
+  const urut = [...data.logs].sort((a, b) => a.waktu_kejadian.localeCompare(b.waktu_kejadian));
+  const logJenis = (jenis: string, saring?: (p: Record<string, unknown>) => boolean) => urut.filter((l) => l.jenis_entri === jenis && (!saring || saring(pl(l))));
 
   let isi: React.ReactNode = null;
+  let kolomKet: string[] | null = null;
 
   if (nomor === 1) {
     const [dok, kel] = await Promise.all([
@@ -65,97 +96,171 @@ export default async function FormulirPage({ params }: { params: Promise<{ sessi
       db.from("sesi_kelompok").select("*").eq("session_id", sessionId).order("created_at"),
     ]);
     const bd = (dok.data ?? []) as BarisDokumen[];
+    const kelompok = (kel.data ?? []) as Baris[];
     const peta = new Map(data.kesiapan.map((k) => [k.kode, k]));
     const keputusan = data.keputusan.filter((k) => ["Dapat Dimulai", "Perbaiki Dulu", "Ditunda"].includes(k.jenis_keputusan)).at(-1);
+    const hasilAspek = (kd: string) => { const k = peta.get(kd); return kd === "f" && !sesi.pakai_gelang_monitor ? "Tidak Berlaku" : k?.terpenuhi ? "Terpenuhi" : "Belum Terpenuhi"; };
+    const cat = (...kds: string[]) => kds.map((kd) => { const t = s(peta.get(kd)?.catatan); return t ? `${kd.toUpperCase()}: ${t}` : ""; }).filter(Boolean).join("\n");
+    kolomKet = ["kelompok", "jumlah warga binaan", "area aktif", "pengawas", "pengganti atau jalur serah terima"];
     isi = (
       <>
-        <Judul>A. Rencana kegiatan</Judul>
         <Pasangan item={[
-          ["Kegiatan", `${kegiatan.jenis_kegiatan} (${kegiatan.kode_kegiatan})`], ["Lokasi", `${lokasi?.nama ?? ""} (${lokasi?.posisi ?? ""})`],
-          ["Komoditas", s(kegiatan.komoditas)], ["Tahap pekerjaan", s(kegiatan.tahap_pekerjaan)], ["Mitra", s(kegiatan.mitra)], ["Pendamping teknis", s(kegiatan.pendamping_teknis)],
-          ["Tanggal pelaksanaan", fmtTanggal(sesi.tanggal_sesi)], ["Jam kegiatan dan kembali", `${s(kegiatan.jam_kegiatan) || "-"} s.d. ${s(kegiatan.jam_kembali) || "-"}`],
-          ["Lahan tersedia / aktif (ha)", `${s(kegiatan.luas_lahan_ha) || "-"} / ${s(sesi.lahan_aktif_ha) || "-"}`], ["Batas area", s(kegiatan.batas_area)],
-          ["Rute", s(kegiatan.rute)], ["Titik komunikasi", s(kegiatan.titik_komunikasi)], ["Jumlah WB peserta", s(sesi.jumlah_narapidana)], ["Jumlah alat kerja", s(sesi.jumlah_alat_kerja)], ["Rincian alat", s(sesi.rincian_alat)],
-          ["Nomor persetujuan", s(kegiatan.nomor_persetujuan)], ["Nomor surat perintah", s(kegiatan.nomor_surat_perintah)], ["Gelang monitor", sesi.pakai_gelang_monitor ? "Ditetapkan" : "Tidak ditetapkan"],
+          ["UPT (Lapas/Rutan) dan nomor kegiatan", `${kop.upt} / ${kode} (${kegiatan.jenis_kegiatan})`],
+          ["Tanggal dan jam kegiatan serta jam kembali", `${tgl}, ${s(kegiatan.jam_kegiatan) || "…"} s.d. ${s(kegiatan.jam_kembali) || "…"}`],
+          ["Lokasi dan kedudukan terhadap perimeter utama", `${lokNama} (${lokasi?.posisi ?? ""})`],
+          ["Komoditas, tahap pekerjaan, mitra dan pendamping teknis", gabung(kegiatan.komoditas, kegiatan.tahap_pekerjaan, kegiatan.mitra, kegiatan.pendamping_teknis)],
+          ["Luas lahan tersedia dan luas area aktif", `${s(kegiatan.luas_lahan_ha) || "…"} ha / ${s(sesi.lahan_aktif_ha) || "…"} ha`],
+          ["Batas area serta akses", gabung(kegiatan.batas_area, kegiatan.rute, kegiatan.titik_komunikasi, kegiatan.akses_warga)],
+          ["Jumlah WB dan jumlah kelompok", `${s(sesi.jumlah_narapidana)} WB; ${kelompok.length} kelompok`],
+          ["Pengawal serta pengawas yang ditugaskan", gabung(petugasSesi.join(", "), kelompok.map((k) => s(k.pengawas)).filter(Boolean).join(", "))],
+          ["Interval pemeriksaan dan batas pembaruan data", `${sesi.interval_pemeriksaan} menit; batas keterlambatan ${sesi.batas_keterlambatan_menit} menit`],
+          ["Alat, mesin, bahan yang dikendalikan, APD dan perangkat", gabung(`${s(sesi.jumlah_alat_kerja)} alat kerja`, sesi.rincian_alat, sesi.pakai_gelang_monitor ? "gelang monitor ditetapkan" : "gelang monitor tidak ditetapkan")],
         ]} />
-        <Judul>B. Kelompok kerja</Judul>
-        <Tabel kolom={["Kelompok", "Jumlah WB", "Area aktif", "Pengawas", "Pengganti", "Jalur serah terima"]} baris={((kel.data ?? []) as Baris[]).map((k) => [s(k.nama), s(k.jumlah_wb), s(k.area_aktif), s(k.pengawas), s(k.pengganti), s(k.jalur_serah_terima)])} />
-        <Judul>C. Pemeriksaan kesiapan pengamanan (aspek A sampai F)</Judul>
-        <Tabel kolom={["Aspek", "Hasil", "Catatan"]} baris={INDIKATOR_KESIAPAN.map((i) => {
+        <Tabel kolom={["Kelompok", "Jumlah WB", "Area aktif", "Pengawas", "Pengganti atau jalur serah terima"]} minBaris={3} baris={kelompok.map((k) => [s(k.nama), s(k.jumlah_wb), s(k.area_aktif), s(k.pengawas), gabung(k.pengganti, k.jalur_serah_terima)])} />
+        <Judul>Daftar periksa kesiapan A–F (Terpenuhi/Belum Terpenuhi; F dapat Tidak Berlaku)</Judul>
+        <Tabel nomor={false} kolom={["Kode", "Aspek", "Hasil", "Kekurangan, perbaikan, dan pemeriksa"]} baris={INDIKATOR_KESIAPAN.map((i) => {
           const k = peta.get(i.kode);
-          const hasil = i.kode === "f" && !sesi.pakai_gelang_monitor ? "Tidak Berlaku" : k?.terpenuhi ? "Terpenuhi" : "Belum Terpenuhi";
-          return [`${i.kode.toUpperCase()}. ${i.judul}`, hasil, s(k?.catatan)];
+          return [i.kode.toUpperCase(), i.judul, hasilAspek(i.kode), gabung(k?.catatan, k?.diperiksa_oleh ? `diperiksa ${nama(k.diperiksa_oleh)}${k.diperiksa_at ? ` ${fmtWaktu(k.diperiksa_at)}` : ""}` : "")];
         })} />
-        <Judul>D. Dokumen yang harus tersedia</Judul>
-        <Tabel kolom={["Dokumen", "Tersedia", "Nomor atau keterangan"]} baris={DOKUMEN_WAJIB.map((d) => {
+        <Judul>Hasil pemeriksaan dokumen wajib</Judul>
+        <Tabel nomor={false} kolom={["Dokumen", "Tersedia", "Nomor atau keterangan"]} baris={DOKUMEN_WAJIB.map((d) => {
           const b = bd.find((x) => x.kode === d.kode);
           const otomatis = d.otomatis === "nominatif" ? (data.nominatif?.length ?? 0) > 0 : d.otomatis === "rencana_pengamanan" ? !!sesi.dokumen_rencana_pengamanan : d.otomatis === "surat_perintah" ? !!sesi.dokumen_surat_perintah : null;
           const ada = otomatis !== null ? otomatis : !!b?.tersedia;
           return [`${d.kode}. ${d.judul}`, !b?.berlaku ? "Tidak berlaku" : ada ? "Ya" : "Belum", b?.berlaku ? s(b?.nomor) : s(b?.alasan_tb)];
         })} />
-        <Judul>E. Keputusan kesiapan</Judul>
-        <Pasangan item={[["Keputusan", keputusan?.jenis_keputusan ?? s(sesi.status_kesiapan)], ["Alasan atau catatan", s(keputusan?.catatan_keputusan)], ["Syarat pengajuan ulang", s(keputusan?.syarat_pengajuan_ulang)], ["Waktu keputusan", keputusan ? fmtWaktu(keputusan.created_at) : ""]]} />
+        <Pasangan item={[
+          ["Hasil pemeriksaan lokasi dan komunikasi", cat("c", "e")],
+          ["Hasil pemeriksaan teknis/APD, pertolongan pertama dan jalur bantuan kesehatan", cat("d")],
+          ["Keputusan mulai, perlu perbaikan, atau tunda", keputusan?.jenis_keputusan ?? s(sesi.status_kesiapan)],
+          ["Perbaikan dan penanggung jawab", gabung(keputusan?.catatan_keputusan, keputusan?.syarat_pengajuan_ulang, sesi.bimker_penanggung_jawab)],
+          ["Pemeriksa dan pemberi persetujuan beserta waktu", gabung(keputusan ? `${nama(keputusan.pejabat_id)}, ${fmtWaktu(keputusan.created_at)}` : "", sesi.disahkan_oleh ? `disahkan ${nama(sesi.disahkan_oleh)}${sesi.disahkan_at ? `, ${fmtWaktu(sesi.disahkan_at)}` : ""}` : "")],
+        ]} />
       </>
     );
   } else if (nomor === 2) {
-    const tahap = await supabase.from("tahap_pengawalan").select("tahap,jumlah_wb,jumlah_alat,waktu_sistem,pengawal_id").eq("session_id", sessionId).order("tahap");
     const kel = await db.from("sesi_kelompok").select("*").eq("session_id", sessionId).order("created_at");
-    const logs = data.logs.filter((l) => l.jenis_entri === "Serah terima di blok" || l.jenis_entri === "Pindah area atau ganti pengawal");
+    const kelompok = (kel.data ?? []) as Baris[];
+    const keluar = logJenis("Serah terima di blok", (p) => p.tahap === "keluar").at(-1);
+    const kembali = logJenis("Serah terima di blok", (p) => p.tahap === "kembali").at(-1);
+    const penyerahPenerima = gabung(sesi.petugas_blok ? `petugas blok: ${sesi.petugas_blok}` : "", sesi.petugas_p2u ? `petugas P2U: ${sesi.petugas_p2u}` : "", kembali ? s(pl(kembali).penerima) && `penerima: ${s(pl(kembali).penerima)}` : "");
+    kolomKet = KET_NOMINATIF;
     isi = (
       <>
-        <Judul>A. Daftar nominatif ({data.nominatif?.length ?? 0} WB)</Judul>
-        <Tabel kolom={["Nama", "Nomor registrasi", "Kelompok", "Paraf"]} baris={(data.nominatif ?? []).map((n) => [n.nama, n.nomor_registrasi, "", ""])} />
-        <Judul>B. Kelompok kerja</Judul>
-        <Tabel kolom={["Kelompok", "Jumlah WB", "Pengawas", "Jalur serah terima"]} baris={((kel.data ?? []) as Baris[]).map((k) => [s(k.nama), s(k.jumlah_wb), s(k.pengawas), s(k.jalur_serah_terima)])} />
-        <Judul>C. Serah terima</Judul>
-        <Tabel kolom={["Waktu", "Jenis", "Isi catatan", "Petugas"]} baris={logs.map((l) => [fmtWaktu(l.waktu_kejadian), l.jenis_entri, JSON.stringify(l.payload).replace(/[{}"]/g, "").replace(/,/g, ", "), nama(l.pengawal_id)])} />
-        <Judul>D. Jumlah per tahap</Judul>
-        <Tabel kolom={["Tahap", "WB", "Alat", "Waktu"]} baris={(tahap.data ?? []).map((t) => [`Tahap ${t.tahap}`, s(t.jumlah_wb), s(t.jumlah_alat), fmtWaktu(t.waktu_sistem)])} />
+        <Pasangan item={[["Nomor kegiatan dan tanggal", `${kode}; ${tgl}`], ["Lokasi serta dasar pergerakan atau pengeluaran", gabung(lokNama, kegiatan.nomor_surat_perintah && `surat perintah ${kegiatan.nomor_surat_perintah}`, kegiatan.nomor_persetujuan && `persetujuan ${kegiatan.nomor_persetujuan}`)]]} />
+        <Tabel noUrut kolom={["Identitas WB", "Kelompok", "Waktu keluar", "Waktu kembali", "Catatan"]} baris={(data.nominatif ?? []).map((n) => [`${n.nama} (${n.nomor_registrasi})`, kelompok.length === 1 ? s(kelompok[0].nama) : "", keluar ? fmtWaktu(keluar.waktu_kejadian) : "", kembali ? fmtWaktu(kembali.waktu_kejadian) : "", ""])} kosong="Daftar nominatif belum diisi." />
+        <Pasangan item={[
+          ["Petugas penyerah dan petugas penerima", penyerahPenerima],
+          ["Jumlah menurut dokumen dan hasil hitung langsung", `${data.nominatif?.length ?? 0} WB menurut dokumen; keluar ${keluar ? s(pl(keluar).jumlah_wbp) : "…"}, kembali ${kembali ? s(pl(kembali).jumlah_wbp) : "…"} hasil hitung`],
+          ["Waktu dan tanda tangan serah terima", gabung(keluar ? `keluar ${fmtWaktu(keluar.waktu_kejadian)}` : "", kembali ? `kembali ${fmtWaktu(kembali.waktu_kejadian)}` : "")],
+        ]} />
       </>
     );
   } else if (nomor === 3) {
-    const [tahap, sb] = await Promise.all([
+    const [tahap, sb, alat] = await Promise.all([
       supabase.from("tahap_pengawalan").select("tahap,jumlah_wb,jumlah_alat,waktu_sistem").eq("session_id", sessionId).order("tahap"),
       db.from("pengembalian_sebagian").select("*").eq("session_id", sessionId).order("waktu_serah"),
+      db.from("kontrol_alat").select("*").eq("session_id", sessionId).order("created_at"),
     ]);
+    const th = (n: number) => (tahap.data ?? []).find((t) => t.tahap === n);
+    const jw = (j?: { jumlah_wb: number | null; waktu_sistem: string | null } | null) => (j ? `${s(j.jumlah_wb)} WB, ${j.waktu_sistem ? fmtWaktu(j.waktu_sistem) : "…"}` : "");
+    const tiba = logJenis("Tiba di lokasi").at(0);
+    const p2uMasuk = logJenis("P2U keluar atau masuk", (p) => p.arah === "masuk").at(-1);
+    const blok = logJenis("Serah terima di blok", (p) => p.tahap === "kembali").at(-1);
     const r = data.rekonsiliasi;
+    const sbList = (sb.data ?? []) as Baris[];
+    const bahan = ((alat.data ?? []) as Baris[]).filter((a) => s(a.jenis) === "Bahan" && Number(a.kembali) > 0).map((a) => `${s(a.nama)} ${s(a.kembali)} ${s(a.satuan)}`);
     isi = (
       <>
-        <Judul>A. Ekspedisi per tahap</Judul>
-        <Tabel kolom={["Tahap", "Jumlah WB", "Jumlah alat", "Waktu dicatat"]} baris={(tahap.data ?? []).map((t) => [`Tahap ${t.tahap}`, s(t.jumlah_wb), s(t.jumlah_alat), fmtWaktu(t.waktu_sistem)])} />
-        <Judul>B. Pengembalian sebagian</Judul>
-        <Tabel kolom={["Waktu", "WB", "Alat", "Penyerah", "Penerima", "Catatan"]} baris={((sb.data ?? []) as Baris[]).map((x) => [fmtWaktu(s(x.waktu_serah)), s(x.jumlah_wb), s(x.jumlah_alat), s(x.penyerah), s(x.penerima), s(x.catatan)])} kosong="Tidak ada pengembalian sebagian." />
-        <Judul>C. Pencocokan akhir</Judul>
-        <Pasangan item={[["WB keluar", s(r?.wbpKeluar)], ["WB kembali (akhir + sebagian, tanpa hitung ganda)", s(r?.wbpKembali)], ["Alat keluar", s(r?.alatKeluar)], ["Alat kembali", s(r?.alatKembali)], ["Penggeledahan saat masuk blok", r?.penggeledahan === null || r?.penggeledahan === undefined ? "" : r.penggeledahan ? "Ya" : "Tidak"], ["Gangguan belum diverifikasi", s(r?.gangguanBelumDiverifikasi)], ["Hasil", r?.siapTutup ? "Cocok dan siap ditutup" : `Belum siap ditutup${r?.alasan.length ? `: ${r.alasan.join("; ")}` : ""}`], ["Ditutup", sesi.ditutup_at ? fmtWaktu(sesi.ditutup_at) : "Belum"]]} />
+        <Pasangan item={[
+          ["Nomor kegiatan dan tanggal", `${kode}; ${tgl}`],
+          ["Persetujuan serta surat perintah", gabung(kegiatan.nomor_persetujuan, kegiatan.nomor_surat_perintah)],
+          ["Jumlah WB keluar P2U dan waktu", jw(th(1))],
+          ["Jumlah tiba di lokasi dan waktu", tiba ? `${s(pl(tiba).jumlah_wbp)} WB, ${fmtWaktu(tiba.waktu_kejadian)}` : jw(th(2))],
+          ["Jumlah meninggalkan lokasi dan waktu", jw(th(3))],
+          ["Jumlah masuk P2U dan waktu", p2uMasuk ? `${s(pl(p2uMasuk).jumlah)} orang, ${fmtWaktu(p2uMasuk.waktu_kejadian)}` : jw(th(4))],
+          ["Jumlah diterima blok dan waktu", blok ? `${s(pl(blok).jumlah_wbp)} WB, ${fmtWaktu(blok.waktu_kejadian)}` : ""],
+          ["Alat, sisa bahan, dan dokumen muatan hasil keluar/kembali", gabung(r ? `alat keluar ${s(r.alatKeluar)}, kembali ${s(r.alatKembali)}` : "", bahan.length ? `sisa bahan: ${bahan.join(", ")}` : "")],
+          ["Temuan selisih serta tindak lanjut", r ? (r.siapTutup ? "Tidak ada selisih" : r.alasan.join("; ")) : ""],
+          ["Penyerah, penerima, dan verifikator", sbList.length ? sbList.map((x) => `${s(x.penyerah)} → ${s(x.penerima)}`).join("; ") : gabung(sesi.petugas_p2u, sesi.petugas_blok)],
+          ["Status penutupan kegiatan beserta waktu", sesi.ditutup_at ? `Ditutup ${fmtWaktu(sesi.ditutup_at)}` : "Belum ditutup"],
+        ]} />
+        {sbList.length > 0 && (<>
+          <Judul>Pengembalian sebagian</Judul>
+          <Tabel nomor={false} kolom={["Waktu", "WB", "Alat", "Penyerah", "Penerima", "Catatan"]} baris={sbList.map((x) => [fmtWaktu(s(x.waktu_serah)), s(x.jumlah_wb), s(x.jumlah_alat), s(x.penyerah), s(x.penerima), s(x.catatan)])} />
+        </>)}
       </>
     );
   } else if (nomor === 4) {
+    const kel = await db.from("sesi_kelompok").select("nama").eq("session_id", sessionId);
+    const kelompok = ((kel.data ?? []) as Baris[]).map((k) => s(k.nama)).filter(Boolean).join(", ");
+    type R = { t: string; baris: React.ReactNode[] };
+    const baris: R[] = [
+      ...data.logs.map((l): R => ({ t: l.waktu_kejadian, baris: [fmtWaktu(l.waktu_kejadian), `${l.jenis_entri}: ${payloadTeks(l.payload)} (sumber: ${nama(l.pengawal_id)})`, s(pl(l).status_baru), "", gabung(nama(l.pengawal_id), l.susulan ? "susulan" : "", l.diverifikasi_at ? `diverifikasi ${fmtWaktu(l.diverifikasi_at)}` : "belum diverifikasi")] })),
+      ...data.keputusan.map((k): R => ({ t: k.created_at, baris: [fmtWaktu(k.created_at), "Keputusan Kepala Pengamanan", s(k.status_baru), gabung(k.jenis_keputusan, k.catatan_keputusan, k.syarat_pengajuan_ulang), nama(k.pejabat_id)] })),
+    ].sort((a, b) => a.t.localeCompare(b.t));
+    const kepAkhir = [...data.keputusan].sort((a, b) => a.created_at.localeCompare(b.created_at)).at(-1);
+    const pulih = [...data.tindakLanjut.filter((t) => t.diverifikasi_at).map((t) => `${t.uraian}: terverifikasi ${fmtWaktu(t.diverifikasi_at!)}`), ...data.gangguan.filter((g) => g.diverifikasi_at).map((g) => `${g.kategori_gangguan}: terverifikasi ${fmtWaktu(g.diverifikasi_at!)}`)];
+    kolomKet = ["waktu kegiatan", "temuan dan sumber", "status", "keputusan yang diambil", "petugas dan pemeriksaan ulang"];
     isi = (
       <>
-        <Judul>A. Catatan lapangan</Judul>
-        <Tabel kolom={["Waktu kejadian", "Diterima", "Jenis", "Isi", "Petugas", "Keterangan"]} baris={[...data.logs].sort((a, b) => a.waktu_kejadian.localeCompare(b.waktu_kejadian)).map((l) => [fmtWaktu(l.waktu_kejadian), fmtWaktu(l.dikirim_at), l.jenis_entri, JSON.stringify(l.payload).replace(/[{}"]/g, "").replace(/,/g, ", "), nama(l.pengawal_id), `${l.susulan ? "Susulan. " : ""}${l.diverifikasi_at ? `Diverifikasi ${fmtWaktu(l.diverifikasi_at)}` : "Belum diverifikasi"}`])} />
-        <Judul>B. Keputusan Kepala Pengamanan</Judul>
-        <Tabel kolom={["Waktu", "Keputusan", "Catatan", "Pejabat"]} baris={data.keputusan.map((k) => [fmtWaktu(k.created_at), k.jenis_keputusan, s(k.catatan_keputusan), nama(k.pejabat_id)])} />
+        <Pasangan item={[["Nomor kegiatan, tanggal, lokasi, dan kelompok", gabung(kode, tgl, lokNama, kelompok)], ["Luas area aktif, jumlah WB, dan petugas", gabung(sesi.lahan_aktif_ha ? `${sesi.lahan_aktif_ha} ha` : "", `${sesi.jumlah_narapidana} WB`, petugasSesi.join(", "))]]} />
+        <Tabel kolom={["Waktu", "Temuan dan sumber", "Status", "Keputusan dan tindakan", "Petugas dan pemeriksaan ulang"]} baris={baris.map((b) => b.baris)} minBaris={4} />
+        <Pasangan item={[
+          ["Pejabat pengambil keputusan dan waktu", kepAkhir ? `${nama(kepAkhir.pejabat_id)}, ${fmtWaktu(kepAkhir.created_at)}` : ""],
+          ["Bukti pemulihan serta hasil verifikasi", pulih.join("\n")],
+          ["Status sesudah verifikasi dan persetujuan", gabung(sesi.status_keamanan, sesi.disahkan_at ? `disahkan ${fmtWaktu(sesi.disahkan_at)}` : "")],
+        ]} />
       </>
     );
   } else if (nomor === 5) {
-    const gelang = data.logs.filter((l) => l.jenis_entri === "Alarm gelang" || l.jenis_entri === "Pemeriksaan gelang");
+    const gelang = urut.filter((l) => l.jenis_entri === "Alarm gelang" || l.jenis_entri === "Pemeriksaan gelang");
+    const alarm = gelang.filter((l) => l.jenis_entri === "Alarm gelang");
+    const periksa = gelang.filter((l) => l.jenis_entri === "Pemeriksaan gelang");
+    const lepas = alarm.filter((l) => s(pl(l).jenis_alarm).startsWith("Perangkat dilepas"));
     isi = (
-      <>
-        <Pasangan item={[["Gelang monitor", sesi.pakai_gelang_monitor ? "Ditetapkan untuk kegiatan ini" : "Tidak ditetapkan (variabel gelang tidak berlaku)"]]} />
-        <Tabel kolom={["Waktu kejadian", "Jenis", "Isi, konfirmasi fisik WB, dan tindakan", "Petugas"]} baris={gelang.map((l) => [fmtWaktu(l.waktu_kejadian), l.jenis_entri, JSON.stringify(l.payload).replace(/[{}"]/g, "").replace(/,/g, ", "), nama(l.pengawal_id)])} kosong="Tidak ada catatan gelang." />
-        <p className="text-[9pt]">Gelang tidak menggantikan pengawasan langsung dan tidak digunakan sebagai hukuman disiplin.</p>
-      </>
+      <Pasangan item={[
+        ["Nomor kegiatan, identitas WB serta perangkat", gabung(kode, [...new Set(alarm.map((l) => s(pl(l).nomor_registrasi)).filter(Boolean))].join(", "))],
+        ["Penetapan penggunaan", sesi.pakai_gelang_monitor ? "Ditetapkan untuk kegiatan ini" : "Tidak ditetapkan (variabel gelang tidak berlaku)"],
+        ["Waktu pasang dan lepas", lepas.map((l) => `lepas/rusak ${fmtWaktu(l.waktu_kejadian)}`).join("\n")],
+        ["Pemeriksaan daya, sinyal, pemasangan serta fungsi", periksa.map((l) => `${fmtWaktu(l.waktu_kejadian)}: ${s(pl(l).jumlah_berfungsi)} dari ${s(pl(l).jumlah_diperiksa)} berfungsi${s(pl(l).catatan) ? ` (${s(pl(l).catatan)})` : ""}`).join("\n")],
+        ["Waktu alarm dan waktu konfirmasi", alarm.map((l) => `${s(pl(l).jenis_alarm)} ${fmtWaktu(l.waktu_kejadian)}; konfirmasi ${l.diverifikasi_at ? fmtWaktu(l.diverifikasi_at) : "…"}`).join("\n")],
+        ["Hasil pemeriksaan langsung WB", alarm.map((l) => `${fmtWaktu(l.waktu_kejadian)}: ${pl(l).dikonfirmasi_langsung === true ? "dikonfirmasi langsung" : pl(l).dikonfirmasi_langsung === false ? "belum dikonfirmasi langsung" : ""}`).join("\n")],
+        ["Gangguan serta tindakan", alarm.map((l) => s(pl(l).tindakan)).filter(Boolean).join("\n")],
+        ["Petugas pemeriksa dan hasil akhir", [...new Set(gelang.map((l) => nama(l.pengawal_id)))].join(", ")],
+      ]} />
     );
   } else if (nomor === 6) {
+    const blok = data.gangguan.map((g) => {
+      const lg = data.logs.find((l) => l.id === g.log_id);
+      const tl = data.tindakLanjut.filter((t) => t.incident_id === g.id);
+      const kp = data.keputusan.filter((k) => k.incident_id === g.id);
+      const cedera = /kecelakaan|cedera/i.test(g.kategori_gangguan);
+      return (
+        <div key={g.id} className="mb-3 break-inside-avoid border-t border-black pt-1">
+          <Pasangan item={[
+            ["Nomor kegiatan, waktu, lokasi", gabung(kode, lg ? fmtWaktu(lg.waktu_kejadian) : "", lokNama)],
+            ["Jenis gangguan dan jumlah WB", gabung(g.kategori_gangguan, lg && pl(lg).jumlah !== undefined ? `${s(pl(lg).jumlah)} WB` : "")],
+            ["Kronologi serta sumber temuan", lg ? gabung(s(pl(lg).keterangan) || s(pl(lg).catatan), `sumber: ${nama(lg.pengawal_id)}`) : ""],
+            ["Kecelakaan/paparan/gangguan mesin; pertolongan dan bantuan kesehatan", cedera ? s(g.tindakan_awal) : ""],
+            ["Status dan tindakan awal", gabung(lg ? s(pl(lg).status_baru) || "KUNING" : "", g.tindakan_awal)],
+            ["Penerima laporan serta waktu laporan", lg ? gabung(nama(lg.pengawal_id), `dikirim ${fmtWaktu(lg.dikirim_at)}`) : ""],
+            ["Perintah serta pejabat yang memutuskan", kp.map((k) => `${k.jenis_keputusan}${k.catatan_keputusan ? ` (${k.catatan_keputusan})` : ""}, ${nama(k.pejabat_id)}`).join("\n")],
+            ["Penanggung jawab dan tenggat", tl.length ? tl.map((t) => `${t.penanggung_jawab_nama}, tenggat ${fmtTanggal(t.tenggat)}`).join("\n") : s(g.penanggung_jawab_tindak_lanjut)],
+            ["Perkembangan serta bukti tindakan", tl.map((t) => `${t.uraian}: ${t.status}${t.catatan_selesai ? `; ${t.catatan_selesai}` : ""}`).join("\n")],
+            ["Hasil verifikasi dan rekonsiliasi", g.diverifikasi_at ? `Terverifikasi ${fmtWaktu(g.diverifikasi_at)} oleh ${nama(g.diverifikasi_oleh)}` : ""],
+            ["Usulan perbaikan serta penutupan", g.status_penyelesaian ? "Selesai" : ""],
+          ]} />
+        </div>
+      );
+    });
     isi = (
       <>
-        <Judul>A. Gangguan</Judul>
-        <Tabel kolom={["Kategori", "Tindakan awal", "Penanggung jawab", "Verifikasi pemulihan"]} baris={data.gangguan.map((g) => [g.kategori_gangguan, s(g.tindakan_awal), s(g.penanggung_jawab_tindak_lanjut), g.status_penyelesaian ? `Terverifikasi ${g.diverifikasi_at ? fmtWaktu(g.diverifikasi_at) : ""}` : "Belum"])} />
-        <Judul>B. Tindak lanjut</Judul>
-        <Tabel kolom={["Uraian", "Penanggung jawab", "Tenggat", "Status", "Bukti dan penyelesaian"]} baris={data.tindakLanjut.map((t) => [t.uraian, t.penanggung_jawab_nama, fmtTanggal(t.tenggat), t.status, `${s(t.catatan_selesai)} ${t.diverifikasi_at ? `Diverifikasi ${fmtWaktu(t.diverifikasi_at)}` : ""}`])} />
-        <Judul>C. Riwayat status keamanan</Judul>
-        <Tabel kolom={["Waktu", "Dari", "Ke", "Sumber", "Alasan"]} baris={data.riwayatStatus.map((r) => [fmtWaktu(r.waktu), s(r.dari), s(r.ke), s(r.sumber), s(r.alasan)])} />
+        {blok.length > 0 ? blok : <Pasangan item={["Nomor kegiatan, waktu, lokasi", "Jenis gangguan dan jumlah WB", "Kronologi serta sumber temuan", "Kecelakaan/paparan/gangguan mesin; pertolongan dan bantuan kesehatan", "Status dan tindakan awal", "Penerima laporan serta waktu laporan", "Perintah serta pejabat yang memutuskan", "Penanggung jawab dan tenggat", "Perkembangan serta bukti tindakan", "Hasil verifikasi dan rekonsiliasi", "Usulan perbaikan serta penutupan"].map((k) => [k, ""] as [string, string])} />}
+        {data.riwayatStatus.length > 0 && (<>
+          <Judul>Riwayat status keamanan</Judul>
+          <Tabel nomor={false} kolom={["Waktu", "Dari", "Ke", "Sumber", "Alasan"]} baris={data.riwayatStatus.map((r) => [fmtWaktu(r.waktu), s(r.dari), s(r.ke), s(r.sumber), s(r.alasan)])} />
+        </>)}
       </>
     );
   } else if (nomor === 7) {
@@ -164,27 +269,54 @@ export default async function FormulirPage({ params }: { params: Promise<{ sessi
       db.from("status_variabel_riwayat").select("*").eq("session_id", sessionId).order("waktu"),
     ]);
     const peta = new Map(((vars.data ?? []) as Baris[]).map((v) => [Number(v.no), v]));
+    kolomKet = ["nama variabel", "status variabel", "bukti sumber dan waktu", "tindak lanjut"];
+    const terakhirRiw = ((riw.data ?? []) as Baris[]).at(-1);
     isi = (
       <>
-        <Pasangan item={[["Status keseluruhan", s(sesi.status_keamanan)], ["Aturan", "Mengikuti temuan terberat yang masih berlangsung, tidak dirata-ratakan."]]} />
-        <Tabel kolom={["Variabel", "Status", "Temuan dan tindakan", "Bukti", "Dicatat"]} baris={VARIABEL_STATUS.map((v) => {
+        <Pasangan item={[["Nomor kegiatan, tanggal dan waktu pemeriksaan", gabung(kode, tgl, ringkas.diperbarui_at ? fmtWaktu(ringkas.diperbarui_at) : "")]]} />
+        <Tabel kolom={["Variabel", "Status atau tidak berlaku", "Bukti sumber dan waktu", "Tindak lanjut"]} baris={VARIABEL_STATUS.map((v) => {
           const b = peta.get(v.no);
           const tbGelang = v.no === 7 && !sesi.pakai_gelang_monitor;
-          return [`${v.no}. ${v.judul}`, b ? (b.status === null ? "Tidak berlaku" : s(b.status)) : tbGelang ? "Tidak berlaku" : "Belum diperiksa", s(b?.tindak_lanjut), s(b?.bukti) || (b?.status === null ? s(b?.alasan_tb) : ""), b ? fmtWaktu(s(b.diperbarui_at)) : ""];
+          const bukti = b?.status === null ? s(b?.alasan_tb) : gabung(b?.bukti, b ? fmtWaktu(s(b.diperbarui_at)) : "");
+          return [`${v.no}. ${v.judul}`, b ? (b.status === null ? "Tidak berlaku" : s(b.status)) : tbGelang ? "Tidak berlaku" : "Belum diperiksa", bukti, s(b?.tindak_lanjut)];
         })} />
-        <Judul>Riwayat perubahan</Judul>
-        <Tabel kolom={["Waktu", "Variabel", "Dari", "Ke", "Alasan"]} baris={((riw.data ?? []) as Baris[]).map((r) => [fmtWaktu(s(r.waktu)), s(r.no), s(r.dari), r.tb ? "Tidak berlaku" : s(r.ke), s(r.alasan)])} />
+        <Pasangan item={[
+          ["Status keseluruhan dan alasan", gabung(sesi.status_keamanan, terakhirRiw ? s(terakhirRiw.alasan) : "", "mengikuti temuan terberat yang masih berlangsung")],
+          ["Tindakan penanggung jawab dan pemeriksaan ulang", data.tindakLanjut.map((t) => `${t.uraian}: ${t.penanggung_jawab_nama}${t.pemeriksaan_ulang_at ? `, periksa ulang ${fmtWaktu(t.pemeriksaan_ulang_at)}` : ""}`).join("\n")],
+          ["Verifikator waktu dan hasil pemulihan", data.tindakLanjut.filter((t) => t.diverifikasi_at).map((t) => `${nama(t.diverifikasi_oleh)}, ${fmtWaktu(t.diverifikasi_at!)}`).join("\n")],
+        ]} />
+        {((riw.data ?? []) as Baris[]).length > 0 && (<>
+          <Judul>Riwayat perubahan</Judul>
+          <Tabel nomor={false} kolom={["Waktu", "Variabel", "Dari", "Ke", "Alasan"]} baris={((riw.data ?? []) as Baris[]).map((r) => [fmtWaktu(s(r.waktu)), s(r.no), s(r.dari), r.tb ? "Tidak berlaku" : s(r.ke), s(r.alasan)])} />
+        </>)}
       </>
     );
   } else if (nomor === 9) {
-    const alat = await db.from("kontrol_alat").select("*").eq("session_id", sessionId).order("created_at");
+    const alat = ((await db.from("kontrol_alat").select("*").eq("session_id", sessionId).order("created_at")).data ?? []) as Baris[];
+    kolomKet = ["nama alat, mesin, atau bahan beserta satuan", "jumlah diserahkan", "jumlah digunakan", "jumlah kembali atau sisa", "selisih, tindakan, dan petugas"];
     isi = (
-      <Tabel kolom={["Jenis", "Nama", "Diserahkan", "Digunakan", "Kembali atau sisa", "Selisih", "Tindakan atas selisih", "Petugas"]} baris={((alat.data ?? []) as Baris[]).map((a) => [s(a.jenis), s(a.nama), `${s(a.diserahkan)} ${s(a.satuan)}`, s(a.digunakan), s(a.kembali), s(a.selisih), s(a.tindakan), s(a.petugas)])} />
+      <>
+        <Pasangan item={[
+          ["UPT, nomor pelaksanaan harian, tanggal dan lokasi", `${kop.upt}; ${kode}; ${tgl}; ${lokNama}`],
+          ["Tahap pekerjaan, pendamping teknis, pemeriksaan mesin dan APD", gabung(kegiatan.tahap_pekerjaan, kegiatan.pendamping_teknis, alat.filter((a) => ["Mesin", "APD"].includes(s(a.jenis)) && s(a.tindakan)).map((a) => `${s(a.nama)}: ${s(a.tindakan)}`).join(", "))],
+        ]} />
+        <Tabel kolom={["Alat/mesin/bahan dan satuan", "Diserahkan", "Digunakan", "Kembali/sisa", "Selisih, tindakan dan petugas"]} minBaris={4} baris={alat.map((a) => [`${s(a.nama)} (${s(a.jenis)}${a.satuan ? `, ${s(a.satuan)}` : ""})`, s(a.diserahkan), s(a.digunakan), s(a.kembali), gabung(a.selisih !== null && a.selisih !== undefined && Number(a.selisih) !== 0 ? `selisih ${s(a.selisih)}` : "", a.tindakan, a.petugas)])} />
+        <Pasangan item={[["Petugas penyerah/penerima, pemeriksa dan waktu", [...new Set(alat.map((a) => s(a.petugas)).filter(Boolean))].join(", ")]]} />
+      </>
     );
   } else {
-    const akses = await db.from("akses_pihak_luar").select("*").eq("session_id", sessionId).order("created_at");
+    const akses = ((await db.from("akses_pihak_luar").select("*").eq("session_id", sessionId).order("created_at")).data ?? []) as Baris[];
+    kolomKet = ["identitas atau jenis kendaraan", "tujuan dan waktu akses", "jenis dan satuan barang", "jumlah dan asal atau tujuan barang", "hasil pemeriksaan dan serah terima"];
+    const wkt = (a: Baris) => gabung(a.waktu_masuk ? `masuk ${fmtWaktu(s(a.waktu_masuk))}` : "", a.waktu_keluar ? `keluar ${fmtWaktu(s(a.waktu_keluar))}` : "");
     isi = (
-      <Tabel kolom={["Identitas dan kendaraan", "Tujuan", "Masuk", "Keluar", "Barang atau hasil", "Asal dan tujuan", "Pemeriksaan dan serah terima"]} baris={((akses.data ?? []) as Baris[]).map((a) => [`${s(a.identitas)} ${s(a.kendaraan)}`, s(a.tujuan), a.waktu_masuk ? fmtWaktu(s(a.waktu_masuk)) : "", a.waktu_keluar ? fmtWaktu(s(a.waktu_keluar)) : "", `${s(a.barang_hasil)} ${a.jumlah !== null && a.jumlah !== undefined ? `${s(a.jumlah)} ${s(a.satuan)}` : ""}`, s(a.asal_tujuan), `${s(a.pemeriksaan)} ${s(a.serah_terima)}`])} />
+      <>
+        <Pasangan item={[
+          ["UPT, nomor pelaksanaan harian, tanggal dan lokasi", `${kop.upt}; ${kode}; ${tgl}; ${lokNama}`],
+          ["Dasar persetujuan, petugas penerima dan pendamping", gabung(kegiatan.nomor_persetujuan, sesi.petugas_blok, kegiatan.pendamping_teknis)],
+        ]} />
+        <Tabel kolom={["Identitas/kendaraan", "Tujuan; waktu akses", "Barang/hasil dan satuan", "Jumlah; asal/tujuan", "Pemeriksaan; serah terima"]} minBaris={4} baris={akses.map((a) => [gabung(a.identitas, a.kendaraan), gabung(a.tujuan, wkt(a)), gabung(a.barang_hasil, a.satuan), gabung(a.jumlah !== null && a.jumlah !== undefined ? s(a.jumlah) : "", a.asal_tujuan), gabung(a.pemeriksaan, a.serah_terima)])} />
+        <Pasangan item={[["Petugas penyerah/penerima, pemeriksa dan waktu", [...new Set(akses.map((a) => nama(s(a.dicatat_oleh))).filter((n) => n !== "-"))].join(", ")]]} />
+      </>
     );
   }
 
@@ -196,14 +328,12 @@ export default async function FormulirPage({ params }: { params: Promise<{ sessi
       </div>
       <article className="mx-auto max-w-[21cm] bg-white px-[1.4cm] py-[1.2cm] font-serif text-[10.5pt] leading-snug text-black shadow-soft print:max-w-none print:p-0 print:shadow-none">
         <KopCetak kop={kop} />
-        <p className="text-center font-bold">FORMULIR {nomor}</p>
-        <p className="text-center font-bold uppercase">{meta.judul}</p>
-        <p className="mb-3 text-center">Nomor: ......................................</p>
-        <Pasangan item={[["UPT", kop.upt], ["Kegiatan", `${kegiatan.kode_kegiatan} · ${kegiatan.jenis_kegiatan}`], ["Tanggal pelaksanaan", fmtTanggal(sesi.tanggal_sesi)], ["Lokasi", lokasi?.nama ?? ""], ["Status pengamanan saat dicetak", `${s(sesi.status_keamanan)} (pembaruan terakhir ${ringkas.diperbarui_at ? fmtWaktu(ringkas.diperbarui_at) : "-"})`]]} />
+        <p className="mb-2 text-center font-bold uppercase">{meta.judul}</p>
         {isi}
+        {kolomKet && <Keterangan kolom={kolomKet} />}
         <div className="mt-8 grid grid-cols-2 gap-8 text-center">
-          <div><p>Dibuat oleh,</p><div className="h-16" /><p>(.......................................)</p></div>
-          <div><p>{kop.kota ? `${kop.kota}, ` : ""}........................<br />Diverifikasi oleh Kepala Pengamanan,</p><div className="h-16" /><p>(.......................................)</p></div>
+          <div><p>Menyetujui,<br />Pejabat Berwenang</p><div className="h-16" /><p>(Nama)</p><p>(NIP)</p></div>
+          <div><p>{kop.kota ? `${kop.kota}` : "(Nama kota)"}, {tgl}<br />Petugas Pelaksana</p><div className="h-16" /><p>(Nama)</p><p>(NIP)</p></div>
         </div>
       </article>
     </div>
