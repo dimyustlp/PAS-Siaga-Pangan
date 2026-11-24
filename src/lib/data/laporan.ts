@@ -48,13 +48,14 @@ export async function ambilDataLaporan(sessionId: string): Promise<DataLaporan |
   const { data: keg } = await supabase.from("activities").select("*").eq("id", sesi.activity_id).maybeSingle();
   if (!keg) return null;
 
-  const [lok, upt, tahap, lamp, kep, nom] = await Promise.all([
+  const [lok, upt, tahap, lamp, kep, nom, ptg] = await Promise.all([
     supabase.from("master_locations").select("*").eq("id", keg.lokasi_id).maybeSingle(),
     supabase.from("master_upt").select("nama,kanwil_id,alamat,telepon,email_kantor,kota_ttd,kab_kota,kop_baris,website,faksimile,kode_pos").eq("kode", keg.kode_upt ?? "").maybeSingle(),
     supabase.from("tahap_pengawalan").select("tahap,jumlah_wb,jumlah_alat,isian,waktu_sistem,pengawal_id").eq("session_id", sessionId).order("tahap"),
     supabase.from("lampiran_tahap").select("id,tahap,butir,jenis,nama_berkas,mime,ukuran_byte,waktu_sistem,sumber").eq("session_id", sessionId).order("tahap").order("waktu_sistem"),
     supabase.from("decisions").select("*").eq("session_id", sessionId).order("created_at", { ascending: false }),
     supabase.rpc("daftar_nominatif", { p_session: sessionId }),
+    supabase.from("petugas_sesi").select("nama,nip").eq("session_id", sessionId).order("created_at"),
   ]);
   const kanwil = upt.data?.kanwil_id
     ? (await supabase.from("master_kanwil").select("nama").eq("id", upt.data.kanwil_id).maybeSingle()).data?.nama ?? null
@@ -100,14 +101,15 @@ export async function ambilDataLaporan(sessionId: string): Promise<DataLaporan |
     keputusanMulai: mulai ? { pejabat: nama(mulai.pejabat_id), waktu: mulai.created_at, catatan: mulai.catatan_keputusan ?? null } : null,
     rencanaWb: sesi.jumlah_narapidana,
     wb: Array.isArray(nom.data) ? nom.data.map((n) => ({ nama: n.nama, nomor_registrasi: n.nomor_registrasi })) : null,
-    pengawal: sesi.petugas_ids.map((id) => ({ nama: nama(id), nip: profil.get(id)?.nip ?? null })),
+    // Nama petugas asli yang dicatat di sesi; nama akun dipakai hanya bila belum ada yang dicatat.
+    pengawal: (ptg.data ?? []).length > 0 ? (ptg.data ?? []).map((x) => ({ nama: x.nama, nip: x.nip })) : sesi.petugas_ids.map((id) => ({ nama: nama(id), nip: profil.get(id)?.nip ?? null })),
     tahap: (tahap.data ?? []).map((t) => ({
       tahap: t.tahap,
       jumlah_wb: t.jumlah_wb,
       jumlah_alat: t.jumlah_alat,
       isian: (t.isian ?? {}) as Record<string, unknown>,
       waktu_sistem: t.waktu_sistem,
-      pengawal: nama(t.pengawal_id),
+      pengawal: String((t.isian as Record<string, unknown> | null)?.petugas ?? "").trim() || nama(t.pengawal_id),
     })),
     lampiran: lamp.data ?? [],
     pengesahan: sesi.disahkan_oleh && sesi.disahkan_at
