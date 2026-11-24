@@ -98,7 +98,7 @@ const RULES: Rule[] = [
   { prefix: "/panduan", roles: ALL_ROLES },
   { prefix: "/laporan", roles: NON_PENGAWAL },
   { prefix: "/akun", roles: PENGELOLA_AKUN },
-  { prefix: "/kop-surat", roles: [...UPT_SAJA, "administrator"] },
+  { prefix: "/kop-surat", roles: ["operator", "administrator"] },
   { prefix: "/lampiran", roles: ALL_ROLES },
   { prefix: "/admin", roles: ["administrator"] },
   { prefix: "/lapangan", roles: ["pengawal"] },
