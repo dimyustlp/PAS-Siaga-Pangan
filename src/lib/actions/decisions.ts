@@ -46,6 +46,7 @@ export async function decideReadiness(input: unknown): Promise<ActionResult> {
     session_id: parsed.data.session_id,
     jenis_keputusan: parsed.data.keputusan,
     catatan_keputusan: parsed.data.catatan || null,
+    syarat_pengajuan_ulang: parsed.data.keputusan === "Ditunda" ? parsed.data.syarat_pengajuan_ulang || null : null,
   });
 }
 

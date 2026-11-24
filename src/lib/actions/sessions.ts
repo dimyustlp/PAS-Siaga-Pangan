@@ -122,7 +122,7 @@ export async function attachSessionDocument(input: unknown): Promise<ActionResul
   return success();
 }
 
-/** Operator mencentang satu dari enam indikator kesiapan (a–f) beserta catatannya. */
+/** Operator mencentang satu dari enam aspek kesiapan (A sampai F) (a–f) beserta catatannya. */
 export async function setReadinessItem(input: unknown): Promise<ActionResult> {
   const auth = await authorize(["operator"]);
   if (!auth.ok) return fail(auth.error);
