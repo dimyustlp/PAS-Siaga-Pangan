@@ -93,8 +93,8 @@ export function PanelPeran({ role, aktif, menungguSah, tanpaPengawal, tlTerlamba
               <li className="flex justify-between gap-3"><span>Kegiatan perlu perhatian</span><b className={perlu.length ? "text-[hsl(34_92%_30%)]" : "text-muted-foreground"}>{perlu.length}</b></li>
             </ul>
           </Kotak>
-          <Kotak judul="Siap disahkan" uraian="Laporan dengan empat tahap lengkap." aksi={<Link href="/laporan?status=menunggu" className="text-xs font-semibold text-primary hover:underline">Buka laporan</Link>}>
-            <Daftar rows={menungguSah} kosong="Belum ada laporan yang siap disahkan." href={(r) => `/sesi/${r.session_id}`} />
+          <Kotak judul="Menunggu pengesahan Ka.UPT" uraian="Empat tahap lengkap; tinggal disahkan Ka.UPT." aksi={<Link href="/laporan?status=menunggu" className="text-xs font-semibold text-primary hover:underline">Buka laporan</Link>}>
+            <Daftar rows={menungguSah} kosong="Tidak ada laporan yang menunggu Ka.UPT." href={(r) => `/sesi/${r.session_id}`} />
           </Kotak>
         </div>
       </div>
