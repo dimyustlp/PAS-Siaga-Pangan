@@ -92,7 +92,7 @@ export function susunLaporan(d: DataLaporan): IsiLaporan {
     if (typeof i.penggeledahan === "boolean") ket.push(i.penggeledahan ? "penggeledahan dilakukan" : "penggeledahan belum dilakukan");
     if (i.penerima) ket.push(`petugas blok penerima: ${String(i.penerima)}`);
     if (i.catatan) ket.push(String(i.catatan));
-    ket.push(`pencatat: ${t.pengawal}`);
+    ket.push(`petugas pengisi: ${t.pengawal}`);
     return { tahap: `${t.tahap}. ${NAMA_TAHAP[t.tahap]}`, waktu: waktuLengkap(t.waktu_sistem), wb: `${t.jumlah_wb} orang`, ket: ket.join("; ") };
   });
 

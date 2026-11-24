@@ -78,7 +78,7 @@ export const ALUR_KERJA: TahapAlur[] = [
     pelaku: ["Kepala Pengamanan", "Ka.UPT"],
     peran: ["kepala_pengamanan", "ka_upt"],
     isi: [
-      "Setelah 4 tahap lengkap, Kepala Pengamanan atau Ka.UPT memeriksa lampiran lalu mengesahkan berkas.",
+      "Setelah 4 tahap lengkap, Ka.UPT memeriksa lampiran lalu mengesahkan berkas.",
       "Laporan resmi berkop UPT diunduh sebagai PDF; penandatangan diisi manual.",
       "Penutupan hanya bisa bila WB keluar sama dengan WB kembali dan gangguan sudah diverifikasi.",
     ],
