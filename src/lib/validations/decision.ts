@@ -9,10 +9,16 @@ export const readinessDecisionSchema = z
     session_id: sessionId,
     keputusan: z.enum(["Dapat Dimulai", "Perbaiki Dulu", "Ditunda"]),
     catatan: z.string().trim().max(1000).optional(),
+    /** Syarat yang harus dipenuhi sebelum kegiatan dapat diajukan kembali (wajib untuk Ditunda). */
+    syarat_pengajuan_ulang: z.string().trim().max(1000).optional(),
   })
   .refine((v) => v.keputusan === "Dapat Dimulai" || (v.catatan ?? "").length > 0, {
     path: ["catatan"],
-    message: "Catatan wajib diisi untuk keputusan Perbaiki Dulu atau Ditunda.",
+    message: "Alasan wajib diisi untuk keputusan Perbaiki Dulu atau Ditunda.",
+  })
+  .refine((v) => v.keputusan !== "Ditunda" || (v.syarat_pengajuan_ulang ?? "").length > 0, {
+    path: ["syarat_pengajuan_ulang"],
+    message: "Syarat pengajuan ulang wajib diisi untuk keputusan Ditunda.",
   });
 
 export const verifyIncidentSchema = z.object({

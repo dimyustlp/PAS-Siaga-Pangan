@@ -10,6 +10,13 @@ const opt = (max: number) =>
     .optional()
     .transform((v) => (v ? v : undefined));
 
+const jam = z
+  .string()
+  .trim()
+  .regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Format jam HH:MM, contoh 07:30.")
+  .optional()
+  .or(z.literal("").transform(() => undefined));
+
 const tanggal = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus TTTT-BB-HH.")
@@ -85,6 +92,12 @@ export const activitySchema = z
     akses_warga: opt(500),
     nomor_persetujuan: opt(120),
     nomor_surat_perintah: opt(120),
+    komoditas: opt(150),
+    tahap_pekerjaan: opt(200),
+    mitra: opt(200),
+    pendamping_teknis: opt(200),
+    jam_kegiatan: jam,
+    jam_kembali: jam,
   })
   .refine((v) => !v.rencana_berakhir || v.rencana_berakhir >= v.tanggal_mulai, {
     path: ["rencana_berakhir"],
@@ -124,14 +137,14 @@ export const nominatifSchema = z.object({
   inmate_ids: z.array(z.string().uuid()).max(2000, "Terlalu banyak warga binaan."),
 });
 
-/** Enam indikator kesiapan menurut RPP (alur keputusan operasional). Indikator f hanya berlaku bila sesi memakai gelang monitor. */
+/** Enam aspek kesiapan pengamanan (kode A sampai F) menurut pedoman. Aspek F hanya berlaku bila gelang monitor ditetapkan. */
 export const INDIKATOR_KESIAPAN: { kode: "a" | "b" | "c" | "d" | "e" | "f"; judul: string; uraian: string }[] = [
-  { kode: "a", judul: "Persetujuan dan penugasan", uraian: "Persetujuan dan penugasan telah tercatat, serta petugas memahami peran dan batas kewenangannya." },
-  { kode: "b", judul: "Nominatif dan rencana pergerakan", uraian: "Daftar nominatif, identitas, jumlah WB, dan rencana pergerakan telah diperiksa dan sesuai." },
-  { kode: "c", judul: "Lokasi, akses, rute, dan komunikasi", uraian: "Lokasi, akses, batas area, rute, waktu, titik komunikasi, dan sarana pendukung telah diketahui petugas." },
-  { kode: "d", judul: "Alat kerja", uraian: "Alat kerja telah diperiksa dan mekanisme pengembalian serta penyimpanannya telah ditetapkan." },
-  { kode: "e", judul: "Sarana komunikasi dan log manual", uraian: "Sarana komunikasi berfungsi dan log manual tersedia apabila jaringan atau dasbor tidak dapat digunakan." },
-  { kode: "f", judul: "Gelang pemantau", uraian: "Gelang pemantau, apabila ditetapkan, berfungsi dan penggunaannya telah dicatat sesuai ketentuan." },
+  { kode: "a", judul: "Persetujuan dan penugasan", uraian: "Persetujuan kegiatan, surat perintah penugasan, dan dasar pengeluaran apabila dipersyaratkan telah tersedia. Petugas mengetahui pembagian tugas, kewenangan, dan tanggung jawabnya." },
+  { kode: "b", judul: "Daftar peserta dan rencana pergerakan", uraian: "Identitas, jumlah peserta, dan pembagian kelompok sesuai dengan daftar nominatif. Jadwal, rencana keberangkatan, serta waktu dan tempat pengembalian telah ditetapkan." },
+  { kode: "c", judul: "Lokasi dan pengawasan", uraian: "Lahan aktif, batas, medan, akses, rute, titik komunikasi dan denah fasilitas diperiksa, termasuk gudang, kandang, kolam dan rumah produksi. Setiap kelompok memiliki pengawas; pihak luar dan pergantian petugas dikendalikan serta dicatat." },
+  { kode: "d", judul: "Alat, mesin, bahan, dan keselamatan kerja", uraian: "Alat, mesin, bahan yang dikendalikan, dan APD sesuai kebutuhan. Kelayakan teknis diperiksa petugas kompeten; penyerahan, penggunaan, sisa, pengembalian dan penyimpanan diatur. Pertolongan pertama dan jalur bantuan kesehatan tersedia sesuai pekerjaan." },
+  { kode: "e", judul: "Komunikasi dan pencatatan", uraian: "Sarana komunikasi berfungsi, jalur pelaporan diketahui, interval pemeriksaan berkala ditetapkan, dan catatan manual tersedia apabila aplikasi atau jaringan tidak dapat digunakan." },
+  { kode: "f", judul: "Gelang monitor warga binaan", uraian: "Apabila penggunaannya ditetapkan, identitas pemakai dan perangkat telah dicocokkan; kondisi fisik, daya, sinyal, fungsi, dan pemasangan telah diperiksa; serta petugas pemantau telah ditugaskan." },
 ];
 
 export const documentKindSchema = z.enum(["surat_perintah", "rencana_pengamanan"]);
