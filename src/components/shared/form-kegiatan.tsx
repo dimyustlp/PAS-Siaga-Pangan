@@ -62,7 +62,7 @@ export function FormKegiatanMudah({ lokasi, hariIni }: { lokasi: Lokasi[]; hariI
   const [berakhir, setBerakhir] = React.useState("");
   const [luas, setLuas] = React.useState("");
   const [luasManual, setLuasManual] = React.useState(false);
-  const [lain, setLain] = React.useState({ persetujuan: "", sp: "", komunikasi: "", batas: "", rute: "", akses: "" });
+  const [lain, setLain] = React.useState({ persetujuan: "", sp: "", komunikasi: "", batas: "", rute: "", akses: "", komoditas: "", tahap: "", mitra: "", pendamping: "", jamMulai: "", jamKembali: "" });
   const setL = (k: keyof typeof lain) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setLain((x) => ({ ...x, [k]: e.target.value }));
 
   function pilihLokasi(id: string) {
@@ -82,7 +82,7 @@ export function FormKegiatanMudah({ lokasi, hariIni }: { lokasi: Lokasi[]; hariI
       action={createActivity}
       submit="Simpan rencana kegiatan"
       success="Rencana kegiatan tersimpan. Membuka halaman rincian untuk menambah sesi dan menugaskan pengawal…"
-      onSuccess={(d) => { router.push(`/rencana/${d.id}`); setJenis(""); setLok(""); setBerakhir(""); setLuas(""); setLuasManual(false); setLain({ persetujuan: "", sp: "", komunikasi: "", batas: "", rute: "", akses: "" }); }}
+      onSuccess={(d) => { router.push(`/rencana/${d.id}`); setJenis(""); setLok(""); setBerakhir(""); setLuas(""); setLuasManual(false); setLain({ persetujuan: "", sp: "", komunikasi: "", batas: "", rute: "", akses: "", komoditas: "", tahap: "", mitra: "", pendamping: "", jamMulai: "", jamKembali: "" }); }}
       resetOnSuccess={false}
       build={() => ({
         jenis_kegiatan: jenis || undefined,
@@ -96,6 +96,12 @@ export function FormKegiatanMudah({ lokasi, hariIni }: { lokasi: Lokasi[]; hariI
         batas_area: lain.batas.trim() || undefined,
         rute: lain.rute.trim() || undefined,
         akses_warga: lain.akses.trim() || undefined,
+        komoditas: lain.komoditas.trim() || undefined,
+        tahap_pekerjaan: lain.tahap.trim() || undefined,
+        mitra: lain.mitra.trim() || undefined,
+        pendamping_teknis: lain.pendamping.trim() || undefined,
+        jam_kegiatan: lain.jamMulai || undefined,
+        jam_kembali: lain.jamKembali || undefined,
       })}
     >
       <Field label="1. Jenis kegiatan">
@@ -121,6 +127,14 @@ export function FormKegiatanMudah({ lokasi, hariIni }: { lokasi: Lokasi[]; hariI
       <Field label="5. Luas lahan atau kolam (hektare)" htmlFor="kg-luas">
         <Input id="kg-luas" inputMode="decimal" placeholder="mis. 2,5" value={luas} onChange={(e) => { setLuas(e.target.value); setLuasManual(true); }} />
       </Field>
+      <Lipat judul="Komoditas, jadwal, dan mitra" hint="boleh dilengkapi nanti">
+        <Field label="Komoditas" htmlFor="kg-kom2"><Input id="kg-kom2" value={lain.komoditas} onChange={setL("komoditas")} placeholder="Contoh: sayuran, lele, ayam petelur" /></Field>
+        <Field label="Tahap pekerjaan" htmlFor="kg-thp"><Input id="kg-thp" value={lain.tahap} onChange={setL("tahap")} placeholder="Contoh: pengolahan lahan, panen" /></Field>
+        <Field label="Jam kegiatan" htmlFor="kg-jm"><Input id="kg-jm" type="time" value={lain.jamMulai} onChange={setL("jamMulai")} /></Field>
+        <Field label="Jam kembali ke blok" htmlFor="kg-jk"><Input id="kg-jk" type="time" value={lain.jamKembali} onChange={setL("jamKembali")} /></Field>
+        <Field label="Mitra (bila ada)" htmlFor="kg-mt"><Input id="kg-mt" value={lain.mitra} onChange={setL("mitra")} /></Field>
+        <Field label="Pendamping teknis (bila ada)" htmlFor="kg-pd" hint="Pendamping atau mitra tidak memberikan izin pergerakan WB."><Input id="kg-pd" value={lain.pendamping} onChange={setL("pendamping")} /></Field>
+      </Lipat>
       <Lipat judul="Dokumen dan pengamanan" hint="boleh dilengkapi nanti">
         <Field label="Nomor surat perintah" htmlFor="kg-sp"><Input id="kg-sp" value={lain.sp} onChange={setL("sp")} /></Field>
         <Field label="Nomor persetujuan kegiatan" htmlFor="kg-pers"><Input id="kg-pers" value={lain.persetujuan} onChange={setL("persetujuan")} /></Field>
@@ -159,7 +173,7 @@ export function FormSesiMudah({ kegiatan, pengawal, hariIni }: { kegiatan: OpsiK
     <ActionForm
       action={createSession}
       submit="Buat sesi harian"
-      success="Sesi dibuat dengan status Menunggu. Lengkapi dokumen, nominatif, dan indikator kesiapan pada halaman sesi."
+      success="Sesi dibuat dengan status Menunggu. Lengkapi dokumen, nominatif, dokumen wajib, dan aspek kesiapan pada halaman sesi."
       resetOnSuccess={false}
       build={() => ({
         activity_id: keg || undefined,

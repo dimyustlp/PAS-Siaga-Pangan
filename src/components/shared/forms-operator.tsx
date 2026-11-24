@@ -41,6 +41,12 @@ export function FormKegiatan({ lokasi }: { lokasi: Tables<"master_locations">[] 
         akses_warga: { s: "akses" },
         nomor_persetujuan: { s: "persetujuan" },
         nomor_surat_perintah: { s: "sp" },
+        komoditas: { s: "komoditas" },
+        tahap_pekerjaan: { s: "tahap" },
+        mitra: { s: "mitra" },
+        pendamping_teknis: { s: "pendamping" },
+        jam_kegiatan: { s: "jam_mulai" },
+        jam_kembali: { s: "jam_kembali" },
       }}
     >
       <div className="grid gap-4 sm:grid-cols-2">
@@ -61,6 +67,12 @@ export function FormKegiatan({ lokasi }: { lokasi: Tables<"master_locations">[] 
         <Field label="Luas lahan atau kolam (hektare)" htmlFor="luas"><Input id="luas" name="luas" inputMode="decimal" placeholder="mis. 2,5" /></Field>
         <Field label="Nomor persetujuan kegiatan" htmlFor="persetujuan"><Input id="persetujuan" name="persetujuan" /></Field>
         <Field label="Nomor surat perintah" htmlFor="sp"><Input id="sp" name="sp" /></Field>
+        <Field label="Komoditas" htmlFor="komoditas"><Input id="komoditas" name="komoditas" placeholder="Contoh: sayuran, lele, ayam petelur" /></Field>
+        <Field label="Tahap pekerjaan" htmlFor="tahap"><Input id="tahap" name="tahap" placeholder="Contoh: pengolahan lahan, panen" /></Field>
+        <Field label="Jam kegiatan" htmlFor="jam_mulai"><Input id="jam_mulai" name="jam_mulai" type="time" /></Field>
+        <Field label="Jam kembali ke blok" htmlFor="jam_kembali"><Input id="jam_kembali" name="jam_kembali" type="time" /></Field>
+        <Field label="Mitra (bila ada)" htmlFor="mitra"><Input id="mitra" name="mitra" /></Field>
+        <Field label="Pendamping teknis (bila ada)" htmlFor="pendamping" hint="Pendamping atau mitra tidak memberikan izin pergerakan WB."><Input id="pendamping" name="pendamping" /></Field>
         <Field label="Titik komunikasi" htmlFor="komunikasi" hint="Mis. pos jaga, nomor radio atau telepon."><Input id="komunikasi" name="komunikasi" /></Field>
         <Field label="Batas area kegiatan" htmlFor="batas" className="sm:col-span-2"><Textarea id="batas" name="batas" rows={2} placeholder="Batas-batas area yang boleh dijangkau WB" /></Field>
         <Field label="Rute berangkat dan pulang" htmlFor="rute" className="sm:col-span-2"><Textarea id="rute" name="rute" rows={2} /></Field>
@@ -110,7 +122,7 @@ export function FormSesiBaru({ kegiatan, pengawal }: { kegiatan: { id: string; l
     <ActionForm
       action={createSession}
       submit="Buat sesi harian"
-      success="Sesi dibuat dengan status Menunggu. Lengkapi dokumen, nominatif, dan indikator kesiapan pada halaman sesi."
+      success="Sesi dibuat dengan status Menunggu. Lengkapi dokumen, nominatif, dokumen wajib, dan aspek kesiapan pada halaman sesi."
       fields={{ activity_id: { s: "kegiatan" }, jumlah_narapidana: { v: 0 }, ...kolomSesi }}
     >
       <Field label="Kegiatan" htmlFor="kegiatan">

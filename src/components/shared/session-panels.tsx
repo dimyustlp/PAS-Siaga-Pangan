@@ -136,8 +136,8 @@ export function PanelKesiapan({ data }: { data: SesiLengkap }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Indikator kesiapan</CardTitle>
-        <CardDescription>Enam indikator yang harus terpenuhi sebelum Kepala Pengamanan memberi izin mulai.</CardDescription>
+        <CardTitle>Aspek kesiapan (A sampai F)</CardTitle>
+        <CardDescription>Enam aspek yang diperiksa sebelum Kepala Pengamanan memberi izin mulai. Aspek yang tidak berlaku ditandai sebagai tidak berlaku.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
         {INDIKATOR_KESIAPAN.map((i) => {
