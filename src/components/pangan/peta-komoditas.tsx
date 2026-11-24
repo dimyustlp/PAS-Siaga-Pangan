@@ -51,7 +51,7 @@ export function PetaKomoditas({ titik, teratas }: { titik: RekapTitik[]; teratas
       const w = warna.get(t.kom) ?? WARNA_LAIN;
       el.style.cssText = `width:18px;height:18px;border-radius:9999px;border:2.5px solid #fff;background:${w};box-shadow:0 2px 6px rgba(15,30,60,.35);cursor:pointer;padding:0`;
       const isi = document.createElement("div");
-      isi.style.cssText = "font:12.5px/1.4 system-ui,sans-serif;color:#13203c;max-width:220px";
+      isi.style.cssText = "font:12.5px/1.4 system-ui,sans-serif;color:#14301f;max-width:220px";
       const j = document.createElement("strong"); j.textContent = t.nama; j.style.display = "block";
       const k = document.createElement("span"); k.textContent = `${kapital(t.kom)} (${t.jenis})`; k.style.display = "block";
       const v = document.createElement("span"); v.textContent = `${angka(t.ton)} ton · ${rupiahRingkas(t.nilai)}`; v.style.cssText = "display:block;color:#51607f";
