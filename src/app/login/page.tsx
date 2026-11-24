@@ -51,7 +51,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             <span className="h-10 w-px bg-white/25" aria-hidden />
             <Logo />
           </div>
-          <p className="mt-4 font-mono text-[0.68rem] font-medium uppercase leading-relaxed tracking-[0.16em] text-[#9db6dc]">
+          <p className="mt-4 font-mono text-[0.68rem] font-medium uppercase leading-relaxed tracking-[0.16em] text-[#95D5B2]">
             Kementerian Imigrasi dan Pemasyarakatan
             <br />
             Direktorat Jenderal Pemasyarakatan
@@ -63,9 +63,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <div className="relative max-w-2xl space-y-8">
           <div className="space-y-4">
             <h1 className="text-5xl font-bold leading-[1.05] tracking-tight xl:text-6xl">
-              PAS-SIAGA <span className="text-[#e6c06a]">Pangan</span>
+              PAS-SIAGA <span className="text-[#FBBF24]">Pangan</span>
             </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-[#c9d9f0]">
+            <p className="max-w-xl text-lg leading-relaxed text-[#D8F3DC]">
               Pemantauan dan pengamanan kegiatan ketahanan pangan pemasyarakatan: dari rencana kegiatan, kesiapan, pengawalan empat tahap, sampai laporan yang disahkan.
             </p>
             <DeretSektor />
@@ -73,11 +73,11 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <ul className="grid gap-3 xl:grid-cols-3">
             {POIN.map(({ ikon: Ikon, judul, teks }) => (
               <li key={judul} className="rounded-[14px] border border-white/10 bg-white/[0.06] p-4 backdrop-blur-sm">
-                <span className="flex h-9 w-9 items-center justify-center rounded-[9px] bg-white/[0.1] text-[#e6c06a] ring-1 ring-inset ring-white/15">
+                <span className="flex h-9 w-9 items-center justify-center rounded-[9px] bg-white/[0.1] text-[#FBBF24] ring-1 ring-inset ring-white/15">
                   <Ikon className="h-[1.1rem] w-[1.1rem]" aria-hidden />
                 </span>
                 <span className="mt-3 block text-[0.95rem] font-semibold text-white">{judul}</span>
-                <span className="mt-1 block text-[0.85rem] leading-relaxed text-[#b9cce8]">{teks}</span>
+                <span className="mt-1 block text-[0.85rem] leading-relaxed text-[#B7E4C7]">{teks}</span>
               </li>
             ))}
           </ul>
@@ -86,14 +86,14 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <dl className="relative flex gap-10">
           {[["Kantor wilayah", "33"], ["UPT terpantau", "611"], ["Tahap pengawalan", "4"]].map(([k, v]) => (
             <div key={k}>
-              <dt className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.16em] text-[#9db6dc]">{k}</dt>
+              <dt className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.16em] text-[#95D5B2]">{k}</dt>
               <dd className="mt-1 text-3xl font-bold tabular-nums">{v}</dd>
             </div>
           ))}
         </dl>
       </section>
 
-      <section className="flex items-center justify-center bg-[#f4f7fb] px-4 py-10">
+      <section className="flex items-center justify-center bg-[#F8FAFC] px-4 py-10">
         <div className="halaman-masuk w-full max-w-[25rem]">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
             <LogoInstansi kecil />
