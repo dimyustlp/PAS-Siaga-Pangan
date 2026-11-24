@@ -195,7 +195,7 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
         <MotifPangan />
         <div className="relative grid gap-6 md:grid-cols-[1.6fr_1fr] md:items-end">
           <div className="min-w-0">
-            <p className="flex items-center gap-2.5 font-mono text-[0.7rem] font-medium uppercase tracking-[0.2em] text-[#e6c06a]"><span className="h-[2px] w-6 rounded-full bg-[#c89a34]" aria-hidden />
+            <p className="flex items-center gap-2.5 font-mono text-[0.7rem] font-medium uppercase tracking-[0.2em] text-[#FBBF24]"><span className="h-[2px] w-6 rounded-full bg-[#D97706]" aria-hidden />
               {tema ? tema.sebut : LABEL_TINGKAT[tingkat]} · {fmtTanggal(now)}
             </p>
             <h1 className="mt-4 max-w-[22ch] text-white text-[1.75rem] font-bold leading-[1.12] tracking-tight md:text-[2.5rem]">{judul}</h1>
