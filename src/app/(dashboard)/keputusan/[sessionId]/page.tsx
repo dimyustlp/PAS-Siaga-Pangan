@@ -50,7 +50,7 @@ export default async function KeputusanSesiPage({ params }: { params: Promise<{ 
     <div className="mx-auto max-w-[1680px] space-y-6">
       <PageHeader
         title="Keputusan sesi"
-        actions={<><RealtimeRefresh />{data.sesi.pakai_gelang_monitor && <TautanGelang />}<Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}`}>Detail & laporan</Link></Button></>}
+        actions={<><RealtimeRefresh />{data.sesi.pakai_gelang_monitor && <TautanGelang />}<Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}/kendali`}>Kendali sesi</Link></Button><Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}`}>Detail & laporan</Link></Button></>}
       />
       {peringatan.map((p) => <Alert key={p.teks} tone={p.tingkat === "kritis" ? "bahaya" : "waspada"}>{p.teks}</Alert>)}
       <KepalaSesi data={data} />
@@ -60,12 +60,13 @@ export default async function KeputusanSesiPage({ params }: { params: Promise<{ 
         <>
           <PanelKesiapan data={data} />
           <Card>
-            <CardHeader><CardTitle>Keputusan kesiapan</CardTitle><CardDescription>“Dapat Dimulai” ditolak otomatis bila dokumen, nominatif, atau indikator belum lengkap.</CardDescription></CardHeader>
+            <CardHeader><CardTitle>Keputusan kesiapan</CardTitle><CardDescription>“Dapat Dimulai” ditolak otomatis bila enam aspek kesiapan, dokumen wajib a sampai m, nominatif, atau rencana pengamanan belum lengkap. Periksa kelengkapan dokumen di halaman Kendali sesi.</CardDescription></CardHeader>
             <CardContent>
-              <ActionForm action={decideReadiness} submit="Putuskan" fields={{ session_id: { v: sessionId }, keputusan: { s: "keputusan" }, catatan: { s: "catatan" } }}>
+              <ActionForm action={decideReadiness} submit="Putuskan" fields={{ session_id: { v: sessionId }, keputusan: { s: "keputusan" }, catatan: { s: "catatan" }, syarat_pengajuan_ulang: { s: "syarat" } }}>
                 <div className="grid gap-4 sm:grid-cols-[14rem_1fr]">
                   <Field label="Keputusan" htmlFor="kp"><Select id="kp" name="keputusan" required defaultValue=""><option value="" disabled>Pilih</option><option>Dapat Dimulai</option><option>Perbaiki Dulu</option><option>Ditunda</option></Select></Field>
-                  <Field label="Catatan" htmlFor="kp-cat" hint="Wajib diisi untuk Perbaiki Dulu atau Ditunda."><Input id="kp-cat" name="catatan" /></Field>
+                  <Field label="Alasan atau catatan" htmlFor="kp-cat" hint="Wajib diisi untuk Perbaiki Dulu atau Ditunda."><Input id="kp-cat" name="catatan" /></Field>
+                  <Field label="Syarat pengajuan ulang" htmlFor="kp-syarat" hint="Wajib diisi bila memilih Ditunda: kondisi yang harus dipenuhi sebelum kegiatan diajukan kembali." className="sm:col-start-2"><Input id="kp-syarat" name="syarat" /></Field>
                 </div>
               </ActionForm>
             </CardContent>
