@@ -165,7 +165,7 @@ async function TabKelompok({ supabase, upt, bisa }: Props) {
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Nama kelompok" htmlFor="k-nama"><Input id="k-nama" name="k-nama" required maxLength={120} /></Field>
                 <Field label="Jenis kegiatan" htmlFor="k-jenis">
-                  <Select id="k-jenis" name="k-jenis" defaultValue=""><option value="">Belum ditentukan</option><option>Pertanian</option><option>Peternakan</option><option>Perikanan</option></Select>
+                  <Select id="k-jenis" name="k-jenis" defaultValue=""><option value="">Belum ditentukan</option><option>Pertanian</option><option>Peternakan</option><option>Perikanan</option><option>Perkebunan</option><option>Lainnya</option></Select>
                 </Field>
                 <Field label="Lokasi kerja" htmlFor="k-lokasi">
                   <Select id="k-lokasi" name="k-lokasi" defaultValue=""><option value="">Belum ditentukan</option>{lokasi.map((l) => <option key={l.id} value={l.id}>{l.nama}</option>)}</Select>
