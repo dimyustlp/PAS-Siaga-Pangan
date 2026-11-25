@@ -5,6 +5,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { perhatianSesi, type Overview } from "@/lib/domain/attention";
 import { fmtTanggalPendek } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { labelJenis } from "@/lib/domain/jenis-kegiatan";
 
 type Props = {
   role: "ka_upt" | "kepala_pengamanan" | "operator";
@@ -39,7 +40,7 @@ function Daftar({ rows, kosong, href, tambahan }: { rows: Overview[]; kosong: st
         <li key={r.session_id}>
           <Link href={href(r)} className="flex items-center gap-3 py-2.5 hover:bg-secondary/40">
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-medium">{r.jenis_kegiatan} · {r.lokasi_nama}</span>
+              <span className="block truncate text-sm font-medium">{labelJenis(r.jenis_kegiatan, r.detail_kegiatan)} · {r.lokasi_nama}</span>
               <span className="block truncate text-xs text-muted-foreground">{r.kode_kegiatan} · {fmtTanggalPendek(r.tanggal_sesi)} · {r.jumlah_narapidana} WB{tambahan ? ` · ${tambahan(r)}` : ""}</span>
             </span>
             {r.status_keamanan && r.status_kesiapan === "Dapat Dimulai" && <StatusBadge status={r.status_keamanan} />}
