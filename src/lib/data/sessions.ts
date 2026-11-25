@@ -14,7 +14,8 @@ export type SesiRingkas = {
   jumlah_narapidana: number;
   activities: {
     kode_kegiatan: string;
-    jenis_kegiatan: "Pertanian" | "Peternakan" | "Perikanan";
+    jenis_kegiatan: "Pertanian" | "Peternakan" | "Perikanan" | "Perkebunan" | "Lainnya";
+    detail_kegiatan: string | null;
     master_locations: { nama: string } | null;
   } | null;
 };
@@ -24,7 +25,7 @@ export async function listSessions(limit = 200): Promise<SesiRingkas[]> {
   const { data, error } = await supabase
     .from("daily_sessions")
     .select(
-      "id,tanggal_sesi,status_kesiapan,status_keamanan,ditutup_at,interval_pemeriksaan,jumlah_narapidana,activities(kode_kegiatan,jenis_kegiatan,master_locations(nama))"
+      "id,tanggal_sesi,status_kesiapan,status_keamanan,ditutup_at,interval_pemeriksaan,jumlah_narapidana,activities(kode_kegiatan,jenis_kegiatan,detail_kegiatan,master_locations(nama))"
     )
     .order("tanggal_sesi", { ascending: false })
     .limit(limit);
@@ -37,7 +38,7 @@ export async function getSessionDetail(sessionId: string) {
 
   const { data: sesi, error } = await supabase
     .from("daily_sessions")
-    .select("*,activities(kode_kegiatan,jenis_kegiatan,tanggal_mulai,rencana_berakhir,master_locations(nama,keterangan))")
+    .select("*,activities(kode_kegiatan,jenis_kegiatan,detail_kegiatan,tanggal_mulai,rencana_berakhir,master_locations(nama,keterangan))")
     .eq("id", sessionId)
     .maybeSingle();
   if (error) throw new Error("Gagal membaca sesi.");
