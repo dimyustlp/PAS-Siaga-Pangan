@@ -28,11 +28,12 @@ export const PANDUAN: Panduan[] = [
       { judul: "Siapkan sesi", isi: "Buka sesi, lengkapi nominatif WB, dokumen surat perintah dan rencana pengamanan, serta aspek kesiapan A sampai F. Sesi yang lengkap masuk antrean keputusan Kepala Pengamanan." },
       { judul: "Centang dokumen wajib a sampai m", isi: "Di halaman Kendali sesi, tandai dokumen yang sudah tersedia. Nominatif, rencana pengamanan, dan surat perintah terisi otomatis. Dokumen f dan g hanya untuk kegiatan di luar perimeter. Tanpa dokumen lengkap, Kepala Pengamanan belum bisa memutuskan Dapat Dimulai.", menu: { href: "/kegiatan", label: "Kegiatan" } },
       { judul: "Catat lahan aktif dan kelompok kerja", isi: "Isi lahan aktif hari itu, kelompok kerja, pengawas, pengganti, dan jalur serah terima. Perubahan rencana dicatat bersama alasan dan pejabat yang menyetujui." },
+      { judul: "Catat data P2U dan pengawalan", isi: "Setelah sesi Dapat Dimulai, buka sesi lalu tekan Catat data P2U dan pengawalan. Catat nama petugas, lalu isi tahap 1 (keluar melalui P2U) dan tahap 4 (kembali ke UPT) dari catatan petugas P2U, lengkap dengan foto dan berkas wajib. Catatan Anda tercatat atas nama akun Operator dan tidak mengubah hasil hitung petugas." },
       { judul: "Cetak formulir lampiran", isi: "Sepuluh formulir pedoman tersedia di menu Formulir pada tiap sesi, lengkap dengan kop UPT dan siap dicetak." },
       { judul: "Atur kop surat", isi: "Isi kop surat UPT agar dokumen persuratan memakai identitas UPT. Isinya bisa diubah sesuai kondisi di lapangan.", menu: { href: "/kop-surat", label: "Kop surat UPT" } },
       { judul: "Buat akun pegawai UPT", isi: "Buat akun Ka.UPT, Kepala Pengamanan, dan Pengawal. Berikan kata sandi awal langsung ke pemiliknya. Akun hanya bisa dibuat untuk UPT Anda sendiri.", menu: { href: "/akun", label: "Akun UPT" } },
     ],
-    catatan: ["Satu akun Pengawal boleh dipakai bergantian beberapa petugas, karena nama petugas dicatat tiap kali bertugas.", "Operator tidak bisa membuat akun Operator lain dan tidak bisa melihat akun UPT lain.", "Operator tidak mengubah hasil penghitungan atau keputusan komando tanpa sumber dan kewenangan yang tercatat.", "Rencana pengamanan disusun Kepala Pengamanan. Operator mengunggahnya sebagai dokumen d."],
+    catatan: ["Satu akun Pengawal boleh dipakai bergantian beberapa petugas, karena nama petugas dicatat tiap kali bertugas.", "Operator tidak bisa membuat akun Operator lain dan tidak bisa melihat akun UPT lain.", "Operator tidak mengubah hasil penghitungan atau keputusan komando tanpa sumber dan kewenangan yang tercatat. Data P2U dimasukkan sesuai catatan petugas P2U.", "Rencana pengamanan disusun Kepala Pengamanan. Operator mengunggahnya sebagai dokumen d."],
   },
   {
     role: "kepala_pengamanan",

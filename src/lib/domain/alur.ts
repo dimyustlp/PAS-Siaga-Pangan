@@ -69,11 +69,11 @@ export const ALUR_KERJA: TahapAlur[] = [
   {
     no: 6,
     judul: "Pemeriksaan di P2U untuk akses keluar",
-    pelaku: ["Petugas P2U", "Pengawal"],
-    peran: ["pengawal"],
+    pelaku: ["Petugas P2U", "Operator", "Pengawal"],
+    peran: ["pengawal", "operator"],
     isi: [
       "Petugas P2U mencocokkan dokumen pengeluaran, identitas dan jumlah peserta, pengawal, barang, alat kerja, dan gelang, lalu mencatat waktu keluar dan serah terima.",
-      "Di dashboard dicatat pada tahap 1 pengawalan melalui akun Pengawal, lengkap dengan nama petugas P2U. Berlaku bila jalur melalui P2U.",
+      "Di dashboard, Operator atau Pengawal mencatat hasilnya pada tahap 1 dari catatan P2U, lengkap dengan nama petugas P2U. Berlaku bila jalur melalui P2U. Pencatatan baru dibuka setelah sesi Dapat Dimulai.",
     ],
     tautan: { href: "/lapangan", label: "Buka tugas lapangan" },
   },
@@ -91,9 +91,9 @@ export const ALUR_KERJA: TahapAlur[] = [
   {
     no: 8,
     judul: "Pemeriksaan P2U saat masuk dan serah terima ke blok",
-    pelaku: ["Petugas P2U", "Pengawal"],
-    peran: ["pengawal"],
-    isi: ["Cocokkan identitas, jumlah, barang, dan alat dengan catatan keluar, catat waktu masuk dan kejadian, lalu serah terima ke petugas blok. Dicatat pada tahap 4. Gelang diperiksa dan dilepas bila masa pakai selesai."],
+    pelaku: ["Petugas P2U", "Operator", "Pengawal"],
+    peran: ["pengawal", "operator"],
+    isi: ["Cocokkan identitas, jumlah, barang, dan alat dengan catatan keluar, catat waktu masuk dan kejadian, lalu serah terima ke petugas blok. Operator atau Pengawal mencatatnya pada tahap 4. Gelang diperiksa dan dilepas bila masa pakai selesai."],
     tautan: { href: "/lapangan", label: "Buka tugas lapangan" },
   },
   {
