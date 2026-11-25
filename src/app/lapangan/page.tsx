@@ -9,6 +9,7 @@ import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { fmtTanggalPendek, fmtWaktu, hariIniWib } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { labelJenis } from "@/lib/domain/jenis-kegiatan";
 
 export const metadata = { title: "Tugas saya" };
 export const dynamic = "force-dynamic";
@@ -82,7 +83,7 @@ export default async function LapanganPage() {
             const isi = (
               <Card className={cn("lift flex h-full items-start gap-3 p-4", siap ? "border-l-4 border-l-gold" : "border-l-4 border-l-border opacity-90")}>
                 <div className="min-w-0 flex-1 space-y-1.5">
-                  <p className="truncate font-semibold">{s.jenis_kegiatan} · {s.lokasi_nama}</p>
+                  <p className="truncate font-semibold">{labelJenis(s.jenis_kegiatan, s.detail_kegiatan)} · {s.lokasi_nama}</p>
                   <p className="text-xs text-muted-foreground">{s.kode_kegiatan}{s.latihan ? " · LATIHAN" : ""} · {fmtTanggalPendek(s.tanggal_sesi)} · {s.jumlah_narapidana} WB</p>
                   <div className="flex flex-wrap items-center gap-2 pt-0.5">
                     {s.status_keamanan && <StatusBadge status={s.status_keamanan} />}
