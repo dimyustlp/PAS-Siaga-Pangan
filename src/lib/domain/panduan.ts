@@ -12,7 +12,7 @@ export type Panduan = {
 export const PANDUAN: Panduan[] = [
   {
     role: "operator",
-    ringkas: "Menyiapkan kegiatan ketahanan pangan di UPT sampai siap diputuskan, dan mengatur siapa yang bertugas.",
+    ringkas: "Menyiapkan kegiatan ketahanan pangan di UPT sampai siap diputuskan, dan mengatur siapa yang bertugas. Dalam Pedoman, peran ini memasukkan data dari Bimker dan petugas lapangan.",
     tugas: [
       "Menyusun rencana kegiatan dan melengkapi rinciannya.",
       "Membuat sesi harian, satu per satu sesuai jadwal.",
@@ -32,7 +32,7 @@ export const PANDUAN: Panduan[] = [
       { judul: "Atur kop surat", isi: "Isi kop surat UPT agar dokumen persuratan memakai identitas UPT. Isinya bisa diubah sesuai kondisi di lapangan.", menu: { href: "/kop-surat", label: "Kop surat UPT" } },
       { judul: "Buat akun pegawai UPT", isi: "Buat akun Ka.UPT, Kepala Pengamanan, dan Pengawal. Berikan kata sandi awal langsung ke pemiliknya. Akun hanya bisa dibuat untuk UPT Anda sendiri.", menu: { href: "/akun", label: "Akun UPT" } },
     ],
-    catatan: ["Satu akun Pengawal boleh dipakai bergantian beberapa petugas, karena nama petugas dicatat tiap kali bertugas.", "Operator tidak bisa membuat akun Operator lain dan tidak bisa melihat akun UPT lain."],
+    catatan: ["Satu akun Pengawal boleh dipakai bergantian beberapa petugas, karena nama petugas dicatat tiap kali bertugas.", "Operator tidak bisa membuat akun Operator lain dan tidak bisa melihat akun UPT lain.", "Operator tidak mengubah hasil penghitungan atau keputusan komando tanpa sumber dan kewenangan yang tercatat.", "Rencana pengamanan disusun Kepala Pengamanan. Operator mengunggahnya sebagai dokumen d."],
   },
   {
     role: "kepala_pengamanan",
@@ -72,7 +72,7 @@ export const PANDUAN: Panduan[] = [
   },
   {
     role: "pengawal",
-    ringkas: "Mengawal kegiatan di lapangan dan mengisi berkas persyaratan tiap tahap.",
+    ringkas: "Mengawal kegiatan di lapangan dan mengisi berkas persyaratan tiap tahap. Akun ini dipakai pengawal, pengawas lokasi, dan petugas yang mencatat pemeriksaan P2U dan serah terima ke blok.",
     tugas: [
       "Membuka tugas yang diberikan Operator.",
       "Mencatat nama petugas yang bertugas sebelum mengisi berkas.",
@@ -87,12 +87,12 @@ export const PANDUAN: Panduan[] = [
       { judul: "Isi Kendali sesi", isi: "Catat status variabel, penyerahan dan pengembalian alat, pihak luar yang masuk, serta pengembalian WB bertahap. Selisih alat wajib ditindaklanjuti sebelum kegiatan ditutup." },
       { judul: "Baca alur kerja", isi: "Ringkasan alur dari penugasan sampai laporan ada di menu Alur kerja.", menu: { href: "/lapangan/alur", label: "Alur kerja" } },
     ],
-    catatan: ["Waktu tahap dan lampiran dicatat otomatis oleh sistem dan tidak bisa diubah dari HP."],
+    catatan: ["Waktu tahap dan lampiran dicatat otomatis oleh sistem dan tidak bisa diubah dari HP.", "Gangguan: lakukan tindakan awal dan lapor lewat jalur komando lebih dulu, tanpa menunggu pencatatan di dashboard.", "Dashboard tidak menggantikan pengawasan langsung dan pemeriksaan fisik di P2U."],
   },
   {
     role: "pemantau_kanwil",
     ringkas: "Memantau seluruh UPT di wilayah dan mengelola akun UPT di wilayahnya.",
-    tugas: ["Memantau dasbor wilayah dan rekap per UPT.", "Membuat dan mengelola akun UPT di wilayah.", "Membaca laporan, evaluasi, dan penilaian pelaksanaan."],
+    tugas: ["Memantau dasbor wilayah dan rekap per UPT.", "Memeriksa kesesuaian laporan dan data UPT, memantau penyelesaian temuan, dan mengenali kendala berulang.", "Membuat dan mengelola akun UPT di wilayah.", "Membaca laporan, evaluasi, dan penilaian pelaksanaan sebagai bahan arahan perbaikan dan laporan ke Pusat."],
     langkah: [
       { judul: "Dasbor wilayah", isi: "Lihat rekap per UPT, lalu buka UPT yang perlu perhatian.", menu: { href: "/", label: "Dasbor" } },
       { judul: "Kelola akun UPT", isi: "Buat atau nonaktifkan akun Ka.UPT, Kepala Pengamanan, Operator, dan Pengawal.", menu: { href: "/akun", label: "Akun UPT" } },
@@ -102,7 +102,7 @@ export const PANDUAN: Panduan[] = [
   {
     role: "pemantau_pusat",
     ringkas: "Memantau seluruh Kanwil dan UPT secara nasional.",
-    tugas: ["Memantau dasbor nasional.", "Mengelola akun Kanwil dan UPT.", "Membaca laporan, evaluasi, penilaian pelaksanaan, dan data SDP."],
+    tugas: ["Memantau dasbor nasional.", "Menganalisis laporan, status operasional, pola gangguan, dan hasil tindak lanjut dari wilayah.", "Mengelola akun Kanwil dan UPT.", "Membaca laporan, evaluasi, penilaian pelaksanaan, dan data SDP sebagai bahan pembinaan teknis dan penyempurnaan pedoman."],
     langkah: [
       { judul: "Dasbor nasional", isi: "Rekap per Kanwil; buka Kanwil lalu UPT untuk rincian.", menu: { href: "/", label: "Dasbor" } },
       { judul: "Kelola akun", isi: "Buat atau nonaktifkan akun Kanwil dan UPT.", menu: { href: "/akun", label: "Akun" } },
