@@ -14,6 +14,7 @@ import { fmtTanggal, fmtWaktu } from "@/lib/format";
 import { longgar } from "@/lib/supabase/longgar";
 import { createClient } from "@/lib/supabase/server";
 import { INDIKATOR_KESIAPAN } from "@/lib/validations/planning";
+import { labelJenis } from "@/lib/domain/jenis-kegiatan";
 
 export const metadata = { title: "Formulir pelaksanaan" };
 export const dynamic = "force-dynamic";
@@ -105,7 +106,7 @@ export default async function FormulirPage({ params }: { params: Promise<{ sessi
     isi = (
       <>
         <Pasangan item={[
-          ["UPT (Lapas/Rutan) dan nomor kegiatan", `${kop.upt} / ${kode} (${kegiatan.jenis_kegiatan})`],
+          ["UPT (Lapas/Rutan) dan nomor kegiatan", `${kop.upt} / ${kode} (${labelJenis(kegiatan.jenis_kegiatan, kegiatan.detail_kegiatan)})`],
           ["Tanggal dan jam kegiatan serta jam kembali", `${tgl}, ${s(kegiatan.jam_kegiatan) || "…"} s.d. ${s(kegiatan.jam_kembali) || "…"}`],
           ["Lokasi dan kedudukan terhadap perimeter utama", `${lokNama} (${lokasi?.posisi ?? ""})`],
           ["Komoditas, tahap pekerjaan, mitra dan pendamping teknis", gabung(kegiatan.komoditas, kegiatan.tahap_pekerjaan, kegiatan.mitra, kegiatan.pendamping_teknis)],
