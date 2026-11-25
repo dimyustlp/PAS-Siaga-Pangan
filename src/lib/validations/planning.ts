@@ -81,7 +81,8 @@ export const inmateSchema = z.object({
 
 export const activitySchema = z
   .object({
-    jenis_kegiatan: z.enum(["Pertanian", "Peternakan", "Perikanan"]),
+    jenis_kegiatan: z.enum(["Pertanian", "Peternakan", "Perikanan", "Perkebunan", "Lainnya"]),
+    detail_kegiatan: z.string().trim().max(120, "Detail kegiatan maksimal 120 karakter.").optional().transform((v) => (v ? v : undefined)),
     lokasi_id: z.string().uuid("Pilih lokasi."),
     tanggal_mulai: tanggal,
     rencana_berakhir: tanggal.optional(),
@@ -102,6 +103,10 @@ export const activitySchema = z
   .refine((v) => !v.rencana_berakhir || v.rencana_berakhir >= v.tanggal_mulai, {
     path: ["rencana_berakhir"],
     message: "Rencana berakhir tidak boleh sebelum tanggal mulai.",
+  })
+  .refine((v) => v.jenis_kegiatan !== "Lainnya" || !!v.detail_kegiatan, {
+    path: ["detail_kegiatan"],
+    message: "Tuliskan kegiatannya pada kolom Detail.",
   });
 
 const sessionFields = {

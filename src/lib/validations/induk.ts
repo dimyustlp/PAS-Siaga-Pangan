@@ -8,7 +8,7 @@ const tanggal = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus TT
 const tanggalOpt = tanggal.optional();
 const uuid = z.string().uuid("Data tidak valid.");
 
-export const JENIS_KEGIATAN = ["Pertanian", "Peternakan", "Perikanan"] as const;
+export const JENIS_KEGIATAN = ["Pertanian", "Peternakan", "Perikanan", "Perkebunan", "Lainnya"] as const;
 export const GOLONGAN_INVENTARIS = ["Alat kerja", "Sarana dan prasarana"] as const;
 export const KONDISI_INVENTARIS = ["Baik", "Rusak ringan", "Rusak berat", "Hilang"] as const;
 export const SATUAN_PANGAN = ["kg", "kwintal", "ton", "liter", "ekor", "butir"] as const;
