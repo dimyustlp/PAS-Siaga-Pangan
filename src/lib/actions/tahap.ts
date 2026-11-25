@@ -20,7 +20,7 @@ const tahapSchema = z.object({
 
 /** Pengawal menyelesaikan satu tahap. Urutan, lampiran wajib, dan waktu dicek dan dicatat database. */
 export async function selesaikanTahap(input: unknown): Promise<ActionResult<{ id: string }>> {
-  const auth = await authorize(["pengawal"]);
+  const auth = await authorize(["pengawal", "operator"]);
   if (!auth.ok) return fail(auth.error);
   const p = tahapSchema.safeParse(input);
   if (!p.success) return fail(p.error.issues[0]?.message ?? "Isian tidak valid.");
@@ -37,7 +37,7 @@ export async function selesaikanTahap(input: unknown): Promise<ActionResult<{ id
 }
 
 export async function hapusLampiran(input: unknown): Promise<ActionResult> {
-  const auth = await authorize(["pengawal"]);
+  const auth = await authorize(["pengawal", "operator"]);
   if (!auth.ok) return fail(auth.error);
   const p = z.object({ id: z.string().uuid(), session_id: z.string().uuid() }).safeParse(input);
   if (!p.success) return fail("Isian tidak valid.");

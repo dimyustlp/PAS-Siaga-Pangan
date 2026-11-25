@@ -55,7 +55,7 @@ function refresh() {
  * Pengawal tidak bisa menurunkan status lewat jalur mana pun.
  */
 export async function submitFieldLog(input: unknown): Promise<ActionResult<{ duplikat: boolean }>> {
-  const auth = await authorize(["pengawal"]);
+  const auth = await authorize(["pengawal", "operator"]);
   if (!auth.ok) return fail(auth.error);
   const parsed = fieldLogSchema.safeParse(input);
   if (!parsed.success) return zodFail(parsed.error);
@@ -82,7 +82,7 @@ export type HasilBatch = {
 export async function submitFieldLogBatch(
   inputs: unknown
 ): Promise<ActionResult<{ hasil: HasilBatch[]; berhasil: number; gagal: number }>> {
-  const auth = await authorize(["pengawal"]);
+  const auth = await authorize(["pengawal", "operator"]);
   if (!auth.ok) return fail(auth.error);
   const arr = fieldLogBatchSchema.safeParse(inputs);
   if (!arr.success) return zodFail(arr.error);

@@ -20,7 +20,7 @@ const catatSchema = z.object({
 
 /** Pengawal mencatat nama petugas yang bertugas. Satu akun dipakai bergantian oleh beberapa petugas. */
 export async function catatPetugas(input: unknown): Promise<ActionResult<{ id: string }>> {
-  const auth = await authorize(["pengawal"]);
+  const auth = await authorize(["pengawal", "operator"]);
   if (!auth.ok) return fail(auth.error);
   const p = catatSchema.safeParse(input);
   if (!p.success) return fail(p.error.issues[0]?.message ?? "Isian tidak valid.");
@@ -36,7 +36,7 @@ export async function catatPetugas(input: unknown): Promise<ActionResult<{ id: s
 }
 
 export async function hapusPetugas(input: unknown): Promise<ActionResult> {
-  const auth = await authorize(["pengawal"]);
+  const auth = await authorize(["pengawal", "operator"]);
   if (!auth.ok) return fail(auth.error);
   const p = z.object({ id: z.string().uuid(), session_id: z.string().uuid() }).safeParse(input);
   if (!p.success) return fail("Isian tidak valid.");
