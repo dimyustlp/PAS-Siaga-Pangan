@@ -50,6 +50,7 @@ export default async function DetailSesiPage({ params }: { params: Promise<{ ses
             {data.sesi.pakai_gelang_monitor && <TautanGelang />}
             {user.role === "kepala_pengamanan" && <Button asChild size="sm"><Link href={`/keputusan/${sessionId}`}>Buka keputusan</Link></Button>}
             {user.role === "operator" && <Button asChild size="sm"><Link href={`/kegiatan/${sessionId}`}>Buka persiapan</Link></Button>}
+            {user.role === "operator" && <Button asChild size="sm" variant="outline"><Link href={`/lapangan/${sessionId}/entri`}>Catat data P2U dan pengawalan</Link></Button>}
             <Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}/kendali`}>Kendali sesi</Link></Button>
             <Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}/formulir`}>Formulir</Link></Button>
             <Button asChild size="sm" variant="outline"><Link href={`/sesi/${sessionId}/laporan`}><Printer className="h-4 w-4" aria-hidden />Laporan resmi (PDF)</Link></Button>
