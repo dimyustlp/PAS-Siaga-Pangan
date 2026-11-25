@@ -10,6 +10,7 @@ import { ambilCakupan } from "@/lib/data/cakupan";
 import { bersihkanKataCari, LABEL_STATUS_RENCANA, statusRencana, UKURAN_HALAMAN_RENCANA, type StatusRencana } from "@/lib/domain/rencana";
 import { fmtTanggal, hariIniWib } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
+import { labelJenis } from "@/lib/domain/jenis-kegiatan";
 
 export const metadata = { title: "Rencana kegiatan" };
 export const dynamic = "force-dynamic";
@@ -24,7 +25,7 @@ export default async function RencanaPage({ searchParams }: { searchParams: Prom
   const cak = await ambilCakupan(supabase, user, q);
   const hariIni = hariIniWib();
   const kata = bersihkanKataCari(q.q);
-  const jenis = ["Pertanian", "Peternakan", "Perikanan"].includes(q.jenis ?? "") ? (q.jenis as string) : "";
+  const jenis = ["Pertanian", "Peternakan", "Perikanan", "Perkebunan", "Lainnya"].includes(q.jenis ?? "") ? (q.jenis as string) : "";
   const status = (["akan", "berjalan", "selesai"] as const).find((s) => s === q.status) ?? "";
   const tgl = (v?: string) => (v && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : "");
   const dari = tgl(q.dari);
@@ -77,7 +78,7 @@ export default async function RencanaPage({ searchParams }: { searchParams: Prom
           </div>
         </Field>
         <Field label="Jenis" htmlFor="r-jenis">
-          <Select id="r-jenis" name="jenis" defaultValue={jenis}><option value="">Semua jenis</option><option>Pertanian</option><option>Peternakan</option><option>Perikanan</option></Select>
+          <Select id="r-jenis" name="jenis" defaultValue={jenis}><option value="">Semua jenis</option><option>Pertanian</option><option>Peternakan</option><option>Perikanan</option><option>Perkebunan</option><option>Lainnya</option></Select>
         </Field>
         <Field label="Status" htmlFor="r-status">
           <Select id="r-status" name="status" defaultValue={status}><option value="">Semua status</option><option value="berjalan">Berjalan</option><option value="akan">Akan datang</option><option value="selesai">Selesai</option></Select>
@@ -119,7 +120,7 @@ export default async function RencanaPage({ searchParams }: { searchParams: Prom
                   <tr key={r.activity_id} className="align-top hover:bg-secondary/40">
                     <td className="px-4 py-3">
                       <Link href={`/rencana/${r.activity_id}`} className="font-medium text-primary hover:underline">{r.kode_kegiatan}</Link>
-                      <div className="text-xs text-muted-foreground">{r.jenis_kegiatan}{r.latihan ? " · LATIHAN" : ""}</div>
+                      <div className="text-xs text-muted-foreground">{labelJenis(r.jenis_kegiatan, r.detail_kegiatan)}{r.latihan ? " · LATIHAN" : ""}</div>
                       {(r.nomor_surat_perintah || r.nomor_persetujuan) && (
                         <div className="mt-0.5 text-xs text-muted-foreground">
                           {r.nomor_surat_perintah ? `SP ${r.nomor_surat_perintah}` : ""}{r.nomor_surat_perintah && r.nomor_persetujuan ? " · " : ""}{r.nomor_persetujuan ? `Persetujuan ${r.nomor_persetujuan}` : ""}
