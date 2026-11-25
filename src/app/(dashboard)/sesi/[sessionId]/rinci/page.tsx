@@ -8,6 +8,7 @@ import { getSessionFull } from "@/lib/data/session-full";
 import { fmtTanggal, fmtWaktu } from "@/lib/format";
 import { INDIKATOR_KESIAPAN } from "@/lib/validations/planning";
 import { z } from "zod";
+import { labelJenis } from "@/lib/domain/jenis-kegiatan";
 
 export const metadata = { title: "Laporan rinci sesi" };
 export const dynamic = "force-dynamic";
@@ -43,7 +44,7 @@ export default async function LaporanPage({ params }: { params: Promise<{ sessio
         <tbody>
           {[
             ["Kode kegiatan", kegiatan.kode_kegiatan],
-            ["Jenis dan lokasi", `${kegiatan.jenis_kegiatan} · ${lokasi?.nama ?? "-"}${kegiatan.luas_lahan_ha ? ` · ${kegiatan.luas_lahan_ha} ha` : ""}`],
+            ["Jenis dan lokasi", `${labelJenis(kegiatan.jenis_kegiatan, kegiatan.detail_kegiatan)} · ${lokasi?.nama ?? "-"}${kegiatan.luas_lahan_ha ? ` · ${kegiatan.luas_lahan_ha} ha` : ""}`],
             ["Tanggal sesi", fmtTanggal(sesi.tanggal_sesi)],
             ["Nomor persetujuan / surat perintah", `${kegiatan.nomor_persetujuan ?? "-"} / ${kegiatan.nomor_surat_perintah ?? "-"}`],
             ["Batas area", kegiatan.batas_area ?? "-"],
