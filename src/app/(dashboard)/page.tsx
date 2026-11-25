@@ -21,6 +21,7 @@ import { LABEL_TINGKAT, ROLE_LABEL, tingkatPeran } from "@/lib/rbac";
 import { fmtTanggal, fmtTanggalPendek } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
+import { labelJenis } from "@/lib/domain/jenis-kegiatan";
 
 export const metadata = { title: "Dasbor" };
 export const dynamic = "force-dynamic";
@@ -284,7 +285,7 @@ export default async function DasborPage({ searchParams }: { searchParams: Promi
                     <Link href={`/sesi/${r.session_id}`} className="kaca lift block rounded-2xl p-4">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="truncate font-semibold">{r.jenis_kegiatan} · {r.lokasi_nama}</p>
+                          <p className="truncate font-semibold">{labelJenis(r.jenis_kegiatan, r.detail_kegiatan)} · {r.lokasi_nama}</p>
                           <p className="text-xs text-muted-foreground">{r.kode_kegiatan} · {fmtTanggalPendek(r.tanggal_sesi)} · {r.jumlah_narapidana} WB · {r.status_kesiapan}</p>
                         </div>
                         {r.status_keamanan && <StatusBadge status={r.status_keamanan} />}
