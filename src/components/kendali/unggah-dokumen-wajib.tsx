@@ -34,7 +34,7 @@ export function UnggahDokumenWajib({ sessionId, kode, ada }: { sessionId: string
 
   return (
     <div className="space-y-1">
-      <label className="text-xs text-muted-foreground" htmlFor={`uw-${kode}`}>{ada ? "Ganti berkas" : "Unggah berkas"} (PDF, JPG, PNG, atau DOCX, maksimal 20 MB)</label>
+      <label className="text-xs text-muted-foreground" htmlFor={`uw-${kode}`}>{ada ? "Usulkan revisi berkas (menunggu persetujuan Kepala UPT)" : "Unggah berkas"} (PDF, JPG, PNG, atau DOCX, maksimal 20 MB)</label>
       <Input id={`uw-${kode}`} type="file" accept=".pdf,.jpg,.jpeg,.png,.docx" onChange={onChange} disabled={proses} />
       {proses && <p className="text-xs text-muted-foreground">Mengunggah…</p>}
       {galat && <Alert tone="bahaya">{galat}</Alert>}

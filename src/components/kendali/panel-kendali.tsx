@@ -12,6 +12,7 @@ import {
   hapusAksesLuar,
   hapusKelompok,
   hapusLampiranDokumenWajib,
+  putuskanRevisiDokumen,
   hapusKontrolAlat,
   simpanKontrolAlat,
   tambahKelompok,
@@ -60,6 +61,8 @@ export async function PanelKendali({ sessionId, peran }: { sessionId: string; pe
   const operator = peran === "operator";
   const kepala = peran === "kepala_pengamanan";
   const pengawal = peran === "pengawal";
+  const kaUpt = peran === "ka_upt";
+  const bisaRevisi = operator && !tutup;
   const bisaUbahPersiapan = operator && !tutup && ["Menunggu", "Perbaiki Dulu", "Ditunda"].includes(sesi.status_kesiapan);
   const bisaCatat = !tutup && (operator || kepala || (pengawal && mulai));
   const bisaPerubahan = !tutup && (operator || kepala);
@@ -224,7 +227,23 @@ export async function PanelKendali({ sessionId, peran }: { sessionId: string; pe
                           {bisaUbahPersiapan && <ActionButton action={hapusLampiranDokumenWajib} input={{ session_id: sessionId, kode: d.kode }} label="Hapus berkas" confirm="Hapus berkas dokumen ini?" />}
                         </p>
                       ) : null}
-                      {bisaUbahPersiapan && b?.berlaku && <UnggahDokumenWajib sessionId={sessionId} kode={d.kode} ada={!!b.storage_path} />}
+                      {b?.rev_status === "menunggu" && (
+                        <div className="rounded-md border border-status-kuning/40 bg-status-kuning/10 p-2 text-sm">
+                          <p className="font-medium">Usulan revisi menunggu persetujuan Kepala UPT. Berkas lama tetap berlaku.</p>
+                          <p className="text-xs text-muted-foreground">Diusulkan {fmtWaktu(s(b.rev_at))}{b.rev_nama ? ` · ${b.rev_nama}` : ""}</p>
+                          <p className="mt-1 flex flex-wrap items-center gap-3">
+                            <a className="text-primary hover:underline" target="_blank" rel="noreferrer" href={`/dokumen/${sessionId}/wajib/${d.kode}?rev=1`}>Buka berkas usulan</a>
+                            {kaUpt && <ActionButton action={putuskanRevisiDokumen} input={{ session_id: sessionId, kode: d.kode, setuju: true }} label="Setujui revisi" confirm="Setujui revisi? Berkas usulan akan menggantikan berkas lama." />}
+                          </p>
+                          {kaUpt && (
+                            <ActionForm action={putuskanRevisiDokumen} submit="Tolak revisi" resetOnSuccess={false} className="mt-2 flex flex-wrap items-end gap-2 space-y-0" fields={{ session_id: { v: sessionId }, kode: { v: d.kode }, setuju: { v: false }, catatan: { s: "catatan" } }}>
+                              <Input name="catatan" placeholder="Alasan penolakan" className="min-w-52 flex-1" aria-label={`Alasan menolak revisi ${d.kode}`} />
+                            </ActionForm>
+                          )}
+                        </div>
+                      )}
+                      {b?.rev_status === "ditolak" && <p className="text-sm text-status-merah">Revisi terakhir ditolak Kepala UPT{b.rev_catatan ? `: ${b.rev_catatan}` : "."} Berkas lama tetap berlaku.</p>}
+                      {bisaRevisi && b?.berlaku && (b.storage_path ? b.rev_status !== "menunggu" : bisaUbahPersiapan) && <UnggahDokumenWajib sessionId={sessionId} kode={d.kode} ada={!!b.storage_path} />}
                     </div>
                   ) : null}
                   {bisaUbahPersiapan && b && auto === null && (
