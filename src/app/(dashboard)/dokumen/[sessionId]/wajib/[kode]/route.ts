@@ -12,8 +12,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ sess
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.redirect(new URL("/login", req.url));
 
-  const { data } = await longgar(supabase).from("sesi_dokumen").select("storage_path").eq("session_id", sessionId).eq("kode", kode).maybeSingle();
-  const path = (data as { storage_path?: string | null } | null)?.storage_path;
+  const { data } = await longgar(supabase).from("sesi_dokumen").select("storage_path,rev_path").eq("session_id", sessionId).eq("kode", kode).maybeSingle();
+  const baris = data as { storage_path?: string | null; rev_path?: string | null } | null;
+  const path = req.nextUrl.searchParams.get("rev") === "1" ? baris?.rev_path : baris?.storage_path;
   if (!path) return new NextResponse("Berkas belum diunggah atau di luar cakupan Anda.", { status: 404 });
   const { data: url, error } = await supabase.storage.from("pas-siaga-documents").createSignedUrl(path, 120);
   if (error || !url) return new NextResponse("Berkas belum bisa dibuka. Coba lagi.", { status: 502 });
