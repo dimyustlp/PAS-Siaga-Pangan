@@ -102,7 +102,7 @@ const RULES: Rule[] = [
   { prefix: "/kop-surat", roles: ["operator", "administrator"] },
   { prefix: "/lampiran", roles: ALL_ROLES },
   { prefix: "/admin", roles: ["administrator"] },
-  { prefix: "/lapangan", roles: ["pengawal"] },
+  { prefix: "/lapangan", roles: ["pengawal", "operator"] },
 ];
 
 export function canAccess(role: Role, pathname: string): boolean {
