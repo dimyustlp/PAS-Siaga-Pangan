@@ -9,6 +9,7 @@ import { Alert } from "@/components/ui/form";
 import { PetugasSesi } from "@/components/lapangan/petugas-sesi";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { labelJenis } from "@/lib/domain/jenis-kegiatan";
 
 export const metadata = { title: "Entri lapangan" };
 export const dynamic = "force-dynamic";
@@ -41,7 +42,7 @@ export default async function EntriPage({ params, searchParams }: { params: Prom
     <div className="mx-auto max-w-4xl space-y-4">
       <Link href="/lapangan" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="h-4 w-4" aria-hidden /> Kembali</Link>
       <div>
-        <h1 className="text-lg font-semibold">{o.jenis_kegiatan} · {o.lokasi_nama}</h1>
+        <h1 className="text-lg font-semibold">{labelJenis(o.jenis_kegiatan, o.detail_kegiatan)} · {o.lokasi_nama}</h1>
         <p className="text-xs text-muted-foreground">{o.kode_kegiatan}{o.latihan ? " · LATIHAN" : ""} · {o.upt_nama ?? o.kode_upt}</p>
       </div>
       <Link href={`/lapangan/${sessionId}/kendali`} className="inline-flex rounded-full border border-border bg-white/80 px-3 py-1.5 text-sm font-medium text-primary">Kendali sesi: status variabel, alat, pihak luar</Link>
