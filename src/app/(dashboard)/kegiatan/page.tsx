@@ -7,6 +7,7 @@ import { FormImporWb, FormLokasi } from "@/components/shared/forms-operator";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { createClient } from "@/lib/supabase/server";
 import { fmtTanggalPendek, hariIniWib } from "@/lib/format";
+import { labelJenis } from "@/lib/domain/jenis-kegiatan";
 
 export const metadata = { title: "Kegiatan" };
 export const dynamic = "force-dynamic";
@@ -29,7 +30,7 @@ export default async function KegiatanPage() {
     .filter((k) => !k.rencana_berakhir || k.rencana_berakhir >= hariIni)
     .map((k) => {
       const l = daftarLokasi.find((x) => x.id === k.lokasi_id);
-      return { id: k.id, label: `${k.kode_kegiatan} · ${k.jenis_kegiatan} · ${l?.nama ?? "-"}`, mulai: k.tanggal_mulai, berakhir: k.rencana_berakhir };
+      return { id: k.id, label: `${k.kode_kegiatan} · ${labelJenis(k.jenis_kegiatan, k.detail_kegiatan)} · ${l?.nama ?? "-"}`, mulai: k.tanggal_mulai, berakhir: k.rencana_berakhir };
     });
 
   return (
@@ -60,7 +61,7 @@ export default async function KegiatanPage() {
               <li key={s.session_id ?? ""}>
                 <Link href={`/kegiatan/${s.session_id}`} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 hover:bg-secondary/60">
                   <span className="min-w-0 flex-1">
-                    <span className="block font-medium">{s.jenis_kegiatan} · {s.lokasi_nama}</span>
+                    <span className="block font-medium">{labelJenis(s.jenis_kegiatan, s.detail_kegiatan)} · {s.lokasi_nama}</span>
                     <span className="block text-xs text-muted-foreground">{s.kode_kegiatan}{s.latihan ? " · LATIHAN" : ""} · {fmtTanggalPendek(s.tanggal_sesi)} · {s.jumlah_narapidana} WB</span>
                   </span>
                   <FasePill fase={s.fase} />
