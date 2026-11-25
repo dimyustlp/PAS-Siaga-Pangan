@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { authorize, fail, success, zodFail, type ActionResult } from "./_shared";
+import { authorize, fail, storageObjectExists, success, zodFail, type ActionResult } from "./_shared";
 import { mapDbError } from "@/lib/errors";
 import { longgar } from "@/lib/supabase/longgar";
 
@@ -51,6 +51,61 @@ export async function ubahDokumenWajib(input: unknown): Promise<ActionResult> {
     .select("kode");
   if (error) return fail(mapDbError(error, DITOLAK));
   if (!data || data.length === 0) return fail("Dokumen tidak ditemukan atau sesi sudah tidak bisa diubah.");
+  segarkan(v.session_id);
+  return success();
+}
+
+const lampiranSchema = z.object({
+  session_id: sid,
+  kode: z.enum(["a", "c", "f", "g", "h", "i", "j", "k", "l", "m"]),
+  path: z.string().min(10).max(300),
+  nama_berkas: teks(200).optional(),
+  mime: teks(120).optional(),
+  ukuran_byte: z.number().int().min(0).max(25 * 1024 * 1024).optional(),
+});
+
+/** Menautkan berkas hasil unggahan ke satu dokumen wajib. Dokumen otomatis ditandai tersedia. */
+export async function lampirkanDokumenWajib(input: unknown): Promise<ActionResult> {
+  const auth = await authorize(["operator"]);
+  if (!auth.ok) return fail(auth.error);
+  const p = lampiranSchema.safeParse(input);
+  if (!p.success) return zodFail(p.error);
+  const v = p.data;
+  if (!v.path.startsWith(`${v.session_id}/`) || v.path.includes("..")) return fail("Alamat berkas tidak valid untuk sesi ini.");
+  if (!(await storageObjectExists(auth.supabase, "pas-siaga-documents", v.path))) return fail("Berkas belum ditemukan di penyimpanan. Unggah ulang lalu coba lagi.");
+  const { data: lama } = await longgar(auth.supabase).from("sesi_dokumen").select("storage_path").eq("session_id", v.session_id).eq("kode", v.kode).maybeSingle();
+  const { data, error } = await longgar(auth.supabase)
+    .from("sesi_dokumen")
+    .update({ berlaku: true, tersedia: true, alasan_tb: null, storage_path: v.path, nama_berkas: v.nama_berkas || null, mime: v.mime || null, ukuran_byte: v.ukuran_byte ?? null })
+    .eq("session_id", v.session_id)
+    .eq("kode", v.kode)
+    .select("kode");
+  if (error) return fail(mapDbError(error, DITOLAK));
+  if (!data || data.length === 0) return fail("Dokumen tidak ditemukan atau sesi sudah tidak bisa diubah.");
+  const sebelumnya = (lama as { storage_path?: string | null } | null)?.storage_path;
+  if (sebelumnya && sebelumnya !== v.path) await auth.supabase.storage.from("pas-siaga-documents").remove([sebelumnya]);
+  segarkan(v.session_id);
+  return success();
+}
+
+/** Menghapus berkas yang tertaut pada dokumen wajib; dokumen kembali ditandai belum tersedia. */
+export async function hapusLampiranDokumenWajib(input: unknown): Promise<ActionResult> {
+  const auth = await authorize(["operator"]);
+  if (!auth.ok) return fail(auth.error);
+  const p = z.object({ session_id: sid, kode: lampiranSchema.shape.kode }).safeParse(input);
+  if (!p.success) return zodFail(p.error);
+  const v = p.data;
+  const { data: lama } = await longgar(auth.supabase).from("sesi_dokumen").select("storage_path").eq("session_id", v.session_id).eq("kode", v.kode).maybeSingle();
+  const { data, error } = await longgar(auth.supabase)
+    .from("sesi_dokumen")
+    .update({ tersedia: false, storage_path: null, nama_berkas: null, mime: null, ukuran_byte: null })
+    .eq("session_id", v.session_id)
+    .eq("kode", v.kode)
+    .select("kode");
+  if (error) return fail(mapDbError(error, DITOLAK));
+  if (!data || data.length === 0) return fail("Dokumen tidak ditemukan atau sesi sudah tidak bisa diubah.");
+  const path = (lama as { storage_path?: string | null } | null)?.storage_path;
+  if (path) await auth.supabase.storage.from("pas-siaga-documents").remove([path]);
   segarkan(v.session_id);
   return success();
 }
