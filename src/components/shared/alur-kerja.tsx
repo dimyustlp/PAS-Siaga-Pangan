@@ -10,6 +10,8 @@ const WARNA: Record<PelakuAlur, string> = {
   "Kepala Pengamanan": "bg-[hsl(222_64%_30%/0.12)] text-[hsl(222_64%_28%)]",
   Pengawal: "bg-[hsl(188_80%_42%/0.14)] text-[hsl(188_85%_26%)]",
   Sistem: "bg-ink/[0.06] text-muted-foreground",
+  Bimker: "bg-secondary text-secondary-foreground",
+  "Petugas P2U": "bg-[hsl(188_80%_42%/0.14)] text-[hsl(188_85%_26%)]",
   Pemantau: "bg-[hsl(262_60%_58%/0.12)] text-[hsl(262_55%_40%)]",
   "Ka.UPT": "bg-gold/15 text-[hsl(36_80%_28%)]",
 };
@@ -30,7 +32,7 @@ export function AlurKerja({ role }: { role: Role }) {
           <span className="block text-sm text-muted-foreground">
             {milik.length > 0
               ? `Anda masuk sebagai ${ROLE_LABEL[role]}. Bagian Anda: tahap ${milik.map((t) => t.no).join(", ")}.`
-              : `Anda masuk sebagai ${ROLE_LABEL[role]}. Delapan langkah dari persiapan sampai evaluasi.`}
+              : `Anda masuk sebagai ${ROLE_LABEL[role]}. Dua belas tahapan Pedoman dari rencana sampai pembinaan, ditambah pendukung.`}
           </span>
         </span>
         <ChevronDown className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" aria-hidden />
