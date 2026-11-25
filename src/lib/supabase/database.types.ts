@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           akses_warga: string | null
           batas_area: string | null
+          detail_kegiatan: string | null
           created_at: string
           created_by: string
           id: string
@@ -44,6 +45,7 @@ export type Database = {
         Insert: {
           akses_warga?: string | null
           batas_area?: string | null
+          detail_kegiatan?: string | null
           created_at?: string
           created_by?: string
           id?: string
@@ -70,6 +72,7 @@ export type Database = {
         Update: {
           akses_warga?: string | null
           batas_area?: string | null
+          detail_kegiatan?: string | null
           created_at?: string
           created_by?: string
           id?: string
@@ -2227,6 +2230,7 @@ export type Database = {
         Row: {
           activity_id: string | null
           created_at: string | null
+          detail_kegiatan: string | null
           jenis_kegiatan: Database["public"]["Enums"]["activity_type"] | null
           jumlah_rencana: number | null
           jumlah_sesi: number | null
@@ -2261,6 +2265,7 @@ export type Database = {
           gangguan_terbuka: number | null
           hitung_terakhir_at: string | null
           interval_pemeriksaan: number | null
+          detail_kegiatan: string | null
           jenis_kegiatan: Database["public"]["Enums"]["activity_type"] | null
           jumlah_alat_kerja: number | null
           jumlah_narapidana: number | null
@@ -2567,7 +2572,7 @@ export type Database = {
       }
     }
     Enums: {
-      activity_type: "Pertanian" | "Peternakan" | "Perikanan"
+      activity_type: "Pertanian" | "Peternakan" | "Perikanan" | "Perkebunan" | "Lainnya"
       log_type:
         | "Serah terima di blok"
         | "P2U keluar atau masuk"
@@ -2721,7 +2726,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      activity_type: ["Pertanian", "Peternakan", "Perikanan"],
+      activity_type: ["Pertanian", "Peternakan", "Perikanan", "Perkebunan", "Lainnya"],
       log_type: [
         "Serah terima di blok",
         "P2U keluar atau masuk",
