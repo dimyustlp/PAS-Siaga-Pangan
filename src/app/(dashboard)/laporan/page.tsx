@@ -9,6 +9,7 @@ import { requireUser } from "@/lib/auth";
 import { ambilCakupan } from "@/lib/data/cakupan";
 import { fmtTanggalPendek, hariIniWib, tambahHari } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
+import { labelJenis } from "@/lib/domain/jenis-kegiatan";
 
 export const metadata = { title: "Laporan kegiatan" };
 export const dynamic = "force-dynamic";
@@ -23,7 +24,7 @@ export default async function DaftarLaporanPage({ searchParams }: { searchParams
 
   let kueri = supabase
     .from("v_session_overview")
-    .select("session_id,kode_kegiatan,jenis_kegiatan,lokasi_nama,tanggal_sesi,kode_upt,upt_nama,status_keamanan,status_kesiapan,jumlah_narapidana,latihan,ditutup_at")
+    .select("session_id,kode_kegiatan,jenis_kegiatan,detail_kegiatan,lokasi_nama,tanggal_sesi,kode_upt,upt_nama,status_keamanan,status_kesiapan,jumlah_narapidana,latihan,ditutup_at")
     .gte("tanggal_sesi", tambahHari(hariIniWib(), -120))
     .order("tanggal_sesi", { ascending: false })
     .limit(500);
@@ -93,7 +94,7 @@ export default async function DaftarLaporanPage({ searchParams }: { searchParams
             {baris.map((s) => (
               <tr key={s.session_id} className="align-top hover:bg-brand-soft/40">
                 <td className="px-3 py-2.5 tabular-nums">{fmtTanggalPendek(s.tanggal_sesi)}</td>
-                <td className="px-3 py-2.5"><p className="font-medium">{s.jenis_kegiatan} · {s.lokasi_nama}</p><p className="text-xs text-muted-foreground">{s.kode_kegiatan}{s.latihan ? " · LATIHAN" : ""} · {s.jumlah_narapidana} WB</p></td>
+                <td className="px-3 py-2.5"><p className="font-medium">{labelJenis(s.jenis_kegiatan, s.detail_kegiatan)} · {s.lokasi_nama}</p><p className="text-xs text-muted-foreground">{s.kode_kegiatan}{s.latihan ? " · LATIHAN" : ""} · {s.jumlah_narapidana} WB</p></td>
                 {!cak.terkunci && <td className="px-3 py-2.5 text-xs">{s.upt_nama ?? s.kode_upt}</td>}
                 <td className="px-3 py-2.5">
                   <div className="flex gap-1" aria-label={`${s.n} dari 4 tahap`}>{[1, 2, 3, 4].map((i) => <span key={i} className={`h-2 w-6 rounded-full ${i <= s.n ? "bg-status-hijau" : "bg-ink/10"}`} />)}</div>
