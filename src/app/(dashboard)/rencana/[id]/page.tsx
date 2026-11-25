@@ -12,6 +12,7 @@ import { requireUser } from "@/lib/auth";
 import { RincianEditor } from "@/components/rencana/rincian-editor";
 import { PenugasanSesi } from "@/components/rencana/penugasan-sesi";
 import { FormSesiMudah } from "@/components/shared/form-kegiatan";
+import { labelJenis } from "@/lib/domain/jenis-kegiatan";
 
 export const metadata = { title: "Rincian rencana kegiatan" };
 export const dynamic = "force-dynamic";
@@ -47,7 +48,7 @@ export default async function RincianRencanaPage({ params }: { params: Promise<{
     <div className="mx-auto max-w-5xl space-y-5">
       <PageHeader
         title={r.kode_kegiatan ?? "Rencana kegiatan"}
-        description={`${r.jenis_kegiatan} · ${r.lokasi_nama ?? "-"} · ${r.upt_nama ?? r.kode_upt}`}
+        description={`${labelJenis(r.jenis_kegiatan, r.detail_kegiatan)} · ${r.lokasi_nama ?? "-"} · ${r.upt_nama ?? r.kode_upt}`}
         actions={<Button asChild variant="outline" size="sm"><Link href="/rencana">Kembali ke daftar</Link></Button>}
       />
       {bisaUbah ? (
@@ -125,7 +126,7 @@ export default async function RincianRencanaPage({ params }: { params: Promise<{
         <Card>
           <CardHeader><CardTitle>Tambah sesi harian</CardTitle><CardDescription>Satu sesi per tanggal. Tambahkan satu per satu sesuai jadwal; pengawal bisa dipilih sekarang atau nanti lewat tabel di atas.</CardDescription></CardHeader>
           <CardContent>
-            <FormSesiMudah kegiatan={[{ id, label: `${r.kode_kegiatan} · ${r.jenis_kegiatan} · ${r.lokasi_nama ?? "-"}`, mulai: r.tanggal_mulai ?? hariIniWib(), berakhir: r.rencana_berakhir ?? null }]} pengawal={daftarPengawal} hariIni={hariIniWib()} />
+            <FormSesiMudah kegiatan={[{ id, label: `${r.kode_kegiatan} · ${labelJenis(r.jenis_kegiatan, r.detail_kegiatan)} · ${r.lokasi_nama ?? "-"}`, mulai: r.tanggal_mulai ?? hariIniWib(), berakhir: r.rencana_berakhir ?? null }]} pengawal={daftarPengawal} hariIni={hariIniWib()} />
           </CardContent>
         </Card>
       )}
