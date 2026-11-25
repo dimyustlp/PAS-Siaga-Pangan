@@ -74,6 +74,13 @@ export async function lampirkanDokumenWajib(input: unknown): Promise<ActionResul
   if (!v.path.startsWith(`${v.session_id}/`) || v.path.includes("..")) return fail("Alamat berkas tidak valid untuk sesi ini.");
   if (!(await storageObjectExists(auth.supabase, "pas-siaga-documents", v.path))) return fail("Berkas belum ditemukan di penyimpanan. Unggah ulang lalu coba lagi.");
   const { data: lama } = await longgar(auth.supabase).from("sesi_dokumen").select("storage_path").eq("session_id", v.session_id).eq("kode", v.kode).maybeSingle();
+  if ((lama as { storage_path?: string | null } | null)?.storage_path) {
+    // Sudah ada berkas: unggahan baru menjadi usulan revisi yang menunggu persetujuan Kepala UPT.
+    const { error: eRev } = await longgar(auth.supabase).rpc("usul_revisi_dokumen", { p_session: v.session_id, p_kode: v.kode, p_path: v.path, p_nama: v.nama_berkas ?? null, p_mime: v.mime ?? null, p_ukuran: v.ukuran_byte ?? null });
+    if (eRev) return fail(mapDbError(eRev, DITOLAK));
+    segarkan(v.session_id);
+    return success();
+  }
   const { data, error } = await longgar(auth.supabase)
     .from("sesi_dokumen")
     .update({ berlaku: true, tersedia: true, alasan_tb: null, storage_path: v.path, nama_berkas: v.nama_berkas || null, mime: v.mime || null, ukuran_byte: v.ukuran_byte ?? null })
@@ -82,8 +89,20 @@ export async function lampirkanDokumenWajib(input: unknown): Promise<ActionResul
     .select("kode");
   if (error) return fail(mapDbError(error, DITOLAK));
   if (!data || data.length === 0) return fail("Dokumen tidak ditemukan atau sesi sudah tidak bisa diubah.");
-  const sebelumnya = (lama as { storage_path?: string | null } | null)?.storage_path;
-  if (sebelumnya && sebelumnya !== v.path) await auth.supabase.storage.from("pas-siaga-documents").remove([sebelumnya]);
+  segarkan(v.session_id);
+  return success();
+}
+
+/** Kepala UPT menyetujui atau menolak usulan revisi berkas. Berkas lama tetap berlaku sampai revisi disetujui. */
+export async function putuskanRevisiDokumen(input: unknown): Promise<ActionResult> {
+  const auth = await authorize(["ka_upt"]);
+  if (!auth.ok) return fail(auth.error);
+  const p = z.object({ session_id: sid, kode: lampiranSchema.shape.kode, setuju: z.boolean(), catatan: teks(500).optional() }).safeParse(input);
+  if (!p.success) return zodFail(p.error);
+  const v = p.data;
+  if (!v.setuju && !v.catatan) return fail("Alasan penolakan wajib diisi.", { catatan: ["Wajib diisi."] });
+  const { error } = await longgar(auth.supabase).rpc("putuskan_revisi_dokumen", { p_session: v.session_id, p_kode: v.kode, p_setuju: v.setuju, p_catatan: v.catatan ?? null });
+  if (error) return fail(mapDbError(error, DITOLAK));
   segarkan(v.session_id);
   return success();
 }
