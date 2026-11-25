@@ -2,6 +2,7 @@ import { ActionButton, ActionForm } from "@/components/shared/action-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, Field, Pill, Select, Textarea } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { UnggahDokumenWajib } from "@/components/kendali/unggah-dokumen-wajib";
 import { StatusBadge, type SecurityStatus } from "@/components/ui/status-badge";
 import {
   catatAksesLuar,
@@ -10,6 +11,7 @@ import {
   catatStatusVariabel,
   hapusAksesLuar,
   hapusKelompok,
+  hapusLampiranDokumenWajib,
   hapusKontrolAlat,
   simpanKontrolAlat,
   tambahKelompok,
@@ -212,6 +214,19 @@ export async function PanelKendali({ sessionId, peran }: { sessionId: string; pe
                   <p className="mb-1 text-sm text-muted-foreground">{d.uraian}</p>
                   {b && !b.berlaku && b.alasan_tb && <p className="text-xs text-muted-foreground">Alasan: {b.alasan_tb}</p>}
                   {b?.nomor && <p className="text-xs text-muted-foreground">Nomor atau keterangan: {b.nomor}</p>}
+                  {d.otomatis === "rencana_pengamanan" || d.otomatis === "surat_perintah" ? (
+                    auto ? <p className="text-sm"><a className="text-primary hover:underline" target="_blank" rel="noreferrer" href={`/dokumen/${sessionId}/${d.otomatis}`}>Buka berkas</a></p> : <p className="text-xs text-muted-foreground">Diunggah operator pada halaman Kegiatan.</p>
+                  ) : d.otomatis === null || d.otomatis === undefined ? (
+                    <div className="mb-2 space-y-1">
+                      {b?.storage_path ? (
+                        <p className="flex flex-wrap items-center gap-3 text-sm">
+                          <a className="text-primary hover:underline" target="_blank" rel="noreferrer" href={`/dokumen/${sessionId}/wajib/${d.kode}`}>Buka berkas{b.nama_berkas ? `: ${b.nama_berkas}` : ""}</a>
+                          {bisaUbahPersiapan && <ActionButton action={hapusLampiranDokumenWajib} input={{ session_id: sessionId, kode: d.kode }} label="Hapus berkas" confirm="Hapus berkas dokumen ini?" />}
+                        </p>
+                      ) : null}
+                      {bisaUbahPersiapan && b?.berlaku && <UnggahDokumenWajib sessionId={sessionId} kode={d.kode} ada={!!b.storage_path} />}
+                    </div>
+                  ) : null}
                   {bisaUbahPersiapan && b && auto === null && (
                     <ActionForm
                       action={ubahDokumenWajib}
