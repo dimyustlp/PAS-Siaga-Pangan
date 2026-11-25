@@ -26,7 +26,7 @@ export const DOKUMEN_WAJIB: DokumenWajib[] = [
   { kode: "m", judul: "Catatan kelayakan teknis, APD, dan pertolongan pertama", uraian: "Kelayakan teknis alat dan mesin, kesesuaian APD, serta kesiapan pertolongan pertama dan jalur bantuan kesehatan. Diperiksa petugas yang kompeten." },
 ];
 
-export type BarisDokumen = { kode: string; berlaku: boolean; tersedia: boolean; nomor: string | null; alasan_tb: string | null };
+export type BarisDokumen = { kode: string; berlaku: boolean; tersedia: boolean; nomor: string | null; alasan_tb: string | null; storage_path?: string | null; nama_berkas?: string | null };
 
 /** Kode dokumen yang belum tersedia, setelah memperhitungkan penilaian otomatis b, d, dan e. */
 export function dokumenKurang(
