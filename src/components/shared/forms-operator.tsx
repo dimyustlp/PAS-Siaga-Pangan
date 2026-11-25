@@ -53,7 +53,7 @@ export function FormKegiatan({ lokasi }: { lokasi: Tables<"master_locations">[] 
         <Field label="Jenis kegiatan" htmlFor="jenis">
           <Select id="jenis" name="jenis" required defaultValue="">
             <option value="" disabled>Pilih jenis</option>
-            <option>Pertanian</option><option>Peternakan</option><option>Perikanan</option>
+            <option>Pertanian</option><option>Peternakan</option><option>Perikanan</option><option>Perkebunan</option><option>Lainnya</option>
           </Select>
         </Field>
         <Field label="Lokasi" htmlFor="lokasi">

@@ -11,6 +11,7 @@ import { INDIKATOR_KESIAPAN } from "@/lib/validations/planning";
 import type { SesiLengkap } from "@/lib/data/session-full";
 import { cn } from "@/lib/utils";
 import { TabelCari } from "@/components/ui/tabel-cari";
+import { labelJenis } from "@/lib/domain/jenis-kegiatan";
 
 const FASE_NADA: Record<string, "netral" | "biru" | "hijau" | "kuning" | "merah"> = {
   "Menunggu keputusan kesiapan": "kuning",
@@ -55,7 +56,7 @@ export function SesiTabel({ rows, now, tampilkanUpt }: { rows: Overview[]; now: 
               <tr key={o.session_id ?? ""} className={cn("align-top transition-colors hover:bg-brand-soft/40", p.some((x) => x.tingkat === "kritis") && "bg-status-merah/5")}>
                 <td className="px-3 py-2.5">
                   <Link href={`/sesi/${o.session_id}`} className="font-medium text-primary hover:underline">
-                    {o.jenis_kegiatan} · {o.lokasi_nama}
+                    {labelJenis(o.jenis_kegiatan, o.detail_kegiatan)} · {o.lokasi_nama}
                   </Link>
                   <p className="text-xs text-muted-foreground">
                     {o.kode_kegiatan}{o.latihan ? " · LATIHAN" : ""} · {fmtTanggalPendek(o.tanggal_sesi)}
@@ -322,7 +323,7 @@ export function KepalaSesi({ data }: { data: SesiLengkap }) {
       <CardContent className="grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-3">
         <div className="space-y-1">
           <p className="text-xs text-muted-foreground">Kegiatan</p>
-          <p className="font-semibold">{kegiatan.jenis_kegiatan} · {lokasi?.nama ?? "-"}</p>
+          <p className="font-semibold">{labelJenis(kegiatan.jenis_kegiatan, kegiatan.detail_kegiatan)} · {lokasi?.nama ?? "-"}</p>
           <p className="text-xs text-muted-foreground">{kegiatan.kode_kegiatan}{kegiatan.latihan ? " · LATIHAN" : ""} · {o.upt_nama ?? o.kode_upt}</p>
         </div>
         <div className="space-y-1">

@@ -13,7 +13,15 @@ type Lokasi = { id: string; nama: string; posisi: string; luas_ha: number | null
 type Pengawal = { id: string; full_name: string; nip: string | null };
 export type OpsiKegiatan = { id: string; label: string; mulai: string; berakhir: string | null };
 
-const JENIS = ["Pertanian", "Peternakan", "Perikanan"] as const;
+const JENIS = ["Pertanian", "Peternakan", "Perikanan", "Perkebunan"] as const;
+const LAINNYA = "Lainnya";
+const CONTOH_DETAIL: Record<string, string> = {
+  Pertanian: "Contoh: sayuran, padi, jagung, hortikultura",
+  Peternakan: "Contoh: ayam petelur, ayam pedaging, kambing, sapi, bebek",
+  Perikanan: "Contoh: lele, nila, gurame, budidaya ikan hias",
+  Perkebunan: "Contoh: kelapa, kopi, kakao, sawit, tebu",
+  [LAINNYA]: "Tuliskan kegiatannya, contoh: pengolahan hasil panen, bank sampah",
+};
 
 function tambahHari(tgl: string, n: number): string {
   const d = new Date(`${tgl}T00:00:00Z`);
@@ -57,6 +65,7 @@ function Lipat({ judul, hint, children }: { judul: string; hint: string; childre
 export function FormKegiatanMudah({ lokasi, hariIni }: { lokasi: Lokasi[]; hariIni: string }) {
   const router = useRouter();
   const [jenis, setJenis] = React.useState("");
+  const [detail, setDetail] = React.useState("");
   const [lok, setLok] = React.useState("");
   const [mulai, setMulai] = React.useState(hariIni);
   const [berakhir, setBerakhir] = React.useState("");
@@ -82,10 +91,11 @@ export function FormKegiatanMudah({ lokasi, hariIni }: { lokasi: Lokasi[]; hariI
       action={createActivity}
       submit="Simpan rencana kegiatan"
       success="Rencana kegiatan tersimpan. Membuka halaman rincian untuk menambah sesi dan menugaskan pengawal…"
-      onSuccess={(d) => { router.push(`/rencana/${d.id}`); setJenis(""); setLok(""); setBerakhir(""); setLuas(""); setLuasManual(false); setLain({ persetujuan: "", sp: "", komunikasi: "", batas: "", rute: "", akses: "", komoditas: "", tahap: "", mitra: "", pendamping: "", jamMulai: "", jamKembali: "" }); }}
+      onSuccess={(d) => { router.push(`/rencana/${d.id}`); setJenis(""); setDetail(""); setLok(""); setBerakhir(""); setLuas(""); setLuasManual(false); setLain({ persetujuan: "", sp: "", komunikasi: "", batas: "", rute: "", akses: "", komoditas: "", tahap: "", mitra: "", pendamping: "", jamMulai: "", jamKembali: "" }); }}
       resetOnSuccess={false}
       build={() => ({
         jenis_kegiatan: jenis || undefined,
+        detail_kegiatan: detail.trim() || undefined,
         lokasi_id: lok || undefined,
         tanggal_mulai: mulai || undefined,
         rencana_berakhir: berakhir || undefined,
@@ -107,8 +117,18 @@ export function FormKegiatanMudah({ lokasi, hariIni }: { lokasi: Lokasi[]; hariI
       <Field label="1. Jenis kegiatan">
         <div className="flex flex-wrap gap-2" role="group" aria-label="Jenis kegiatan">
           {JENIS.map((j) => <Pilihan key={j} aktif={jenis === j} onClick={() => setJenis(j)}>{j}</Pilihan>)}
+          <Pilihan aktif={jenis === LAINNYA} onClick={() => setJenis(LAINNYA)}>Lainnya (isi sendiri)</Pilihan>
         </div>
       </Field>
+      {jenis && (
+        <Field
+          label={jenis === LAINNYA ? "Detail kegiatan (wajib)" : "Detail kegiatan (boleh dikosongkan)"}
+          htmlFor="kg-detail"
+          hint={CONTOH_DETAIL[jenis]}
+        >
+          <Input id="kg-detail" value={detail} maxLength={120} required={jenis === LAINNYA} onChange={(e) => setDetail(e.target.value)} placeholder={jenis === LAINNYA ? "Tulis nama kegiatan" : "Mis. Peternakan ayam petelur"} />
+        </Field>
+      )}
       <Field label="2. Lokasi" htmlFor="kg-lokasi" hint={lokasi.length ? "Luas lahan terisi otomatis dari data lokasi bila sudah ada." : undefined}>
         <Select id="kg-lokasi" value={lok} onChange={(e) => pilihLokasi(e.target.value)}>
           <option value="" disabled>{lokasi.length ? "Pilih lokasi" : "Tambahkan lokasi dulu di bagian Data induk UPT"}</option>
